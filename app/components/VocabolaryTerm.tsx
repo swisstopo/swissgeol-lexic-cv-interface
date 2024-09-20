@@ -11,19 +11,21 @@ interface VocabolaryTermProps {
     breadCrumbsData: BreadCrumbsData;
 }
 
-
 const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsData }) => {
-
+    /**
+     * Extracts the label or identifier from a URL by manipulating the URL string.
+     * 
+     * This function processes the URL by replacing the '#' character with '/' and then splits
+     * the URL into parts using '/' as the delimiter. The function then returns the last part
+     * of the split URL, which is typically the label or identifier.
+     */
     const extractLabel = (url: string) => {
         const parts = url.replace('#', '/').split('/');
         return parts.pop();
     };
-
-    const extractLabelRelatedConcept = (url: string) => {
-        const parts = url.split('#');
-        return parts.pop();
-    };
-
+    /**
+     * Retrieve the path of images based on the label indicating the language
+     */
     const getFlagImageUrl = (lang: string) => {
         switch (lang) {
             case 'en':
@@ -204,7 +206,7 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
                                                                 <Text>•</Text>
                                                                 <Badge bg='#e0e0e0' variant='muted' borderRadius="$full" ml={2} mr={2}>
                                                                     <BadgeText color='#7c7c7c' fontSize={12} fontWeight={'$bold'} mb={1}>
-                                                                        {extractLabelRelatedConcept(predicate)}
+                                                                        {extractLabel(predicate)}
                                                                     </BadgeText>
                                                                 </Badge>
                                                                 <Box ml={4}>

@@ -3,10 +3,11 @@ import { useRouter } from 'next/router';
 import VocabolaryTerm from '@/app/components/VocabolaryTerm';
 
 const TermPage: React.FC = () => {
+    // Get the router object to access route parameters
     const router = useRouter();
     const { term } = router.query;
     console.log('[term].ts: term:', term);
-
+    // State for storing term data, breadcrumb data, loading status, and errors
     const [termData, setTermData] = useState(null);
     const [breadCrumbsData, setBreadCrumbsData] = useState();
     const [loading, setLoading] = useState(true);
@@ -14,6 +15,7 @@ const TermPage: React.FC = () => {
 
     useEffect(() => {
         const fetchTermData = async () => {
+            // Exit if term is not available yet
             if (!term) {
                 console.log('Term is not available yet');
                 return;
@@ -24,13 +26,14 @@ const TermPage: React.FC = () => {
             setError(null);
 
             try {
+                // Fetch term data from the API
                 const response = await fetch(`/api/dbQueryTerms?vocabulary=Chronostratigraphy&term=${term}`);
                 console.log('Response status:', response.status);
 
                 if (!response.ok) {
                     throw new Error(`Network response was not ok: ${response.status}`);
                 }
-
+                // Update state with the fetched data
                 const data = await response.json();
                 console.log('Received data:', data);
 
@@ -43,7 +46,6 @@ const TermPage: React.FC = () => {
                 setLoading(false);
             }
         };
-
         fetchTermData();
     }, [term]);
 
