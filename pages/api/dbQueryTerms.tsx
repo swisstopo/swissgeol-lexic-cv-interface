@@ -26,6 +26,14 @@ interface SparqlResult {
         value: string;
     };
 }
+interface LabelQueryResult {
+    subject: {
+        value: string;
+    };
+    label: {
+        value: string;
+    };
+}
 /**
  * API route handler for fetching term and breadcrumb data from a GraphDB repository.
  * 
@@ -59,17 +67,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     let configJsonDB;
     try {
         const configFile = fs.readFileSync(configPath, 'utf8');
-        configJsonDB = JSON.parse(configFile)[vocabulary];
+        configJsonDB = JSON.parse(configFile);
     } catch (error) {
         console.error('Error reading configuration file:', error);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
-    if (!configJsonDB) {
+    if (!configJsonDB[vocabulary]) {
         return res.status(404).json({ message: `Configuration not found for vocabulary: ${vocabulary}` });
     }
-    const url = configJsonDB.url;
-    const username = configJsonDB.username;
-    const password = configJsonDB.password;
+
+    const { url, username, password } = configJsonDB[vocabulary];
 
     console.log(`Attempting to connect to GraphDB at ${url} with user: ${username}`);
     try {
@@ -84,10 +91,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
          * Logs an error and returns a 500 Internal Server Error response if the connection test fails.
          */
         const graphDBClient = new GraphDBClient(url, username, password);
+
+        const otherVocabulary = Object.keys(configJsonDB).find(vocab => vocab !== vocabulary);
+        if (!otherVocabulary) {
+            return res.status(404).json({ message: 'No other vocabulary found' });
+        }
+
+        const { url: otherUrl, username: otherUsername, password: otherPassword } = configJsonDB[otherVocabulary];
+        const graphDBClientOtherVocabulary = new GraphDBClient(otherUrl, otherUsername, otherPassword);
+
         try {
-            console.log('Testing GraphDB connection...');
             await graphDBClient.getRepositoryIds();
-            console.log('GraphDB connection successful in queryterm api');
+            console.log('GraphDB connection successful for:', vocabulary);
+
+            await graphDBClientOtherVocabulary.getRepositoryIds();
+            console.log('GraphDB connection successful for:', otherVocabulary);
         } catch (error) {
             console.error('GraphDB connection failed:', error);
             return res.status(500).json({ error: 'Failed to connect to GraphDB' });
@@ -99,9 +117,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
          * - Creates the URL for the GraphDB repository using the base URL and the repository ID extracted from the configuration.
          * - Initializes a `QueryExecutor` instance with the GraphDB client. This instance will be used to execute SPARQL queries.
          */
-        const repositoryId = configJsonDB.repositoryId;
+        const repositoryId = configJsonDB[vocabulary].repositoryId;
         const repositoryUrl = `${url}/repositories/${repositoryId}`;
+        const repositoryIdOtherVocabolary = configJsonDB[otherVocabulary].repositoryId;
+        const repositoryUrlOherVocabolary = `${otherUrl}/repositories/${repositoryIdOtherVocabolary}`;
         const queryExecutor = new QueryExecutor(graphDBClient, repositoryId, url, username, password, repositoryUrl);
+        const queryExecutorOtherVocabolary = new QueryExecutor(graphDBClientOtherVocabulary, repositoryIdOtherVocabolary, otherUrl, otherUsername, otherPassword, repositoryUrlOherVocabolary);
         /**
          * Retrieves the query configuration for the specified vocabulary using `getQueryConfig`.
          * Prepares the SPARQL queries for term data and breadcrumb path data by replacing placeholders in the query templates with the actual term.
@@ -110,6 +131,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const queryVocabolo = queryConfig.queryVocabolo.replace('${term}', term);
         const breadcrumbsConfig = getQueryConfig(vocabulary);
         const queryBreadcrumbs = breadcrumbsConfig.queryBreadcrumbs.replace('${term}', term);
+
+        const queryConfigCronos = getQueryConfig('Chronostratigraphy');
+        const queryConfigTecto = getQueryConfig('TectonicUnits');
+
+        const queryLabelOfAllConceptCronos = queryConfigCronos.queryLabelOfAllConcept;
+        const queryLabelOfAllConceptTecto = queryConfigTecto.queryLabelOfAllConcept;
         /**
          * Set the string representing the github version based on the vocabulary
          */
@@ -134,6 +161,48 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             const breadcrumbResult: SparqlResult[] = await queryExecutor.executeSparqlQuery(queryBreadcrumbs);
             console.log('Breadcrumbs query result:', breadcrumbResult);
             const broaderTerms: string[] = [];
+            const prefLabelOfAllConcept: LabelQueryResult[] = await queryExecutor.executeSparqlQuery(queryLabelOfAllConceptCronos); //for per iterare su tutti i vocabolari, segnalazione da inserire in pratiche, 
+            const prefLabelOfAllConceptOtherVocabolary: LabelQueryResult[] = await queryExecutorOtherVocabolary.executeSparqlQuery(queryLabelOfAllConceptTecto);
+
+            const allConceptMap = new Map<string, string>();
+
+            const processResults = (results: LabelQueryResult[]) => {
+                console.log('Processing results:', results.length);
+                let addedCount = 0;
+                let skippedCount = 0;
+                let duplicateCount = 0;
+
+                const initialSize = allConceptMap.size;
+
+                results.forEach(result => {
+                    const subject = result.subject.value;
+                    const label = result.label.value;
+
+                    if (subject && label) {
+                        if (allConceptMap.has(subject)) {
+                            duplicateCount++;
+                        } else {
+                            allConceptMap.set(subject, label);
+                            addedCount++;
+                        }
+                    } else {
+                        skippedCount++;
+                    }
+                });
+
+                console.log('Processing complete:');
+                console.log(`- Added: ${addedCount}`);
+                console.log(`- Skipped: ${skippedCount}`);
+                console.log(`- Duplicates: ${duplicateCount}`);
+                console.log(`- Initial map size: ${initialSize}`);
+                console.log(`- Final map size: ${allConceptMap.size}`);
+                console.log(`- Difference: ${allConceptMap.size - initialSize}`);
+            };
+
+
+            processResults(prefLabelOfAllConcept);
+            processResults(prefLabelOfAllConceptOtherVocabolary);
+
             /**
              * Initializes a `TermData` object to store the term details.
              * Iterates through the term data results and populates the `TermData` object based on the predicates and objects retrieved.
@@ -198,6 +267,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         break;
                 }
             });
+            /**
+             * Takes from configuration the order to follow when saving prefLabels by giving them a precise order of display 
+             */
+            const orderedLanguages = queryConfig.labelLanguageOrder;
+            const sortedLanguages: { [key: string]: string } = {};
+            orderedLanguages.forEach((lang: string) => {
+                if (termData.languages[lang]) {
+                    sortedLanguages[lang] = termData.languages[lang];
+                }
+            });
+            termData.languages = sortedLanguages;
 
             breadcrumbResult.forEach(result => {
                 const { narrowerConcept } = result;
@@ -225,6 +305,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             const otherRelationObject = Object.fromEntries(
                 Array.from(termData.relatedTerms.OtherRelation.entries()).map(([key, value]) => [key, Array.from(value)])
             );
+            const allConceptObject = Object.fromEntries(
+                Array.from(allConceptMap.entries()).map(([key, value]) => [key, value])
+            );
             // Constructs the response data object with query results and term data.
             const responseData = {
                 predicates: termResult, // Results of the SPARQL query for the term.
@@ -236,8 +319,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     }
                 },
                 breadCrumbsData: breadCrumbsData,
+                allConceptMap: allConceptObject,
             };
 
+            console.log('All Concept Map:', responseData.allConceptMap);
             console.log('Query executed successfully, sending response');
             res.status(200).json(responseData);
         } catch (error) {

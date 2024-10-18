@@ -1,10 +1,84 @@
 'use client';
 
 import { Box, Button, ButtonIcon, SearchIcon, Input, InputField, Icon, Text, Link } from '@gluestack-ui/themed';
-import { UserRound } from 'lucide-react';
-import React from 'react';
+import { Search, UserRound } from 'lucide-react';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import Select, { components } from 'react-select';
+
+interface Concept {
+    value: string;
+    label: string;
+}
 
 const Navbar: React.FC = () => {
+    const [concepts, setConcepts] = useState<Concept[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [selectedTerm, setSelectedTerm] = useState('');
+    const router = useRouter();
+
+    const fetchConcepts = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const response = await fetch('/api/getAllConceptMap');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+
+            if (!data.allConceptMap || Object.keys(data.allConceptMap).length === 0) {
+                throw new Error('No concepts found in the response');
+            }
+
+            const conceptsArray: Concept[] = Object.entries(data.allConceptMap).map(([key, value]) => ({
+                value: key,
+                label: String(value),
+            }));
+
+            conceptsArray.sort((a, b) => a.label.localeCompare(b.label));
+            
+            setConcepts(conceptsArray);
+        } catch (error) {
+            console.error('Errore durante il fetch dei concetti:', error);
+            setError('Failed to load concepts. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchConcepts();
+    }, []);
+
+    const handleNavigation = (selectedOption: Concept | null) => {
+        if (selectedOption) {
+            const parts = selectedOption.value.split('/');
+
+            if (parts.length >= 3) {
+                const vocabulary = parts[parts.length - 2];
+                const term = parts[parts.length - 1];
+
+                router.push(`/${vocabulary}/${term}`);
+            } else {
+                console.warn("URL non valido: ",  selectedOption.value);
+                router.push(selectedOption.value);
+            }
+        }
+    };
+
+    const DropdownIndicator = (props: any) => {
+        return (
+            <components.DropdownIndicator {...props}>
+                <Search
+                    size={16}
+                    onClick={() => handleNavigation(props.selectProps.value)}
+                />
+            </components.DropdownIndicator>
+        );
+    };
+
     return (
         <Box
             flexDirection='row'
@@ -27,32 +101,77 @@ const Navbar: React.FC = () => {
 
                 <Text fontSize={16} ml={40} color='red' alignContent='center' fontWeight='$semibold'>Pilot Project</Text>
             </Box>
-            <Box w='33%' alignItems='center' justifyContent='center' flexDirection='row' display='none'>
-                <Button
-                    size="sm"
-                    variant="link"
-                    action="primary"
-                    isDisabled={false}
-                    isFocusVisible={false}
-                    mr={5}
-                >
-                    <ButtonIcon as={SearchIcon} color='black' width={20} height={20} />
-                </Button>
-                <Input
-                    variant="outline"
-                    size="sm"
-                    isDisabled={false}
-                    isInvalid={false}
-                    isReadOnly={false}
-                    w='100%'
-                    borderColor='#dee2e6'
-                >
-                    <InputField placeholder="Search..." />
-                </Input>
-            </Box>
+            {loading ? (
+                <Text>Loading concepts...</Text>
+            ) : error ? (
+                <Text color="red">{error}</Text>
+            ) : (
+                <Box w={'33%'}>
+                    <Select
+                        value={concepts.find(option => option.value === selectedTerm)}
+                        onChange={(selectedOption) => {
+                            setSelectedTerm(selectedOption ? selectedOption.value : '');
+                            handleNavigation(selectedOption);
+                        }}
+                        onKeyDown={(event) => {
+                            if (event.key === 'Enter' && selectedTerm) {
+                                const selectedOption = concepts.find(option => option.value === selectedTerm);
+                                handleNavigation(selectedOption || null);
+                            }
+                        }}
+                        options={concepts}
+                        placeholder="Search term"
+                        isSearchable={true}
+                        classNamePrefix="react-select"
+                        menuPortalTarget={document.body}
+                        components={{ DropdownIndicator }}
+                        styles={{
+                            control: (provided) => ({
+                                ...provided,
+                                fontSize: '14px',
+                                color: 'black',
+                                width: '100%'
+                            }),
+                            singleValue: (provided) => ({
+                                ...provided,
+                                fontSize: '12px',
+                                color: 'black',
+                            }),
+                            placeholder: (provided) => ({
+                                ...provided,
+                                fontSize: '12px',
+                                color: 'black',
+                                fontWeight: 'bold'
+                            }),
+                            option: (provided) => ({
+                                ...provided,
+                                fontSize: '14px',
+                                color: 'black',
+                            }),
+                            menu: (provided) => ({
+                                ...provided,
+                            }),
+                            dropdownIndicator: (provided) => ({
+                                ...provided,
+                                color: '#999',
+                                '&:hover': {
+                                    color: '#666',
+                                },
+                                cursor: 'pointer',
+                            }),
+                            input: (provided) => ({
+                                ...provided,
+                                color: 'black',
+                                fontSize: '14px',
+                                fontWeight: 'bold'
+                            }),
+                        }}
+                    />
+                </Box>
 
-            <Box w='33%' alignItems='flex-end' display='none'>
-                <Icon as={UserRound} width={30} height={30} strokeWidth={1} />
+            )}
+            <Box w='33%' alignItems='flex-end' /* display='none' */>
+                {/* <Icon as={UserRound} width={30} height={30} strokeWidth={1} /> */}
             </Box>
         </Box>
     );

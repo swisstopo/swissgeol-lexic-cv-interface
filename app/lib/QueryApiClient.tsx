@@ -47,7 +47,7 @@ class QueryExecutor {
                 .setQuery(sparqlQuery)
                 .setQueryType(QueryType.SELECT)
                 .setResponseType(RDFMimeType.SPARQL_RESULTS_XML)
-                .setLimit(100);
+                .setLimit(10000);
 
             const queryStream = await repository.query(payload);
             const results: any[] = [];

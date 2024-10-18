@@ -9,9 +9,10 @@ import { BreadCrumbsData } from '../models/breadCrumbsInterface';
 interface VocabolaryTermProps {
     termData: TermData | null;
     breadCrumbsData: BreadCrumbsData;
+    allConceptMap: Map<string, string>;
 }
 
-const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsData }) => {
+const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsData, allConceptMap }) => {
     /**
      * Extracts the label or identifier from a URL by manipulating the URL string.
      * 
@@ -22,6 +23,17 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
     const extractLabel = (url: string) => {
         const parts = url.replace('#', '/').split('/');
         return parts.pop();
+    };
+    const getTermLabel = (term: string, isBadge: boolean) => {
+        console.log(allConceptMap);
+        if (!allConceptMap || allConceptMap.size === 0) {
+            return "Map is not available";
+        }
+        if (isBadge) {
+            return allConceptMap.get(term) || `[${extractLabel(term)}]`;
+        } else {
+            return allConceptMap.get(term) || term;
+        }
     };
     /**
      * Retrieve the path of images based on the label indicating the language
@@ -147,9 +159,12 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
                                             <AccordionContent bgColor='$white' ml={15}>
                                                 {termData.relatedTerms.Broader.length > 0 ? (
                                                     termData.relatedTerms.Broader.map(term => (
-                                                        <Link href={`/${termData.vocabulary}/${extractLabel(term)}`} mb={1} key={term}>
-                                                            <LinkText color='black' textDecorationLine='none'>• {extractLabel(term)}</LinkText>
-                                                        </Link>
+                                                        <Box flexDirection='row'>
+                                                            <Text>•</Text>
+                                                            <Link href={`/${termData.vocabulary}/${extractLabel(term)}`} mb={1} key={term}>
+                                                                <LinkText color='#7c7c7c' textDecorationLine='none'> {getTermLabel(term, false)}</LinkText>
+                                                            </Link>
+                                                        </Box>
                                                     ))
                                                 ) : (
                                                     <Text color='$secondary300'>No Broader concepts...</Text>
@@ -174,9 +189,12 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
                                             <AccordionContent bgColor='$white' ml={15}>
                                                 {termData.relatedTerms.Narrower.length > 0 ? (
                                                     termData.relatedTerms.Narrower.map(term => (
-                                                        <Link href={`/${termData.vocabulary}/${extractLabel(term)}`} mb={1} key={term}>
-                                                            <LinkText color='black' textDecorationLine='none'>• {extractLabel(term)}</LinkText>
-                                                        </Link>
+                                                        <Box flexDirection='row'>
+                                                            <Text>•</Text>
+                                                            <Link href={`/${termData.vocabulary}/${extractLabel(term)}`} mb={1} key={term}>
+                                                                <LinkText color='#7c7c7c' textDecorationLine='none'> {getTermLabel(term, false)}</LinkText>
+                                                            </Link>
+                                                        </Box>
                                                     ))
                                                 ) : (
                                                     <Text color='$secondary300'>No Narrowers concepts...</Text>
@@ -206,14 +224,14 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
                                                                 <Text>•</Text>
                                                                 <Badge bg='#e0e0e0' variant='muted' borderRadius="$full" ml={2} mr={2}>
                                                                     <BadgeText color='#7c7c7c' fontSize={12} fontWeight={'$bold'} mb={1}>
-                                                                        {extractLabel(predicate)}
+                                                                        {getTermLabel(predicate, true)}
                                                                     </BadgeText>
                                                                 </Badge>
                                                                 <Box ml={4}>
                                                                     {term.startsWith('http') ? (
                                                                         <Link href={`${term}`} mb={1} key={`${predicate}-${index}`}>
                                                                             <Text fontSize={14} color="#7c7c7c" textDecorationLine="none">
-                                                                                {term}
+                                                                                {getTermLabel(term, false)}
                                                                             </Text>
                                                                         </Link>
                                                                     ) : (

@@ -10,6 +10,7 @@ const TermPage: React.FC = () => {
     // State for storing term data, breadcrumb data, loading status, and errors
     const [termData, setTermData] = useState(null);
     const [breadCrumbsData, setBreadCrumbsData] = useState();
+    const [allConceptMap, setAllConceptMap] = useState(new Map<string, string>());
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -39,6 +40,7 @@ const TermPage: React.FC = () => {
 
                 setTermData(data.termData);
                 setBreadCrumbsData(data.breadCrumbsData || null);
+                setAllConceptMap(new Map(Object.entries(data.allConceptMap)));
             } catch (error) {
                 console.error('Error fetching term data:', error);
                 setError(error);
@@ -68,7 +70,7 @@ const TermPage: React.FC = () => {
 
     return (
         <div key={term}>
-            <VocabolaryTerm termData={termData} breadCrumbsData={breadCrumbsData} />
+            <VocabolaryTerm termData={termData} breadCrumbsData={breadCrumbsData} allConceptMap={allConceptMap} />
         </div>
     );
 };

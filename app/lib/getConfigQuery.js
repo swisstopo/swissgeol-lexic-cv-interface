@@ -13,11 +13,16 @@ function getQueryConfig(vocabulary) {
 
     const queryBreadcrumbs = config[vocabulary].queryBreadcrumbs;
     const queryVocabolo = config[vocabulary].queryVocabolo;
+    const queryLabelOfAllConcept = config[vocabulary].prefLabelOfAllConcept;
+    const labelLanguageOrder = config.labelLanguageOrder;
 
     return {
         queryBreadcrumbs,
-        queryVocabolo
+        queryVocabolo,
+        queryLabelOfAllConcept,
+        labelLanguageOrder
     };
 }
 
 module.exports = { getQueryConfig };
+
