@@ -59,6 +59,37 @@ const Homepage: React.FC = () => {
                 { label: "Südalpin (de), South Alpine (en), Sudalpin (fr), Sudalpino (it)", url: '/TectonicUnits/South_Alpine' },
                 { label: "Känozoische magmatische Gesteine (de), Cenozoic magmatic rocks (en), Roches magmatiques cénozoïques (fr), Rocce magmatiche cenozoiche (it)", url: '/TectonicUnits/Cenozoicmagmaticrocks' },
             ],
+        },
+        {
+            name: 'Lithology',
+            translations: {
+                'EN': 'Lithology',
+                'DE': 'Lithologie',
+                'IT': 'Litologia',
+                'FR': 'Lithologie'
+            },
+            description: 'The controlled vocabulary on "Lithology" includes terms used to describe the rock types and lithological characteristics of Switzerland in maps, boreholes, and other assets managed by the Swiss Geological Survey. This vocabulary is based on standardized geological classifications, adapted and complemented for detailed attributions of rock materials and their properties, considering additional internal and external links',
+            topConcept: [
+                { label: "Felsen (de), Rock (en), Rocher (fr), Roccia (it)", url: '/Lithology/Rock' },
+                { label: "Brekzie (de), Breccia (en), Brèche (fr), Breccia (it)", url: '/Lithology/Breccia' },
+                { label: "Material: locker (de), Material: unconsolidated (en), Matériel: non consolidé (fr), Materiale: non consolidato (it)", url: '/Lithology/MaterialUnconsolidated' },
+            ],
+        },
+        {
+            name: 'Lithostratigraphy',
+            translations: {
+                'EN': 'Lithostratigraphy',
+                'DE': 'Lithostratigraphie',
+                'IT': 'Litostratigrafia',
+                'FR': 'Lithostratigraphie'
+            },
+            description: 'The controlled vocabulary “Lithostratigraphy” includes terms used to describe and classify the lithostratigraphic units of Switzerland in maps, boreholes, and other items maintained by the Swiss Geological Survey. This vocabulary is based on the fundamental principles of stratigraphy that allow rock layers to be studied and categorized according to their lithological characteristics, enabling correlation between different geographic areas',
+            topConcept: [
+                { label: "Europäische Platte (de), European Plate (en), Plaque européenne (fr), Piatto europeano (it)", url: '/Lithostratigraphy/European_Plate' },
+                { label: "Adriatische Platte (de), Adriatic Plate (en), PPlaque adriatique (fr), Piatto adriatico (it)", url: '/Lithostratigraphy/Adriatic_Plate' },
+                { label: "Molasse-Becken (de), Molasse Basin (en), Bassin molassique (fr), Bacino molassico (it)", url: '/Lithostratigraphy/Molasse_Basin' },
+                
+            ],
         }
     ];
 

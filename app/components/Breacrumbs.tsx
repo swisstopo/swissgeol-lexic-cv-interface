@@ -35,7 +35,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ data }) => {
                 </Link>
             ))}
             <Link href={`/${data.vocabulary}/${extractLabel(data.term)}`}>
-                <LinkText fontSize={14} textDecorationLine='none' bold color='$secondary400'>{data.term}</LinkText>
+                <LinkText fontSize={14} textDecorationLine='none' bold color='$secondary400'>{data?.term}</LinkText>
             </Link>
         </Box>
     );

@@ -1,0 +1,8 @@
+services:
+  controlled-vocabolary-interface:
+    image: controlled-vocabolary-interface:prod
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3050:3000"

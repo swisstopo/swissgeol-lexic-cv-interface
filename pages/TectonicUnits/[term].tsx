@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import VocabolaryTerm from '@/app/components/VocabolaryTerm';
+import { BreadCrumbsData, TermData } from '../../app/models';
+
+interface ErrorType {
+    message: string;
+}
 
 const TermPage: React.FC = () => {
     // Get the router object to access route parameters
@@ -8,11 +13,11 @@ const TermPage: React.FC = () => {
     const { term } = router.query;
     console.log('[term].ts: term:', term);
     // State for storing term data, breadcrumb data, loading status, and errors
-    const [termData, setTermData] = useState(null);
-    const [breadCrumbsData, setBreadCrumbsData] = useState();
+    const [termData, setTermData] = useState<TermData>();
+    const [breadCrumbsData, setBreadCrumbsData] = useState<BreadCrumbsData>();
     const [allConceptMap, setAllConceptMap] = useState(new Map<string, string>());
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<ErrorType | null>();
 
     useEffect(() => {
         const fetchTermData = async () => {
@@ -43,7 +48,7 @@ const TermPage: React.FC = () => {
                 setAllConceptMap(new Map(Object.entries(data.allConceptMap)));
             } catch (error) {
                 console.error('Error fetching term data:', error);
-                setError(error);
+                setError({ message: error instanceof Error ? error.message : 'An unknown error occurred' });
             } finally {
                 setLoading(false);
             }
@@ -64,12 +69,12 @@ const TermPage: React.FC = () => {
         return <div>Error fetching data for {term}: {error.message}</div>;
     }
 
-    if (!termData) {
-        return <div>No data found for {term}</div>;
+    if (!termData || !breadCrumbsData) {
+        return <div>Loading data...</div>;
     }
 
     return (
-        <div key={term}>
+        <div key={Array.isArray(term) ? term[0] : term}>
             <VocabolaryTerm termData={termData} breadCrumbsData={breadCrumbsData} allConceptMap={allConceptMap} />
         </div>
     );

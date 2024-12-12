@@ -33,7 +33,7 @@ const TermPage: React.FC = () => {
 
             try {
                 // Fetch term data from the API
-                const response = await fetch(`/api/dbQueryTerms?vocabulary=Chronostratigraphy&term=${term}`);
+                const response = await fetch(`/api/dbQueryTerms?vocabulary=Lithostratigraphy&term=${term}`);
                 console.log('Response status:', response.status);
 
                 if (!response.ok) {
@@ -42,7 +42,7 @@ const TermPage: React.FC = () => {
                 // Update state with the fetched data
                 const data = await response.json();
                 console.log('Received data:', data);
-
+                
                 setTermData(data.termData);
                 setBreadCrumbsData(data.breadCrumbsData || null);
                 setAllConceptMap(new Map(Object.entries(data.allConceptMap)));

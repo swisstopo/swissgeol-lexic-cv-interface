@@ -7,14 +7,19 @@ const path = require('path');
  * It extracts the queries for the specified vocabulary and returns them.
  */
 function getQueryConfig(vocabulary) {
-    const configPath = path.join(process.cwd(), 'queryConfig.json');
+    const configPath = path.join(process.cwd(), 'dbConfig.json');
     const configFile = fs.readFileSync(configPath, 'utf8');
     const config = JSON.parse(configFile);
 
-    const queryBreadcrumbs = config[vocabulary].queryBreadcrumbs;
-    const queryVocabolo = config[vocabulary].queryVocabolo;
-    const queryLabelOfAllConcept = config[vocabulary].prefLabelOfAllConcept;
-    const labelLanguageOrder = config.labelLanguageOrder;
+    const queryKey = `${vocabulary}Query`;
+    if (!config.queries || !config.queries[queryKey]) {
+        throw new Error(`Query configuration not found for vocabulary: ${vocabulary}`);
+    }
+
+    const queryBreadcrumbs = config.queries[queryKey].queryBreadcrumbs;
+    const queryVocabolo = config.queries[queryKey].queryVocabolo;
+    const queryLabelOfAllConcept = config.queries[queryKey].prefLabelOfAllConcept;
+    const labelLanguageOrder = config.queries.labelLanguageOrder;
 
     return {
         queryBreadcrumbs,

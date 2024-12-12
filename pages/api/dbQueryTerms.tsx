@@ -63,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * responds with a 500 Internal Server Error status. If the configuration for the specified vocabulary
      * is not found in the file, it responds with a 404 Not Found status.
      */
-    const configPath = path.join(process.cwd(), 'connectionDbConfig.json');
+    const configPath = path.join(process.cwd(), 'dbConfig.json');
     let configJsonDB;
     try {
         const configFile = fs.readFileSync(configPath, 'utf8');
@@ -72,11 +72,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.error('Error reading configuration file:', error);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
-    if (!configJsonDB[vocabulary]) {
+    if (!configJsonDB.vocabularies[vocabulary]) {
         return res.status(404).json({ message: `Configuration not found for vocabulary: ${vocabulary}` });
     }
 
-    const { url, username, password } = configJsonDB[vocabulary];
+    const { url, username, password } = configJsonDB.vocabularies[vocabulary];
 
     console.log(`Attempting to connect to GraphDB at ${url} with user: ${username}`);
     try {
@@ -92,12 +92,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
          */
         const graphDBClient = new GraphDBClient(url, username, password);
 
-        const otherVocabulary = Object.keys(configJsonDB).find(vocab => vocab !== vocabulary);
+        const otherVocabulary = Object.keys(configJsonDB.vocabularies).find(vocab => vocab !== vocabulary);
         if (!otherVocabulary) {
             return res.status(404).json({ message: 'No other vocabulary found' });
         }
 
-        const { url: otherUrl, username: otherUsername, password: otherPassword } = configJsonDB[otherVocabulary];
+        const { url: otherUrl, username: otherUsername, password: otherPassword } = configJsonDB.vocabularies[otherVocabulary];
         const graphDBClientOtherVocabulary = new GraphDBClient(otherUrl, otherUsername, otherPassword);
 
         try {
@@ -117,9 +117,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
          * - Creates the URL for the GraphDB repository using the base URL and the repository ID extracted from the configuration.
          * - Initializes a `QueryExecutor` instance with the GraphDB client. This instance will be used to execute SPARQL queries.
          */
-        const repositoryId = configJsonDB[vocabulary].repositoryId;
+        const repositoryId = configJsonDB.vocabularies[vocabulary].repositoryId;
         const repositoryUrl = `${url}/repositories/${repositoryId}`;
-        const repositoryIdOtherVocabolary = configJsonDB[otherVocabulary].repositoryId;
+        const repositoryIdOtherVocabolary = configJsonDB.vocabularies[otherVocabulary].repositoryId;
         const repositoryUrlOherVocabolary = `${otherUrl}/repositories/${repositoryIdOtherVocabolary}`;
         const queryExecutor = new QueryExecutor(graphDBClient, repositoryId, url, username, password, repositoryUrl);
         const queryExecutorOtherVocabolary = new QueryExecutor(graphDBClientOtherVocabulary, repositoryIdOtherVocabolary, otherUrl, otherUsername, otherPassword, repositoryUrlOherVocabolary);
@@ -142,9 +142,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
          */
         const getVersion = (vocabulary: string): string => {
             if (vocabulary === 'Chronostratigraphy') {
-                return 'Release: 14/08/2024 - Chronostratigrafie v5-demo';
+                return 'Release: 11/09/2024 - chronostratigrafie v6';
             } else if (vocabulary === 'TectonicUnits') {
-                return 'Release: 14/08/2024 - Tectonic Units - v1.1-demo';
+                return 'Release: 11/09/2024 - TectonicUnits v2';
+            } else if (vocabulary === 'Lithostratigraphy') {
+                return 'Release: 10/12/2024 - Lithostratigraphy - V1';
+            } else if (vocabulary === 'Lithology') {
+                return 'Release: 10/12/2024 - Lithology - V1';
             }
             return 'No data for version.';
         };
@@ -270,7 +274,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             /**
              * Takes from configuration the order to follow when saving prefLabels by giving them a precise order of display 
              */
-            const orderedLanguages = queryConfig.labelLanguageOrder;
+            const orderedLanguages = configJsonDB.queries.labelLanguageOrder;
             const sortedLanguages: { [key: string]: string } = {};
             orderedLanguages.forEach((lang: string) => {
                 if (termData.languages[lang]) {

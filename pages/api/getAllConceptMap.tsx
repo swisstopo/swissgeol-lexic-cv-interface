@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const configPath = path.join(process.cwd(), 'connectionDbConfig.json');
+    const configPath = path.join(process.cwd(), 'dbConfig.json');
     let configJsonDB;
     try {
         const configFile = fs.readFileSync(configPath, 'utf8');
@@ -27,13 +27,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 
-    const vocabularies = Object.keys(configJsonDB);
+    const vocabularies = Object.keys(configJsonDB.vocabularies);
     console.log(vocabularies);
     const allConceptMap = new Map<string, string>();
 
     try {
         for (const vocabulary of vocabularies) {
-            const { url, username, password, repositoryId } = configJsonDB[vocabulary];
+            const { url, username, password, repositoryId } = configJsonDB.vocabularies[vocabulary];
             const graphDBClient = new GraphDBClient(url, username, password);
             const repositoryUrl = `${url}/repositories/${repositoryId}`;
             const queryExecutor = new QueryExecutor(graphDBClient, repositoryId, url, username, password, repositoryUrl);
@@ -57,9 +57,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const subject = result.subject.value;
                 const label = result.label.value;
 
+                let duplicates: boolean = false;
                 if (subject && label) {
                     if (allSubjects.has(subject)) {
-                        console.log('Duplicato trovato:', subject, 'con label:', label);
+                        duplicates = true;
                     } else {
                         allSubjects.add(subject);
 
@@ -68,15 +69,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                             const vocabulary = parts[parts.length - 2];
                             const term = parts[parts.length - 1];
 
-                            if ((vocabulary === 'Chronostratigraphy' || vocabulary === 'TectonicUnits') && term) {
+                            if (vocabularies.includes(vocabulary) && term) {
                                 allConceptMap.set(subject, label);
                             } else {
-                                console.log('Non aggiunto:', subject);
+                                duplicates = true;
                             }
                         } else {
-                            console.log('URL non valido, troppe poche parti:', subject);
+                            console.log('[GetAllConceptMap] WARN: This url not represent a vocabulary term (maybe is the root):', subject);
                         }
                     }
+                }
+                if (duplicates == true) {
+                    //console.log('[GetAllConceptMap] WARN: Some terms into vocabulary '+vocabulary+' are returned duplicated from queryLabelOfAllConcept.')
                 }
             });
         }

@@ -219,10 +219,10 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
                                             <AccordionContent bgColor='$white' ml={15}>
                                                 {Object.keys(termData.relatedTerms.OtherRelation).length > 0 ? (
                                                     Object.entries(termData.relatedTerms.OtherRelation).map(([predicate, terms]) => (
-                                                        terms.map((term, index) => (
+                                                        terms.map((term: string, index: number) => (
                                                             <Box key={`${predicate}-${index}`} mb={10} flexDirection='row' alignItems="center">
                                                                 <Text>•</Text>
-                                                                <Badge bg='#e0e0e0' variant='muted' borderRadius="$full" ml={2} mr={2}>
+                                                                <Badge bg='#e0e0e0' variant='solid' borderRadius="$full" ml={2} mr={2}>
                                                                     <BadgeText color='#7c7c7c' fontSize={12} fontWeight={'$bold'} mb={1}>
                                                                         {getTermLabel(predicate, true)}
                                                                     </BadgeText>

@@ -2,7 +2,7 @@
 
 import { Box, Button, ButtonIcon, SearchIcon, Input, InputField, Icon, Text, Link } from '@gluestack-ui/themed';
 import { Search, UserRound } from 'lucide-react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react';
 import Select, { components } from 'react-select';
 

@@ -12,7 +12,24 @@ export interface FooterProps {
 
 const Footer: React.FC<FooterProps> = ({ showReleaseGitHub, termData }) => {
     return (
-        <Box bg='#9988BA' mt={80} position='fixed' bottom={0} w={'100%'}>
+        <Box bg='#9988BA' mt={80} bottom={0} w={'100%'} style={{ position: 'fixed' as any }}>
+            <Box 
+                position="absolute"
+                bottom={5}
+                right={20}
+                padding="$2"
+                borderRadius="$sm"
+                opacity={0.9}
+                zIndex={1000}
+            >
+                <Text 
+                    fontSize="$xs"
+                    color="$white"
+                    fontWeight="$medium"
+                >
+                    v0.3.0-pilot
+                </Text>
+            </Box>
             <Box p={10} flexDirection='row' justifyContent='center' w={'75%'} m={'auto'}>
                 {showReleaseGitHub && (
                     <Box w={'33%'} alignItems='center'>

@@ -8,11 +8,15 @@ const path = require('path');
  */
 function getConfigDB(vocabulary) {
     try {
-        const configPath = path.join(process.cwd(), 'connectionDbConfig.json');
+        const configPath = path.join(process.cwd(), 'dbConfig.json');
         const configFile = fs.readFileSync(configPath, 'utf8');
         const config = JSON.parse(configFile);
 
-        return config[vocabulary];
+        if (!config.vocabularies || !config.vocabularies[vocabulary]) {
+            throw new Error(`Configuration not found for vocabulary: ${vocabulary}`);
+        }
+
+        return config.vocabularies[vocabulary];
     } catch (error) {
         console.error('Error reading configuration:', error);
         return null;
