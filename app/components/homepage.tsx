@@ -70,8 +70,7 @@ const Homepage: React.FC = () => {
             },
             description: 'The controlled vocabulary on "Lithology" includes terms used to describe the rock types and lithological characteristics of Switzerland in maps, boreholes, and other assets managed by the Swiss Geological Survey. This vocabulary is based on standardized geological classifications, adapted and complemented for detailed attributions of rock materials and their properties, considering additional internal and external links',
             topConcept: [
-                { label: "Felsen (de), Rock (en), Rocher (fr), Roccia (it)", url: '/Lithology/Rock' },
-                { label: "Brekzie (de), Breccia (en), Brèche (fr), Breccia (it)", url: '/Lithology/Breccia' },
+                { label: "Gestein (de), Rock (en), Roche (fr), occia (it)", url: '/Lithology/Rock' },
                 { label: "Material: locker (de), Material: unconsolidated (en), Matériel: non consolidé (fr), Materiale: non consolidato (it)", url: '/Lithology/MaterialUnconsolidated' },
             ],
         },
@@ -88,7 +87,12 @@ const Homepage: React.FC = () => {
                 { label: "Europäische Platte (de), European Plate (en), Plaque européenne (fr), Piatto europeano (it)", url: '/Lithostratigraphy/European_Plate' },
                 { label: "Adriatische Platte (de), Adriatic Plate (en), PPlaque adriatique (fr), Piatto adriatico (it)", url: '/Lithostratigraphy/Adriatic_Plate' },
                 { label: "Molasse-Becken (de), Molasse Basin (en), Bassin molassique (fr), Bacino molassico (it)", url: '/Lithostratigraphy/Molasse_Basin' },
-                
+                { label: "Alpines Magmatismus (de), Alpine Magmatism (en), Magmatisme alpin (fr), Magmatismo alpino (it)", url: '/Lithostratigraphy/Alpine_Magmatism' },
+                { label: "Briançonnais-Terrane (de), Briançonnais Terrane (en), Terrane briançonnais (fr), Terrane briançonnese (it)", url: '/Lithostratigraphy/Briançonnais_Terrane' },
+                { label: "Cervinia-Terrane (de), Cervinia Terrane (en), Terrane Cervinia (fr), Terrane Cervinia (it)", url: '/Lithostratigraphy/Cervinia_Terrane' },
+                { label: "Melange (de), Mélange (en), Mélange (fr), Mélange (it)", url: '/Lithostratigraphy/Mélange' },
+                { label: "Piémont-Ozean (de), Piémont Ocean (en), Océan piémontais (fr), Oceano piemontese (it)", url: '/Lithostratigraphy/Piémont_Ocean' },
+                { label: "Walliser Trog (de), Valaisan Basin (en), Bassin valaisan (fr), Bacino vallese (it)", url: '/Lithostratigraphy/Valaisan_Basin' },
             ],
         }
     ];
