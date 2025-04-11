@@ -104,27 +104,9 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
                             ))}
                         </Box>
                         <Box flexDirection='row' justifyContent='flex-end' marginTop={8} gap={20} marginBottom={20}>
-                            <Menu placement="bottom left" trigger={({ ...triggerProps }) => (
-                                <Button {...triggerProps} bgColor='red' size='sm'>
-                                    <ButtonIcon as={DownloadIcon} mr={5} />
-                                    <ButtonText>Download</ButtonText>
-                                    <ButtonIcon as={ChevronDownIcon} ml={5} />
-                                </Button>
-                            )}>
-                                <MenuItem key="json" textValue="json">
-                                    <MenuItemLabel size='sm'>Download JSON</MenuItemLabel>
-                                </MenuItem>
-                                <MenuItem key="rdf" textValue="rdf">
-                                    <MenuItemLabel size='sm'>Download RDF</MenuItemLabel>
-                                </MenuItem>
-                            </Menu>
                             <Button size="sm" variant="solid" action="primary" isDisabled={false} isFocusVisible={false} bgColor='red' rounded={5}>
                                 <ButtonIcon as={Map} mr={5} />
                                 <ButtonText fontWeight='$medium'>Go To Map View </ButtonText>
-                            </Button>
-                            <Button size="sm" variant="solid" action="primary" isDisabled={false} isFocusVisible={false} bgColor='red' rounded={5}>
-                                <ButtonIcon as={Search} />
-                                <ButtonText fontWeight='$medium'> Show all details on ShowVoc </ButtonText>
                             </Button>
                         </Box>
                         <Box w='100%'>

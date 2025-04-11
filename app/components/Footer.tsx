@@ -27,7 +27,7 @@ const Footer: React.FC<FooterProps> = ({ showReleaseGitHub, termData }) => {
                     color="$white"
                     fontWeight="$medium"
                 >
-                    v0.3.0-pilot
+                    v0.4.0-pilot
                 </Text>
             </Box>
             <Box p={10} flexDirection='row' justifyContent='center' w={'75%'} m={'auto'}>

@@ -144,7 +144,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             if (vocabulary === 'Chronostratigraphy') {
                 return 'Release: 11/09/2024 - chronostratigrafie v6';
             } else if (vocabulary === 'TectonicUnits') {
-                return 'Release: 11/09/2024 - TectonicUnits v2';
+                return 'Release: 01/04/2025 - Tectonic Units - v2.1';
             } else if (vocabulary === 'Lithostratigraphy') {
                 return 'Release: 10/12/2024 - Lithostratigraphy - V1';
             } else if (vocabulary === 'Lithology') {
