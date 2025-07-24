@@ -56,8 +56,8 @@ const Homepage: React.FC = () => {
                 { label: "Ostalpin (de), Austroalpine (en), Austroalpin (fr), Austroalpino (it)", url: '/TectonicUnits/Austroalpine' },
                 { label: "Penninikum (de), Penninic (en), Pennique (fr), Pennidico (it)", url: '/TectonicUnits/Penninic' },
                 { label: "Salassikum (de), Salassic (en), Salassique (fr), Salassico (it)", url: '/TectonicUnits/Salassic' },
-                { label: "Südalpin (de), South Alpine (en), Sudalpin (fr), Sudalpino (it)", url: '/TectonicUnits/South_Alpine' },
-                { label: "Känozoische magmatische Gesteine (de), Cenozoic magmatic rocks (en), Roches magmatiques cénozoïques (fr), Rocce magmatiche cenozoiche (it)", url: '/TectonicUnits/Cenozoicmagmaticrocks' },
+                { label: "Südalpin (de), South Alpine (en), Sudalpin (fr), Sudalpino (it)", url: '/TectonicUnits/SouthAlpine' },
+                { label: "Känozoische magmatische Gesteine (de), Cenozoic magmatic rocks (en), Roches magmatiques cénozoïques (fr), Rocce magmatiche cenozoiche (it)", url: '/TectonicUnits/CenozoicMagmaticRocks' },
             ],
         },
         {
@@ -83,15 +83,15 @@ const Homepage: React.FC = () => {
             },
             description: 'The controlled vocabulary “Lithostratigraphy” includes terms used to describe and classify the lithostratigraphic units of Switzerland in maps, boreholes, and other items maintained by the Swiss Geological Survey. This vocabulary is based on the fundamental principles of stratigraphy that allow rock layers to be studied and categorized according to their lithological characteristics, enabling correlation between different geographic areas',
             topConcept: [
-                { label: "Europäische Platte (de), European Plate (en), Plaque européenne (fr), Piatto europeano (it)", url: '/Lithostratigraphy/EuropeanPlate' },
-                { label: "Adriatische Platte (de), Adriatic Plate (en), PPlaque adriatique (fr), Piatto adriatico (it)", url: '/Lithostratigraphy/AdriaticPlate' },
-                { label: "Molasse-Becken (de), Molasse Basin (en), Bassin molassique (fr), Bacino molassico (it)", url: '/Lithostratigraphy/MolasseBasin' },
-                { label: "Alpines Magmatismus (de), Alpine Magmatism (en), Magmatisme alpin (fr), Magmatismo alpino (it)", url: '/Lithostratigraphy/AlpineMagmatism' },
+                { label: "Europäische Platte (de), European Plate (en), Plaque européenne (fr), Piatto europeano (it)", url: '/Lithostratigraphy/Europeanplate' },
+                { label: "Adriatische Platte (de), Adriatic Plate (en), PPlaque adriatique (fr), Piatto adriatico (it)", url: '/Lithostratigraphy/Adriaticplate' },
+                { label: "Molasse-Becken (de), Molasse Basin (en), Bassin molassique (fr), Bacino molassico (it)", url: '/Lithostratigraphy/Molassebasin' },
+                { label: "Alpines Magmatismus (de), Alpine Magmatism (en), Magmatisme alpin (fr), Magmatismo alpino (it)", url: '/Lithostratigraphy/Alpinemagmatism' },
                 { label: "Briançonnais-Terrane (de), Briançonnais Terrane (en), Terrane briançonnais (fr), Terrane briançonnese (it)", url: '/Lithostratigraphy/Brianconnaisterrane' },
-                { label: "Cervinia-Terrane (de), Cervinia Terrane (en), Terrane Cervinia (fr), Terrane Cervinia (it)", url: '/Lithostratigraphy/CerviniaTerrane' },
+                { label: "Cervinia-Terrane (de), Cervinia Terrane (en), Terrane Cervinia (fr), Terrane Cervinia (it)", url: '/Lithostratigraphy/Cerviniaterrane' },
                 { label: "Melange (de), Mélange (en), Mélange (fr), Mélange (it)", url: '/Lithostratigraphy/Melange' },
                 { label: "Piémont-Ozean (de), Piémont Ocean (en), Océan piémontais (fr), Oceano piemontese (it)", url: '/Lithostratigraphy/Piemontocean' },
-                { label: "Walliser Trog (de), Valaisan Basin (en), Bassin valaisan (fr), Bacino vallese (it)", url: '/Lithostratigraphy/ValaisanBasin' },
+                { label: "Walliser Trog (de), Valaisan Basin (en), Bassin valaisan (fr), Bacino vallese (it)", url: '/Lithostratigraphy/Valaisanbasin' },
             ],
         }
     ];
