@@ -32,8 +32,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const allConceptMap = new Map<string, string>();
 
     try {
+        // Get configuration from environment variables (required)
+        const url = process.env.GRAPHDB_BASE_URL;
+        const username = process.env.GRAPHDB_USERNAME || '';
+        const password = process.env.GRAPHDB_PASSWORD || '';
+        
+        if (!url) {
+            return res.status(500).json({ error: 'GRAPHDB_BASE_URL environment variable is required' });
+        }
+
         for (const vocabulary of vocabularies) {
-            const { url, username, password, repositoryId } = configJsonDB.vocabularies[vocabulary];
+            // Get repository ID from specific environment variables
+            let repositoryId;
+            switch (vocabulary) {
+                case 'Chronostratigraphy':
+                    repositoryId = process.env.CHRONOSTRATIGRAPHY_REPO_ID;
+                    break;
+                case 'TectonicUnits':
+                    repositoryId = process.env.TECTONICUNITS_REPO_ID;
+                    break;
+                case 'Lithostratigraphy':
+                    repositoryId = process.env.LITHOSTRATIGRAPHY_REPO_ID;
+                    break;
+                case 'Lithology':
+                    repositoryId = process.env.LITHOLOGY_REPO_ID;
+                    break;
+            }
+            
+            if (!repositoryId) {
+                return res.status(500).json({ error: `${vocabulary.toUpperCase()}_REPO_ID environment variable is required` });
+            }
+            
             const graphDBClient = new GraphDBClient(url, username, password);
             const repositoryUrl = `${url}/repositories/${repositoryId}`;
             const queryExecutor = new QueryExecutor(graphDBClient, repositoryId, url, username, password, repositoryUrl);

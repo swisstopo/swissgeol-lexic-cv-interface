@@ -76,7 +76,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(404).json({ message: `Configuration not found for vocabulary: ${vocabulary}` });
     }
 
-    const { url, username, password } = configJsonDB.vocabularies[vocabulary];
+    // Get configuration from environment variables (required)
+    const url = process.env.GRAPHDB_BASE_URL;
+    const username = process.env.GRAPHDB_USERNAME || '';
+    const password = process.env.GRAPHDB_PASSWORD || '';
+    
+    if (!url) {
+        return res.status(500).json({ error: 'GRAPHDB_BASE_URL environment variable is required' });
+    }
+    
+    // Get repository ID from specific environment variables
+    let repositoryId;
+    switch (vocabulary) {
+        case 'Chronostratigraphy':
+            repositoryId = process.env.CHRONOSTRATIGRAPHY_REPO_ID;
+            break;
+        case 'TectonicUnits':
+            repositoryId = process.env.TECTONICUNITS_REPO_ID;
+            break;
+        case 'Lithostratigraphy':
+            repositoryId = process.env.LITHOSTRATIGRAPHY_REPO_ID;
+            break;
+        case 'Lithology':
+            repositoryId = process.env.LITHOLOGY_REPO_ID;
+            break;
+    }
+    
+    if (!repositoryId) {
+        return res.status(500).json({ error: `${vocabulary.toUpperCase()}_REPO_ID environment variable is required` });
+    }
 
     console.log(`Attempting to connect to GraphDB at ${url} with user: ${username}`);
     try {
@@ -97,7 +125,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(404).json({ message: 'No other vocabulary found' });
         }
 
-        const { url: otherUrl, username: otherUsername, password: otherPassword } = configJsonDB.vocabularies[otherVocabulary];
+        // Use same environment variables for other vocabulary
+        const otherUrl = url; // Same GraphDB instance
+        const otherUsername = username;
+        const otherPassword = password;
         const graphDBClientOtherVocabulary = new GraphDBClient(otherUrl, otherUsername, otherPassword);
 
         try {
@@ -117,12 +148,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
          * - Creates the URL for the GraphDB repository using the base URL and the repository ID extracted from the configuration.
          * - Initializes a `QueryExecutor` instance with the GraphDB client. This instance will be used to execute SPARQL queries.
          */
-        const repositoryId = configJsonDB.vocabularies[vocabulary].repositoryId;
+        // Use the repositoryId already determined above with env override
         const repositoryUrl = `${url}/repositories/${repositoryId}`;
-        const repositoryIdOtherVocabolary = configJsonDB.vocabularies[otherVocabulary].repositoryId;
-        const repositoryUrlOherVocabolary = `${otherUrl}/repositories/${repositoryIdOtherVocabolary}`;
+        
+        // Get repository ID for other vocabulary from environment variables
+        let repositoryIdOtherVocabulary;
+        switch (otherVocabulary) {
+            case 'Chronostratigraphy':
+                repositoryIdOtherVocabulary = process.env.CHRONOSTRATIGRAPHY_REPO_ID;
+                break;
+            case 'TectonicUnits':
+                repositoryIdOtherVocabulary = process.env.TECTONICUNITS_REPO_ID;
+                break;
+            case 'Lithostratigraphy':
+                repositoryIdOtherVocabulary = process.env.LITHOSTRATIGRAPHY_REPO_ID;
+                break;
+            case 'Lithology':
+                repositoryIdOtherVocabulary = process.env.LITHOLOGY_REPO_ID;
+                break;
+        }
+        
+        if (!repositoryIdOtherVocabulary) {
+            return res.status(500).json({ error: `${otherVocabulary.toUpperCase()}_REPO_ID environment variable is required` });
+        }
+        
+        const repositoryUrlOtherVocabulary = `${otherUrl}/repositories/${repositoryIdOtherVocabulary}`;
         const queryExecutor = new QueryExecutor(graphDBClient, repositoryId, url, username, password, repositoryUrl);
-        const queryExecutorOtherVocabolary = new QueryExecutor(graphDBClientOtherVocabulary, repositoryIdOtherVocabolary, otherUrl, otherUsername, otherPassword, repositoryUrlOherVocabolary);
+        const queryExecutorOtherVocabulary = new QueryExecutor(graphDBClientOtherVocabulary, repositoryIdOtherVocabulary, otherUrl, otherUsername, otherPassword, repositoryUrlOtherVocabulary);
         /**
          * Retrieves the query configuration for the specified vocabulary using `getQueryConfig`.
          * Prepares the SPARQL queries for term data and breadcrumb path data by replacing placeholders in the query templates with the actual term.
@@ -166,7 +218,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             console.log('Breadcrumbs query result:', breadcrumbResult);
             const broaderTerms: string[] = [];
             const prefLabelOfAllConcept: LabelQueryResult[] = await queryExecutor.executeSparqlQuery(queryLabelOfAllConceptCronos); //for per iterare su tutti i vocabolari, segnalazione da inserire in pratiche, 
-            const prefLabelOfAllConceptOtherVocabolary: LabelQueryResult[] = await queryExecutorOtherVocabolary.executeSparqlQuery(queryLabelOfAllConceptTecto);
+            const prefLabelOfAllConceptOtherVocabulary: LabelQueryResult[] = await queryExecutorOtherVocabulary.executeSparqlQuery(queryLabelOfAllConceptTecto);
 
             const allConceptMap = new Map<string, string>();
 
@@ -205,7 +257,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 
             processResults(prefLabelOfAllConcept);
-            processResults(prefLabelOfAllConceptOtherVocabolary);
+            processResults(prefLabelOfAllConceptOtherVocabulary);
 
             /**
              * Initializes a `TermData` object to store the term details.
@@ -340,5 +392,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
-
-

@@ -2,52 +2,52 @@
     "vocabularies": {
         "Chronostratigraphy": {
             "id": "Chronostratigraphy",
-            "url": "https://dev-graphdb.swissgeol.ch",
-            "repositoryId": "chronostratigraphy_swisstopo_public_core",
+            "url": "",
+            "repositoryId": "",
             "username": "",
             "password": ""
         },
         "TectonicUnits": {
             "id": "TectonicUnits",
-            "url": "https://dev-graphdb.swissgeol.ch",
-            "repositoryId": "tektonik_swisstopo_public_core",
+            "url": "",
+            "repositoryId": "",
             "username": "",
             "password": ""
         },
         "Lithostratigraphy": {
             "id": "Lithostratigraphy",
-            "url": "https://dev-graphdb.swissgeol.ch",
-            "repositoryId": "lithostratigraphy_swisstopo_public_core",
+            "url": "",
+            "repositoryId": "",
             "username": "",
             "password": ""
         },
         "Lithology": {
             "id": "Lithology",
-            "url": "https://dev-graphdb.swissgeol.ch",
-            "repositoryId": "lithology_swisstopo_public_core",
+            "url": "",
+            "repositoryId": "",
             "username": "",
             "password": ""
         }
     },
     "queries": {
         "ChronostratigraphyQuery": {
-            "queryBreadcrumbs": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <https://dev-lexic.swissgeol.ch/Chronostratigraphy/>\n\nSELECT ?narrowerConcept\nWHERE {\n  ex:${term} skos:broader+ ?narrowerConcept.\n}",
-            "queryVocabolo": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <https://dev-lexic.swissgeol.ch/Chronostratigraphy/>\n\nSELECT ?predicate ?object\nWHERE {\n  ex:${term} ?predicate ?object .\n}",
+            "queryBreadcrumbs": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <{{PREFIX_BASE_URL}}/Chronostratigraphy/>\n\nSELECT ?narrowerConcept\nWHERE {\n  ex:${term} skos:broader+ ?narrowerConcept.\n}",
+            "queryVocabolo": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <{{PREFIX_BASE_URL}}/Chronostratigraphy/>\n\nSELECT ?predicate ?object\nWHERE {\n  ex:${term} ?predicate ?object .\n}",
             "prefLabelOfAllConcept": "SELECT DISTINCT ?subject ?label\nWHERE {\n  GRAPH ?graph {\n ?subject ?predicate ?label .\n FILTER(CONTAINS(LCASE(STR(?predicate)), \"label\"))\n FILTER(LANGMATCHES(LANG(?label), \"en\"))\n }\n}"
         },
         "TectonicUnitsQuery": {
-            "queryBreadcrumbs": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <https://dev-lexic.swissgeol.ch/TectonicUnits/>\n\nSELECT ?narrowerConcept\nWHERE {\n  ex:${term} skos:broader+ ?narrowerConcept.\n}",
-            "queryVocabolo": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <https://dev-lexic.swissgeol.ch/TectonicUnits/>\n\nSELECT ?predicate ?object\nWHERE {\n  ex:${term} ?predicate ?object .\n}",
+            "queryBreadcrumbs": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <{{PREFIX_BASE_URL}}/TectonicUnits/>\n\nSELECT ?narrowerConcept\nWHERE {\n  ex:${term} skos:broader+ ?narrowerConcept.\n}",
+            "queryVocabolo": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <{{PREFIX_BASE_URL}}/TectonicUnits/>\n\nSELECT ?predicate ?object\nWHERE {\n  ex:${term} ?predicate ?object .\n}",
             "prefLabelOfAllConcept": "SELECT DISTINCT ?subject ?label\nWHERE {\n  GRAPH ?graph {\n ?subject ?predicate ?label .\n FILTER(CONTAINS(LCASE(STR(?predicate)), \"label\"))\n FILTER(LANGMATCHES(LANG(?label), \"en\"))\n }\n}"
         },
         "LithostratigraphyQuery": {
-            "queryBreadcrumbs": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <https://dev-lexic.swissgeol.ch/Lithostratigraphy/>\n\nSELECT ?narrowerConcept\nWHERE {\n  ex:${term} skos:broader+ ?narrowerConcept.\n}",
-            "queryVocabolo": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <https://dev-lexic.swissgeol.ch/Lithostratigraphy/>\n\nSELECT ?predicate ?object\nWHERE {\n  ex:${term} ?predicate ?object .\n}",
+            "queryBreadcrumbs": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <{{PREFIX_BASE_URL}}/Lithostratigraphy/>\n\nSELECT ?narrowerConcept\nWHERE {\n  ex:${term} skos:broader+ ?narrowerConcept.\n}",
+            "queryVocabolo": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <{{PREFIX_BASE_URL}}/Lithostratigraphy/>\n\nSELECT ?predicate ?object\nWHERE {\n  ex:${term} ?predicate ?object .\n}",
             "prefLabelOfAllConcept": "SELECT DISTINCT ?subject ?label\nWHERE {\n  GRAPH ?graph {\n ?subject ?predicate ?label .\n FILTER(CONTAINS(LCASE(STR(?predicate)), \"label\"))\n FILTER(LANGMATCHES(LANG(?label), \"en\"))\n }\n}"
         },
         "LithologyQuery": {
-            "queryBreadcrumbs": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <https://dev-lexic.swissgeol.ch/Lithology/>\n\nSELECT ?narrowerConcept\nWHERE {\n  ex:${term} skos:broader+ ?narrowerConcept.\n}",
-            "queryVocabolo": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <https://dev-lexic.swissgeol.ch/Lithology/>\n\nSELECT ?predicate ?object\nWHERE {\n  ex:${term} ?predicate ?object .\n}",
+            "queryBreadcrumbs": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <{{PREFIX_BASE_URL}}/Lithology/>\n\nSELECT ?narrowerConcept\nWHERE {\n  ex:${term} skos:broader+ ?narrowerConcept.\n}",
+            "queryVocabolo": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <{{PREFIX_BASE_URL}}/Lithology/>\n\nSELECT ?predicate ?object\nWHERE {\n  ex:${term} ?predicate ?object .\n}",
             "prefLabelOfAllConcept": "SELECT DISTINCT ?subject ?label\nWHERE {\n  GRAPH ?graph {\n ?subject ?predicate ?label .\n FILTER(CONTAINS(LCASE(STR(?predicate)), \"label\"))\n FILTER(LANGMATCHES(LANG(?label), \"en\"))\n }\n}"
         },
         "labelLanguageOrder": [
