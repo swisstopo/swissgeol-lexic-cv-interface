@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import VocabolaryTerm from '@/app/components/VocabolaryTerm';
 import { BreadCrumbsData, TermData } from '../../app/models';
+import { resolveVocabularyVersion } from '@/app/Utils/resolveVocabularyVersion';
 
 interface ErrorType {
     message: string;
@@ -43,9 +44,13 @@ const TermPage: React.FC = () => {
                 const data = await response.json();
                 console.log('Received data:', data);
 
+                // Base term data
                 setTermData(data.termData);
                 setBreadCrumbsData(data.breadCrumbsData || null);
                 setAllConceptMap(new Map(Object.entries(data.allConceptMap)));
+
+                const ver = await resolveVocabularyVersion('Chronostratigraphy');
+                setTermData((prev) => prev ? { ...prev, version: ver } : prev);
             } catch (error) {
                 console.error('Error fetching term data:', error);
                 setError({ message: error instanceof Error ? error.message : 'An unknown error occurred' });

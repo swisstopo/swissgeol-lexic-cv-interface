@@ -8,18 +8,18 @@ services:
       - "3050:3000"
     environment:
       # GraphDB Connection Configuration
-      GRAPHDB_BASE_URL: "https://graphdb.voc.dev.epsilon-italia.it"
+      GRAPHDB_BASE_URL: "https://dev-graphdb.swissgeol.ch"      
       GRAPHDB_USERNAME: ""
       GRAPHDB_PASSWORD: ""
       
       # Repository IDs per vocabulary
-      CHRONOSTRATIGRAPHY_REPO_ID: "Chronostratigraphy_test_2_core"
-      TECTONICUNITS_REPO_ID: "TectonicUnits_test_2_core"
-      LITHOSTRATIGRAPHY_REPO_ID: "Lithostratigraphy_test_2_core"
-      LITHOLOGY_REPO_ID: "Lithology_test_2_core"
+      CHRONOSTRATIGRAPHY_REPO_ID: "chronostratigraphy_swisstopo_public_core"
+      TECTONICUNITS_REPO_ID: "tektonik_swisstopo_public_core"
+      LITHOSTRATIGRAPHY_REPO_ID: "lithostratigraphy_swisstopo_public_core"
+      LITHOLOGY_REPO_ID: "lithology_swisstopo_public_core"
       
       # Vocabulary Prefix Base URL (for SPARQL queries)
-      VOCABULARY_PREFIX_URL: "https://lexic.swisstopo.demo.epsilon-italia.it"
+      VOCABULARY_PREFIX_URL: "https://dev-lexic.swissgeol.ch"
 
       GITHUB_OWNER: swisstopo
 

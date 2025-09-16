@@ -63,7 +63,15 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
                     <Box width='100%' paddingRight={15} paddingLeft={15} marginRight='auto' marginLeft='auto' w='70%' m='auto' mt='2%'>
                         <Box flexDirection='row' gap={1} /* mb={5} */ alignItems='baseline'>
                             <Text fontSize={20} color='$secondary300' fontWeight={'$semibold'}>{termData.vocabulary}</Text>
-                            <Text fontSize={10} color='$secondary300' ml={40} fontWeight={'$semibold'}>[{termData.version}]</Text>
+                            {termData.version && (
+                                /^https?:\/\//.test(termData.version) ? (
+                                    <Link href={termData.version} ml={40}>
+                                        <LinkText fontSize={10} color='$secondary300' fontWeight={'$semibold'}>[{termData.version}]</LinkText>
+                                    </Link>
+                                ) : (
+                                    <Text fontSize={10} color='$secondary300' ml={40} fontWeight={'$semibold'}>[{termData.version}]</Text>
+                                )
+                            )}
                         </Box>
                         <Box mb={4} flexDirection='row' alignItems='baseline'>
                             {Object.entries(termData.languages).map(([lang, translation]) => (

@@ -27,7 +27,7 @@ const Footer: React.FC<FooterProps> = ({ showReleaseGitHub, termData }) => {
                     color="$white"
                     fontWeight="$medium"
                 >
-                    v0.4.2-pilot
+                    v0.4.3-pilot
                 </Text>
             </Box>
             <Box p={10} flexDirection='row' justifyContent='center' w={'75%'} m={'auto'}>
@@ -35,7 +35,13 @@ const Footer: React.FC<FooterProps> = ({ showReleaseGitHub, termData }) => {
                     <Box w={'33%'} alignItems='center'>
                         <Box flexDirection='row' gap={10}>
                             <Icon as={Github} width={20} height={20} fill='white' />
-                            <Text fontSize={16} color='white' /* ref="https://lexic.swissgeol.ch/" */>{termData?.version}</Text>
+                            {termData?.version && /^https?:\/\//.test(termData.version) ? (
+                                <Link href={termData.version}>
+                                    <Text fontSize={16} color='white'>{termData.version}</Text>
+                                </Link>
+                            ) : (
+                                <Text fontSize={16} color='white'>{termData?.version}</Text>
+                            )}
                         </Box>
                     </Box>
                 )}
