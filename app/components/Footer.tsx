@@ -1,57 +1,82 @@
 'use client';
 
-import { Box, Button, ButtonIcon, SearchIcon, Input, InputField, Icon, Text, Divider, Link } from '@gluestack-ui/themed';
-import { Github } from 'lucide-react';
+import { Box, Text, Divider, Link, Image } from '@gluestack-ui/themed';
 import React from 'react';
-import { TermData } from '../models/termDataInterface';
 
-export interface FooterProps {
-    showReleaseGitHub: boolean;
-    termData: TermData | null;
-}
-
-const Footer: React.FC<FooterProps> = ({ showReleaseGitHub, termData }) => {
+const Footer: React.FC = () => {
     return (
-        <Box bg='#9988BA' mt={80} bottom={0} w={'100%'} style={{ position: 'fixed' as any }}>
-            <Box 
-                position="absolute"
-                bottom={5}
-                right={20}
-                padding="$2"
-                borderRadius="$sm"
-                opacity={0.9}
-                zIndex={1000}
+        <Box
+            bg="#201C34"
+            h={156}
+            w="100%"
+            p={48}
+        >
+            <Box
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="space-between"
+                h="100%"
             >
-                <Text 
-                    fontSize="$xs"
-                    color="$white"
-                    fontWeight="$medium"
+                <Box
+                    flexDirection="row"
+                    alignItems="center"
+                    gap={6}
                 >
-                    v0.4.3-pilot
-                </Text>
-            </Box>
-            <Box p={10} flexDirection='row' justifyContent='center' w={'75%'} m={'auto'}>
-                {showReleaseGitHub && (
-                    <Box w={'33%'} alignItems='center'>
-                        <Box flexDirection='row' gap={10}>
-                            <Icon as={Github} width={20} height={20} fill='white' />
-                            {termData?.version && /^https?:\/\//.test(termData.version) ? (
-                                <Link href={termData.version}>
-                                    <Text fontSize={16} color='white'>{termData.version}</Text>
-                                </Link>
-                            ) : (
-                                <Text fontSize={16} color='white'>{termData?.version}</Text>
-                            )}
+                    <Link href="/About">
+                        <Box
+                            h={46}
+                            pl={24}
+                            pr={24}
+                            justifyContent="center"
+                        >
+                            <Text
+                                color="#FFFFFF"
+                                fontSize={'0.875em' as any}
+                                lineHeight={20}
+                                letterSpacing={0.25}
+                                fontWeight="$medium"
+                                textAlign="center"
+                            >
+                                About
+                            </Text>
                         </Box>
-                    </Box>
-                )}
-                <Box w={'33%'} alignItems='center'>
-                    <Link href='/About'>
-                        <Text color='white' ml={10}>About lexic.swissgeol.ch</Text>
+                    </Link>
+                    <Divider
+                        orientation="vertical"
+                        h={18}
+                        bg="#FFFFFF33"
+                    />
+                    <Link href="mailto:swissgeol@swisstopo.ch">
+                        <Box
+                            h={46}
+                            pl={24}
+                            pr={24}
+                            justifyContent="center"
+                        >
+                            <Text
+                                color="#FFFFFF"
+                                fontSize={'0.875em' as any}
+                                lineHeight={20}
+                                letterSpacing={0.25}
+                                fontWeight="$medium"
+                                textAlign="center"
+                            >
+                                Contact
+                            </Text>
+                        </Box>
                     </Link>
                 </Box>
-                <Box w={'33%'} alignItems='center'>
-                    <Link href="mailto:swissgeol@swisstopo.ch"><Text color='$white' ml={10}>Contact</Text></Link>
+                {/* Destra (logo CH) */}
+                <Box alignItems="center" justifyContent="center" p={0} m={0} pr={16} w={256} h={60}>
+                    <Image
+                        alt="Logo Confederazione Svizzera"
+                        source={{
+                            uri: '/logo_svizzera.svg',
+                        }}
+                        w={256}
+                        resizeMode="center"
+                        opacity={1}
+                    />
                 </Box>
             </Box>
         </Box>

@@ -8,7 +8,7 @@ const AboutUs: React.FC = () => {
     const title = 'About lexic.swissgeol.ch - Controlled Vocabularies Interface';
 
     return (
-        <RootLayout title={title} showReleaseGitHub={false} termData={null}>
+        <RootLayout title={title}>
             <Box
                 ml={8}
                 mt={8}

@@ -1,8 +1,12 @@
 'use client';
 
-import React from 'react';
-import { Box, VStack, HStack, Text, Image, Link } from '@gluestack-ui/themed';
+import React, { useMemo, useRef } from 'react';
+import { Box, VStack, Text } from '@gluestack-ui/themed';
 import RootLayout from '../layout';
+import { useMainWidth, calculateFromMainWidth } from '../utils/heightUtils';
+
+import CardHome from './CardHome';
+import HeroSection from './HeroSection';
 
 interface Translation {
     [key: string]: string;
@@ -22,7 +26,24 @@ interface Vocabulary {
     topConcept: TopConcept[];
 }
 
+const slugify = (value: string) =>
+    value
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
+const ANCHOR_OFFSET = 120;
+
 const Homepage: React.FC = () => {
+    const mainWidth = useMainWidth();
+    const vocabulariesRef = useRef<HTMLDivElement>(null);
+
+    const handleScrollToVocabularies = () => {
+        vocabulariesRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
     const title = 'Homepage - Controlled Vocabularies Interface';
     const vocabularies: Vocabulary[] = [
         {
@@ -101,75 +122,57 @@ const Homepage: React.FC = () => {
         'DE': 'GERMANIA.jpg',
         'IT': 'italia.png',
         'FR': 'Flag_of_France_(1794–1815,_1830–1974).svg.png'
-    };
+    } as Record<FlagCode, string>;
 
-    const flags: FlagCode[] = ['EN', 'DE', 'IT', 'FR'];
+    const sections = useMemo(
+        () =>
+            vocabularies.map((vocab) => ({
+                ...vocab,
+                sectionId: slugify(vocab.name),
+            })),
+        [vocabularies]
+    );
 
     return (
-        <RootLayout title={title} showReleaseGitHub={false} termData={null}>
-            <Box m={'auto'} mb={50}>
-                <Box w='77%' mt={40} m={'auto'}>
-                    {/* <Text fontSize="$3xl" fontWeight="$bold">lexic.swissgeol.ch</Text> */}
-                    <Text fontSize="$xl" /* textAlign="center" */><Text fontSize="$3xl" bold mb={0}>Welcome to lexic.swissgeol.ch</Text>,{"\n"}the controlled vocabulary platform for geology developed by swisstopo.</Text>
-                </Box>
-                < VStack space="xl" p="$6" alignItems="center" >
-                    <Box bg="$backgroundLight100" p="$4" borderRadius="$md" width="80%">
-                        <Text /* textAlign="center" */>
-                            <Text bold fontSize={20}>Explore Our Features:</Text>{"\n\n"}
-                            {"  • "}<Text bold>User-Friendly Interface:</Text> Discover geological vocabularies and terminology through our intuitive landing page and main user interface.{"\n"}
-                            {"  • "}<Text bold>Web Map Query Tool:</Text> Use our data and build queries with the integrated vocabularies for enhanced research.{"\n"}
-                            {"  • "}<Text bold>Vocabulary Engineering Environment:</Text> Develop, manage, and publish vocabularies or ontologies using our advanced tools.{"\n\n"}
-                            Currently, lexic.swissgeol.ch is in its pilot phase. We are actively developing and refining features, and more vocabularies are planned for publication. Your feedback, suggestions, and ideas are most welcome.{"\n"}
-                            Please do not hesitate to contact us at <Link href="mailto:swissgeol@swisstopo.ch"><Text color='$info900'> swissgeol@swisstopo.ch</Text></Link>.
-                        </Text>
+        <RootLayout title={title}>
+            <HeroSection onExploreClick={handleScrollToVocabularies} />
+            <Box w={'100%'} m={'auto'} mb={calculateFromMainWidth(130, mainWidth) as any}>
+                <Box
+                    w={'100%'}
+                    ref={vocabulariesRef as any}
+                    pl={'8.7%'}
+                    pr={'8.7%'}
+                    justifyContent='space-between'
+                    flexDirection='row'
+                >
+                    <Box gap={calculateFromMainWidth(64, mainWidth) as any}>
+                        <Text fontSize={'2em' as any} fontWeight={600} lineHeight={40} color='#1C2834' letterSpacing={-0.5} verticalAlign='middle'>Vocabularies</Text>
+                        <VStack gap={calculateFromMainWidth(40, mainWidth) as any}>
+                            {sections.map((vocab, index) => (
+                                <Box
+                                    key={`vocab-${index}`}
+                                    id={vocab.sectionId}
+                                    sx={{ scrollMarginTop: `${ANCHOR_OFFSET}px` } as any}
+                                >
+                                    <CardHome
+                                        title={vocab.name}
+                                        description={vocab.description}
+                                        englishFlagSrc={flagImages['EN']}
+                                        translations={{
+                                            DE: vocab.translations['DE'],
+                                            FR: vocab.translations['FR'],
+                                            IT: vocab.translations['IT'],
+                                        }}
+                                        topConcepts={vocab.topConcept}
+                                    />
+                                </Box>
+                            ))}
+                        </VStack>
                     </Box>
-
-                    <Text fontSize="$xl" fontWeight="$semibold">Vocabularies</Text>
-
-                    {vocabularies.map((vocab, index) => (
-                        <Box key={`vocab-${index}`} width="80%" bg="$white" p="$4" borderRadius="$md" borderWidth={1} borderColor="$borderLight200">
-                            <HStack justifyContent="space-between" alignItems="center" mb={20}>
-                                <Text fontSize={25} fontWeight="$semibold">{vocab.name}</Text>
-                                <HStack space="xs" alignItems="center">
-                                    {flags.map((flag, flagIndex) => (
-                                        <HStack key={`flag-${flagIndex}`} space="sm" alignItems="center">
-                                            <Box
-                                                rounded='$full'
-                                                width={20}
-                                                height={20}
-                                                bgColor='$orange100'
-                                                overflow='hidden'
-                                                mr={7}
-                                            >
-                                                <img
-                                                    id="imgLogo"
-                                                    height='100%'
-                                                    src={flagImages[flag]}
-                                                    alt={`Flag of ${flag}`}
-                                                />
-                                            </Box>
-                                            <Text fontSize={15} mr={10}>{vocab.translations[flag]}</Text>
-                                        </HStack>
-                                    ))}
-                                </HStack>
-                            </HStack>
-                            <Text mt={10}>
-                                {vocab.description}
-                            </Text>
-                            <Text mt={20} mb={5} fontWeight="$semibold">Top Concepts</Text>
-                            <VStack space="xs" ml="$4">
-                                {vocab.topConcept.map((concept, conceptIndex) => (
-                                    <Link key={`concept-${conceptIndex}`} href={concept.url}>
-                                        <Text fontSize={13} mb={3}>• <span style={{ textDecoration: 'underline' }}>{concept.label}</span></Text>
-                                    </Link>
-                                ))}
-                            </VStack>
-                        </Box>
-                    ))}
-                </VStack >
+                </Box>
             </Box>
-
         </RootLayout>
     );
-}
+};
+
 export default Homepage;

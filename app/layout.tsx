@@ -1,22 +1,24 @@
 import './globals.css';
-import { Roboto } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import { Providers } from './providers';
 import StyledJsxRegistry from './registry';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import { TermData } from './models/termDataInterface';
 
-const inter = Roboto({
+
+/* const inter = Roboto({
   subsets: ['latin'],
   weight: '100'
+}); */
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900']
 });
 
 export default function RootLayout({
-  children, title, showReleaseGitHub, termData
+  children, title
 }: {
   title: string;
-  showReleaseGitHub: boolean;
-  termData: TermData | null;
   children: React.ReactNode;
 }) {
   return (
@@ -33,8 +35,8 @@ export default function RootLayout({
         <Providers>
           <StyledJsxRegistry>
             <Navbar />
-            <main>{children}</main>
-            <Footer showReleaseGitHub={showReleaseGitHub} termData={termData} />
+            <main style={{ width: '1496px', margin: '0 auto' }}>{children}</main>
+            <Footer />
           </StyledJsxRegistry>
         </Providers>
       </body>
