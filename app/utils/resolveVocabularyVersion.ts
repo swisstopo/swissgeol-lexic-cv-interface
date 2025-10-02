@@ -1,4 +1,4 @@
-import { fetchLatestReleaseLine } from '@/app/Utils/githubRelease';
+import { fetchLatestReleaseLine } from '@/app/utils/githubRelease';
 
 export async function resolveVocabularyVersion(vocabulary: 'Chronostratigraphy' | 'TectonicUnits' | 'Lithostratigraphy' | 'Lithology'): Promise<string> {
   try {
