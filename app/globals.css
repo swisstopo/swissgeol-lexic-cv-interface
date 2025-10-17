@@ -99,7 +99,14 @@ a {
   }
 }
 
-/* Media queries per la larghezza del main */
+/* Lock document scroll when modal is open */
+html.no-scroll,
+body.no-scroll {
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
+
+/* Media queries for main width */
 @media (min-width: 1920px) {
   main {
     width: 1496px !important;

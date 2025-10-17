@@ -4,6 +4,7 @@ import { Providers } from './providers';
 import StyledJsxRegistry from './registry';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import ConsentProvider from './components/ConsentProvider';
 
 
 /* const inter = Roboto({
@@ -33,11 +34,13 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <Providers>
-          <StyledJsxRegistry>
-            <Navbar />
-            <main style={{ width: '1496px', margin: '0 auto' }}>{children}</main>
-            <Footer />
-          </StyledJsxRegistry>
+          <ConsentProvider>
+            <StyledJsxRegistry>
+              <Navbar />
+              <main style={{ width: '1496px', margin: '0 auto' }}>{children}</main>
+              <Footer />
+            </StyledJsxRegistry>
+          </ConsentProvider>
         </Providers>
       </body>
     </html>

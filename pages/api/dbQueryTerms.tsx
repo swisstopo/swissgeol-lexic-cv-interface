@@ -35,13 +35,43 @@ interface LabelQueryResult {
     };
 }
 /**
+ * Validates and sanitizes the term parameter to prevent SPARQL injection.
+ *
+ * @param term - The term parameter to validate
+ * @returns Object with isValid flag and sanitized term or error message
+ */
+function validateAndSanitizeTerm(term: string): { isValid: boolean; sanitizedTerm?: string; error?: string } {
+    // Controllo lunghezza massima (100 caratteri per prevenire query troppo lunghe)
+    if (term.length > 100) {
+        return { isValid: false, error: 'Term parameter too long (max 100 characters)' };
+    }
+
+    // Controllo lunghezza minima (almeno 1 carattere)
+    if (term.length === 0) {
+        return { isValid: false, error: 'Term parameter cannot be empty' };
+    }
+
+    // Regex per caratteri sicuri: solo lettere, numeri, punti, trattini, underscore
+    const allowedPattern = /^[a-zA-Z0-9._-]+$/;
+
+    if (!allowedPattern.test(term)) {
+        return { isValid: false, error: 'Term parameter contains invalid characters (only letters, numbers, dots, hyphens, and underscores allowed)' };
+    }
+
+    // Sanificazione aggiuntiva: rimuovi eventuali caratteri potenzialmente pericolosi
+    const sanitized = term.replace(/[<>'";&|]/g, '');
+
+    return { isValid: true, sanitizedTerm: sanitized };
+}
+
+/**
  * API route handler for fetching term and breadcrumb data from a GraphDB repository.
- * 
- * This handler processes GET requests containing a `term` and a `vocabulary` parameter. It uses these parameters 
- * to query a GraphDB repository and retrieve information about the specified term and its related breadcrumbs 
- * within the context of the given vocabulary. The data fetched includes term definitions, related terms 
+ *
+ * This handler processes GET requests containing a `term` and a `vocabulary` parameter. It uses these parameters
+ * to query a GraphDB repository and retrieve information about the specified term and its related breadcrumbs
+ * within the context of the given vocabulary. The data fetched includes term definitions, related terms
  * (broader, narrower, and other relations), and breadcrumb navigation data.
- * 
+ *
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { term, vocabulary } = req.query;
@@ -54,8 +84,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (typeof vocabulary !== 'string') {
         return res.status(400).json({ error: 'Invalid vocabulary parameter' });
     }
-    console.log('api: term: ', term)
-    console.log('api: vocabulary: ', vocabulary)
+
+    // Validazione e sanificazione del parametro term per prevenire SPARQL injection
+    const validation = validateAndSanitizeTerm(term);
+    if (!validation.isValid) {
+        return res.status(400).json({ error: validation.error });
+    }
+
+    const sanitizedTerm = validation.sanitizedTerm!;
+    
     /**
      * Reads the `connectionDbConfig.json` configuration file to retrieve the connection details for the specified vocabulary.
      * Parses the JSON content of the file to extract the configuration for the specified vocabulary.
@@ -106,7 +143,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(500).json({ error: `${vocabulary.toUpperCase()}_REPO_ID environment variable is required` });
     }
 
-    console.log(`Attempting to connect to GraphDB at ${url} with user: ${username}`);
+    
     try {
         /** 
          * Establishes a connection to the GraphDB instance using the extracted configuration details.
@@ -133,10 +170,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         try {
             await graphDBClient.getRepositoryIds();
-            console.log('GraphDB connection successful for:', vocabulary);
 
             await graphDBClientOtherVocabulary.getRepositoryIds();
-            console.log('GraphDB connection successful for:', otherVocabulary);
         } catch (error) {
             console.error('GraphDB connection failed:', error);
             return res.status(500).json({ error: 'Failed to connect to GraphDB' });
@@ -177,12 +212,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const queryExecutorOtherVocabulary = new QueryExecutor(graphDBClientOtherVocabulary, repositoryIdOtherVocabulary, otherUrl, otherUsername, otherPassword, repositoryUrlOtherVocabulary);
         /**
          * Retrieves the query configuration for the specified vocabulary using `getQueryConfig`.
-         * Prepares the SPARQL queries for term data and breadcrumb path data by replacing placeholders in the query templates with the actual term.
+         * Prepares the SPARQL queries for term data and breadcrumb path data by replacing placeholders in the query templates with the sanitized term.
          */
         const queryConfig = getQueryConfig(vocabulary);
-        const queryVocabolo = queryConfig.queryVocabolo.replace('${term}', term);
+        const queryVocabolo = queryConfig.queryVocabolo.replace('${term}', sanitizedTerm);
         const breadcrumbsConfig = getQueryConfig(vocabulary);
-        const queryBreadcrumbs = breadcrumbsConfig.queryBreadcrumbs.replace('${term}', term);
+        const queryBreadcrumbs = breadcrumbsConfig.queryBreadcrumbs.replace('${term}', sanitizedTerm);
 
         const queryConfigCronos = getQueryConfig('Chronostratigraphy');
         const queryConfigTecto = getQueryConfig('TectonicUnits');
@@ -196,20 +231,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
              * Executes the term data query and logs the result.
              * Executes the breadcrumb path query and logs the result.
              */
-            console.log('Executing term query:', queryVocabolo);
             const termResult: SparqlResult[] = await queryExecutor.executeSparqlQuery(queryVocabolo);
-            console.log('Term query result:', termResult);
-            console.log('Executing breadcrumbs query:', queryBreadcrumbs);
             const breadcrumbResult: SparqlResult[] = await queryExecutor.executeSparqlQuery(queryBreadcrumbs);
-            console.log('Breadcrumbs query result:', breadcrumbResult);
             const broaderTerms: string[] = [];
-            const prefLabelOfAllConcept: LabelQueryResult[] = await queryExecutor.executeSparqlQuery(queryLabelOfAllConceptCronos); //for per iterare su tutti i vocabolari, segnalazione da inserire in pratiche, 
+            const prefLabelOfAllConcept: LabelQueryResult[] = await queryExecutor.executeSparqlQuery(queryLabelOfAllConceptCronos); // for iterating across all vocabularies; note to include in practices
             const prefLabelOfAllConceptOtherVocabulary: LabelQueryResult[] = await queryExecutorOtherVocabulary.executeSparqlQuery(queryLabelOfAllConceptTecto);
 
             const allConceptMap = new Map<string, string>();
 
             const processResults = (results: LabelQueryResult[]) => {
-                console.log('Processing results:', results.length);
+                
                 let addedCount = 0;
                 let skippedCount = 0;
                 let duplicateCount = 0;
@@ -232,13 +263,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     }
                 });
 
-                console.log('Processing complete:');
-                console.log(`- Added: ${addedCount}`);
-                console.log(`- Skipped: ${skippedCount}`);
-                console.log(`- Duplicates: ${duplicateCount}`);
-                console.log(`- Initial map size: ${initialSize}`);
-                console.log(`- Final map size: ${allConceptMap.size}`);
-                console.log(`- Difference: ${allConceptMap.size - initialSize}`);
+                
             };
 
 
@@ -268,8 +293,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             termResult.forEach(result => {
                 const { predicate, object } = result;
 
-                console.log(`Processing predicate: ${predicate.value}`);
-                console.log(`Processing object: ${object.value}`);
+                
 
                 switch (predicate.value) {
                     case 'http://www.w3.org/2004/02/skos/core#inScheme':
@@ -302,7 +326,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     case 'http://resource.geosciml.org/ontology/timescale/gts#rank':
                         break;
                     default:
-                        console.log(`Adding to OtherRelation with predicate ${predicate.value}: ${object.value}`);
+                        
                         const relatedArray = termData.relatedTerms.OtherRelation.get(predicate.value) ?? [];
                         relatedArray.push(object.value);
                         termData.relatedTerms.OtherRelation.set(predicate.value, relatedArray);
@@ -364,8 +388,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 allConceptMap: allConceptObject,
             };
 
-            console.log('All Concept Map:', responseData.allConceptMap);
-            console.log('Query executed successfully, sending response');
+            
             res.status(200).json(responseData);
         } catch (error) {
             console.error('Error executing query:', error);

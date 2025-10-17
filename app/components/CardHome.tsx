@@ -77,7 +77,7 @@ const CardHome: React.FC<CardHomeProps> = ({
                 style={{ display: "block" }}
               />
             </Box>
-            {/* TITOLO */}
+            {/* TITLE */}
             <Text
               fontWeight="$bold"
               fontSize={'1.25em' as any}

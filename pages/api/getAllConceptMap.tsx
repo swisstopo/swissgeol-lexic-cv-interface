@@ -28,7 +28,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const vocabularies = Object.keys(configJsonDB.vocabularies);
-    console.log(vocabularies);
     const allConceptMap = new Map<string, string>();
 
     try {
@@ -74,7 +73,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             try {
                 await graphDBClient.getRepositoryIds();
-                console.log('GraphDB connection successful for:', vocabulary);
             } catch (error) {
                 console.error('GraphDB connection failed:', error);
                 return res.status(500).json({ error: 'Failed to connect to GraphDB' });

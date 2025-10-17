@@ -22,7 +22,7 @@
     "@legendapp/motion": "latest",
     "graphdb": "^3.0.2",
     "lucide-react": "^0.394.0",
-    "next": "^13.5.4",
+    "next": "^13.5.9",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native-svg": "13.4.0",

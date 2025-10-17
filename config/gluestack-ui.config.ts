@@ -720,5 +720,3 @@ export const config = {
   ...gluestackUIConfig,
   components: componentsConfig,
 };
-
-console.log('Custom theme configuration loaded');

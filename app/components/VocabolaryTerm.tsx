@@ -49,6 +49,117 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
     const mainWidth = useMainWidth();
 
     /**
+     * Helper function to render a related term with appropriate styling and behavior
+     * Handles both HTTP links and plain text terms
+     */
+    const renderRelatedTerm = (term: string, predicate: string, index: number) => {
+        if (term.startsWith('http')) {
+            const isPdf = /^https?:\/\/.+\.pdf(\?.*)?$/i.test(term);
+            const LinkIcon = isPdf ? ArrowUpRight : ArrowRight;
+
+            return (
+                <Box flexDirection="row" alignItems="center">
+                    <Link
+                        href={term}
+                        mb={1}
+                        flexDirection="row"
+                        alignItems="center"
+                        isExternal
+                        sx={{ ...TERM_LINK_SX, fontWeight: 500 } as any}
+                    >
+                        <Tooltip
+                            placement="top"
+                            trigger={(triggerProps) => (
+                                <Badge
+                                    {...triggerProps}
+                                    h={calculateFromMainWidth(27, mainWidth)}
+                                    variant="solid"
+                                    borderRadius="$full"
+                                    bgColor="#46596B"
+                                >
+                                    <BadgeText color="white" textAlign="center" fontSize={'0.625em' as any} fontWeight="$semibold">
+                                        {getTermLabel(predicate, true)}
+                                    </BadgeText>
+                                </Badge>
+                            )}
+                        >
+                            <TooltipContent
+                                bg='#1C2834'
+                                pt={5}
+                                pr={8}
+                                pl={8}
+                                pb={5}
+                                borderRadius={4}
+                                gap={8}
+                            >
+                                <TooltipText>{predicate}</TooltipText>
+                            </TooltipContent>
+                        </Tooltip>
+
+                        <Text
+                            ml={calculateFromMainWidth(23, mainWidth) as any}
+                            fontSize={'1em' as any}
+                            fontWeight={500}
+                            lineHeight={24}
+                            textDecorationLine="underline"
+                            color="inherit"
+                            sx={TERM_LINK_TEXT_SX as any}
+                        >
+                            {getTermLabel(term, false)}
+                        </Text>
+
+                        <Box sx={TERM_LINK_ICON_BOX_SX as any}>
+                            <Icon as={LinkIcon} p={2} h={calculateFromMainWidth(24, mainWidth) as any} w={calculateFromMainWidth(24, mainWidth) as any} color="currentColor" />
+                        </Box>
+                    </Link>
+                </Box>
+            );
+        } else {
+            return (
+                <Box flexDirection="row" alignItems="center">
+                    <Tooltip
+                        placement="top"
+                        trigger={(triggerProps) => (
+                            <Badge
+                                {...triggerProps}
+                                h={calculateFromMainWidth(27, mainWidth)}
+                                variant="solid"
+                                borderRadius="$full"
+                                bgColor="#46596B"
+                            >
+                                <BadgeText color="white" textAlign="center" fontSize={'0.625em' as any} fontWeight="$semibold">
+                                    {getTermLabel(predicate, true)}
+                                </BadgeText>
+                            </Badge>
+                        )}
+                    >
+                        <TooltipContent
+                            bg='#1C2834'
+                            pt={5}
+                            pr={8}
+                            pl={8}
+                            pb={5}
+                            borderRadius={4}
+                            gap={8}
+                        >
+                            <TooltipText>{predicate}</TooltipText>
+                        </TooltipContent>
+                    </Tooltip>
+                    <Text
+                        ml={calculateFromMainWidth(23, mainWidth) as any}
+                        fontSize={'1em' as any}
+                        fontWeight={500}
+                        lineHeight={24}
+                        color="inherit"
+                    >
+                        {term}
+                    </Text>
+                </Box>
+            );
+        }
+    };
+
+    /**
      * Extracts the label or identifier from a URL by manipulating the URL string.
      *
      * This function processes the URL by replacing the '#' character with '/' and then splits
@@ -60,7 +171,6 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
         return parts.pop();
     };
     const getTermLabel = (term: string, isBadge: boolean) => {
-        console.log(allConceptMap);
         if (!allConceptMap || allConceptMap.size === 0) {
             return "Map is not available";
         }
@@ -71,7 +181,7 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
         }
     };
     /**
-     * Retrieve the path of images based on the label indicating the language
+     * Retrieves the flag image path based on the language code
      */
     const getFlagImageUrl = (lang: string) => {
         switch (lang) {
@@ -114,7 +224,7 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
                                         <Text mb={0} fontWeight={600} lineHeight={'100%' as any} letterSpacing={-0.5} verticalAlign='middle' color='#1C2834' fontSize={'3em' as any} m={0}>
                                             {translation}
                                         </Text>
-                                        {/* Dropdown lingua con Tooltip */}
+                                        {/* Language dropdown with tooltip */}
                                         <Tooltip
                                             placement="top"
                                             trigger={(props) => {
@@ -179,7 +289,7 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
                         </Box>
 
                         <Divider orientation='horizontal' mt={calculateFromMainWidth(64, mainWidth) as any} mb={calculateFromMainWidth(64, mainWidth) as any} />
-                        {/* CARD DESCRIZIONE TERMINE */}
+                        {/* TERM DESCRIPTION CARD */}
                         <CardTerm title="Details" description={termData.definition || 'Coming soon...'} isDefinedBy={termData.isDefinedBy} />
 
                         <Divider orientation='horizontal' mt={calculateFromMainWidth(64, mainWidth) as any} mb={calculateFromMainWidth(64, mainWidth) as any} />
@@ -389,113 +499,7 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
                                             Object.entries(termData.relatedTerms.OtherRelation).map(([predicate, terms]) => (
                                                 terms.map((term: string, index: number) => (
                                                     <Box key={`${predicate}-${index}`} mb={10} flexDirection='row' alignItems="center">
-                                                        <Box>
-                                                            {term.startsWith('http') ? (() => {
-                                                                const isPdf = /^https?:\/\/.+\.pdf(\?.*)?$/i.test(term);
-                                                                const LinkIcon = isPdf ? ArrowUpRight : ArrowRight;
-
-                                                                return (
-                                                                    <Box flexDirection="row" alignItems="center" key={`${predicate}-${index}`}>
-                                                                        <Link
-                                                                            href={term}
-                                                                            mb={1}
-                                                                            flexDirection="row"
-                                                                            alignItems="center"
-                                                                            isExternal
-                                                                            sx={{ ...TERM_LINK_SX, fontWeight: 500 } as any}
-                                                                        >
-                                                                            <Tooltip
-                                                                                placement="top"
-                                                                                trigger={(triggerProps) => (
-                                                                                    <Badge
-                                                                                        {...triggerProps}
-                                                                                        h={calculateFromMainWidth(27, mainWidth)}
-                                                                                        variant="solid"
-                                                                                        borderRadius="$full"
-                                                                                        bgColor="#46596B"
-                                                                                    >
-                                                                                        <BadgeText color="white" textAlign="center" fontSize={'0.625em' as any} fontWeight="$semibold">
-                                                                                            {getTermLabel(predicate, true)}
-                                                                                        </BadgeText>
-                                                                                    </Badge>
-                                                                                )}
-                                                                            >
-                                                                                <TooltipContent
-                                                                                    bg='#1C2834'
-                                                                                    pt={5}
-                                                                                    pr={8}
-                                                                                    pl={8}
-                                                                                    pb={5}
-                                                                                    borderRadius={4}
-                                                                                    gap={8}
-                                                                                >
-                                                                                    <TooltipText>{predicate}</TooltipText>
-                                                                                </TooltipContent>
-                                                                            </Tooltip>
-
-                                                                            <Text
-                                                                                ml={calculateFromMainWidth(23, mainWidth) as any}
-                                                                                fontSize={'1em' as any}
-                                                                                fontWeight={500}
-                                                                                lineHeight={24}
-                                                                                textDecorationLine="underline"
-                                                                                color="inherit"
-                                                                                sx={TERM_LINK_TEXT_SX as any}
-                                                                            >
-                                                                                {getTermLabel(term, false)}
-                                                                            </Text>
-
-                                                                            <Box sx={TERM_LINK_ICON_BOX_SX as any}>
-                                                                                <Icon as={LinkIcon} p={2} h={calculateFromMainWidth(24, mainWidth) as any} w={calculateFromMainWidth(24, mainWidth) as any} color="currentColor" />
-                                                                            </Box>
-                                                                        </Link>
-                                                                    </Box>
-                                                                );
-                                                            })()
-                                                                : (
-                                                                <Box flexDirection="row" alignItems="center" key={`${predicate}-${index}`}>
-                                                                        <Tooltip
-                                                                            placement="top"
-                                                                            trigger={(triggerProps) => (
-                                                                                <Badge
-                                                                                    {...triggerProps}
-                                                                                    h={calculateFromMainWidth(27, mainWidth)}
-                                                                                    variant="solid"
-                                                                                    borderRadius="$full"
-                                                                                    bgColor="#46596B"
-                                                                                >
-                                                                                    <BadgeText color="white" textAlign="center" fontSize={'0.625em' as any} fontWeight="$semibold">
-                                                                                        {getTermLabel(predicate, true)}
-                                                                                    </BadgeText>
-                                                                                </Badge>
-                                                                            )}
-                                                                        >
-                                                                            <TooltipContent
-                                                                                bg='#1C2834'
-                                                                                pt={5}
-                                                                                pr={8}
-                                                                                pl={8}
-                                                                                pb={5}
-                                                                                borderRadius={4}
-                                                                                gap={8}
-                                                                            >
-                                                                                <TooltipText>{predicate}</TooltipText>
-                                                                            </TooltipContent>
-                                                                        </Tooltip>
-
-                                                                        <Text
-                                                                            ml={calculateFromMainWidth(23, mainWidth) as any}
-                                                                            fontSize={'1em' as any}
-                                                                            fontWeight={500}
-                                                                            lineHeight={24}
-                                                                            color="inherit"
-                                                                            sx={TERM_LINK_TEXT_SX as any}
-                                                                        >
-                                                                            {getTermLabel(term, false)}
-                                                                        </Text>
-                                                                    </Box>
-                                                                )}
-                                                        </Box>
+                                                        {renderRelatedTerm(term, predicate, index)}
                                                     </Box>
                                                 ))
                                             ))

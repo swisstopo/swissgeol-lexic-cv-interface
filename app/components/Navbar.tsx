@@ -52,7 +52,7 @@ const Navbar: React.FC = () => {
 
             setConcepts(conceptsArray);
         } catch (error) {
-            console.error('Errore durante il fetch dei concetti:', error);
+            console.error('Error fetching concepts:', error);
             setError('Failed to load concepts. Please try again later.');
         } finally {
             setLoading(false);
@@ -69,7 +69,7 @@ const Navbar: React.FC = () => {
         const update = () => {
             rafId = null;
             const next = clamp(window.scrollY / NAV_SCROLL_DISTANCE, 0, 1);
-            setScrollProgress(next); // Aggiornamento immediato senza throttling
+            setScrollProgress(next); // Immediate update without throttling
         };
 
         const handleScroll = () => {
@@ -109,7 +109,7 @@ const Navbar: React.FC = () => {
 
                 router.push(`/${vocabulary}/${term}`);
             } else {
-                console.warn("URL non valido: ", selectedOption.value);
+                console.warn("Invalid URL: ", selectedOption.value);
                 router.push(selectedOption.value);
             }
         }
@@ -318,10 +318,10 @@ const Navbar: React.FC = () => {
                         Beta
                     </Text>
                 </Box>
-                {/* Box per la versione */}
+                {/* Version box */}
                 <VersionBox />
 
-                {/* Dropdown lingua con Tooltip */}
+                {/* Language dropdown with tooltip */}
                 <Tooltip
                     placement="bottom"
                     trigger={(props) => {

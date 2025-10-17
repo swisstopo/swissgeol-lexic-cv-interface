@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 /**
  * Retrieves SPARQL query configurations for a specific vocabulary from a JSON file.
- * 
- * This function reads the `queryConfig.json` file, which contains query templates for various vocabularies.
+ *
+ * This function reads the `dbConfig.json` file, which contains query templates for various vocabularies.
  * It extracts the queries for the specified vocabulary and returns them.
  */
 function getQueryConfig(vocabulary) {

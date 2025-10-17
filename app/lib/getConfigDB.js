@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 /**
  * Retrieves the database configuration for a specific vocabulary from a JSON file.
- * 
- * This function reads the `connectionDbConfig.json` file, which contains connection details for various vocabularies.
+ *
+ * This function reads the `dbConfig.json` file, which contains connection details for various vocabularies.
  * It extracts and returns the configuration for the specified vocabulary.
  */
 function getConfigDB(vocabulary) {

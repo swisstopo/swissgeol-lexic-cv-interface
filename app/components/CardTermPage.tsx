@@ -53,7 +53,7 @@ const CardTerm: React.FC<CardHomeProps> = ({
         {/* LEFT HEADER */}
         <Box bg={headerBg} justifyContent="center" alignContent="center" sx={{ h: calculateFromMainWidth(96, mainWidth), pl: calculateFromMainWidth(23, mainWidth), pt: calculateFromMainWidth(41, mainWidth), pr: calculateFromMainWidth(23, mainWidth), pb: calculateFromMainWidth(41, mainWidth) } as any}>
           <Box gap={12} flexDirection="row" alignItems="center">
-            {/* TITOLO */}
+            {/* TITLE */}
             <Text
               fontWeight="$bold"
               fontSize={'1.25em' as any}

@@ -22,8 +22,6 @@ class GraphDBClient {
 
 
         this.serverClient = new GraphDBServerClient(serverConfig);
-
-        console.log(`Attempting to connect to GraphDB at ${serverUrl} with user: ${username}`);
     }
 
     public async getRepositoryIds(): Promise<string[]> {

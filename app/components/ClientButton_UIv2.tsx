@@ -7,11 +7,11 @@ import { ChevronRight } from "lucide-react";
 import { useMainWidth, calculateFromMainWidth } from "../utils/heightUtils";
 
 /**
- * ClientButton — versione semplificata e corretta.
- * - Dimensioni e padding sono fissi e applicati direttamente come props.
- * - La logica di stile è semplificata, senza costanti intermedie come `baseSx`.
- * - La struttura interna è stata rivista per garantire il corretto funzionamento del text-wrapping.
- * - Le uniche proprietà dinamiche sono i colori, basati sullo stato del bottone.
+ * ClientButton — simplified and corrected version.
+ * - Dimensions and padding are fixed and applied directly as props.
+ * - The styling logic is simplified, without intermediate constants like `baseSx`.
+ * - The internal structure has been revised to ensure proper text-wrapping functionality.
+ * - The only dynamic properties are the colors, based on the button state.
  */
 
 export const CLIENT_BUTTON_STATE_COLORS = {
@@ -106,7 +106,7 @@ export function ClientButton({
       accessibilityRole={href ? "link" : "button"}
       aria-disabled={isDisabled}
       aria-pressed={isSelected}
-      // Stili applicati direttamente per chiarezza e correttezza
+      // Styles applied directly for clarity and correctness
       borderRadius={8}
       borderWidth={1}
       borderColor={palette.borderColor}
@@ -128,7 +128,7 @@ export function ClientButton({
         },
       } as any}
     >
-      {/* Contenitore del testo che può restringersi */}
+      {/* Text container that can shrink */}
       <Box flexShrink={1} mr="$3">
         <Text
           color={palette.textColor}
@@ -142,7 +142,7 @@ export function ClientButton({
         </Text>
       </Box>
       
-      {/* Icona a destra */}
+      {/* Right-side icon */}
       {RightIcon ? (
         <Box>
           <RightIcon size={'1.5em'} color={palette.iconColor} />

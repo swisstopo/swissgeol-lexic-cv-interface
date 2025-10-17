@@ -66,7 +66,7 @@ const Footer: React.FC = () => {
                         </Box>
                     </Link>
                 </Box>
-                {/* Destra (logo CH) */}
+                {/* Right (CH logo) */}
                 <Box alignItems="center" justifyContent="center" p={0} m={0} pr={16} w={256} h={60}>
                     <Image
                         alt="Logo Confederazione Svizzera"

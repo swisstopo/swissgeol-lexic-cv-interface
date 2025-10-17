@@ -28,7 +28,7 @@ const AboutUs: React.FC = () => {
                     <Text fontSize="$xl" /* textAlign="center" */><Text fontSize="$3xl" bold mb={0}>About lexic.swissgeol.ch</Text>,{"\n\n"}
                         Our platform aims to provide geological classifications and nomenclatures in four languages.{"\n"}By integrating different semantic models used in our data and map products, we offer a unified approach.{"\n"}The platform is based on knowledge graphs and supports various formats, including machine-readable knowledge representations such as SKOS.{"\n"}Each concept is assigned a unique URI for easy reference.</Text>
                 </Box>
-                < VStack space="xl" p="$6" alignItems="center" >
+                <VStack space="xl" p="$6" alignItems="center" >
                     <Box bg="$backgroundLight100" p="$4" borderRadius="$md" width="80%">
                         <Text /* textAlign="center" */>
                             <Text bold fontSize={20}>Current Focus Areas:</Text>{"\n"} During the pilot phase, we are concentrating on three main components:{"\n\n"}

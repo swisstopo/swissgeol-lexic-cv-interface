@@ -29,7 +29,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ data }) => {
         const update = () => {
             rafId = null;
             const next = clamp(window.scrollY / SCROLL_DISTANCE, 0, 1);
-            setScrollProgress(next); // Aggiornamento immediato senza throttling
+            setScrollProgress(next); // Immediate update without throttling
         };
 
         const handleScroll = () => {

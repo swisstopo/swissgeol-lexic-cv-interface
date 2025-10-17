@@ -23,7 +23,7 @@ const VersionBox = () => {
                 color='#828E9A'
                 verticalAlign='middle'
             >
-                v0.5.0-beta
+                v0.5.1-beta
             </Text>
         </Box>
     );
