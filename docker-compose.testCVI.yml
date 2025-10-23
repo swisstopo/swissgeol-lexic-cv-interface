@@ -21,6 +21,8 @@ services:
       # Vocabulary Prefix Base URL (for SPARQL queries)
       VOCABULARY_PREFIX_URL: "https://dev-lexic.swissgeol.ch"
 
+      GOOGLE_ANALYTICS_ID:
+
       GITHUB_OWNER: swisstopo
 
       CHRONOSTRATIGRAPHY_REPO_SLUG: swissgeol-lexic-vocabulary-chronostratigrafie

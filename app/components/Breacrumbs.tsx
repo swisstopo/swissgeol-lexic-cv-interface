@@ -111,20 +111,28 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ data }) => {
                         ))
                     ) : (
                         <>
-                            <Link href={`/${data.vocabulary}`} ml={3}>
-                                <LinkText fontSize={14} fontWeight={500} lineHeight={20} letterSpacing={0.25} textDecorationLine='underline'>...</LinkText>
+                            <Link href={`/${data.vocabulary}/${extractLabel(data.broader[data.broader.length - 1])}`} ml={3}>
+                                <LinkText fontSize={14} fontWeight={500} lineHeight={20} letterSpacing={0.25} textDecorationLine='underline'>
+                                    {extractLabel(data.broader[data.broader.length - 1])}
+                                </LinkText>
                             </Link>
                             <Text>&gt;</Text>
-                            {data.broader.slice(-2).reverse().map((term, index) => (
+
+                            {data.broader.slice(1, -1).reverse().map((term, index) => (
                                 <React.Fragment key={`${term}-${index}`}>
                                     <Link href={`/${data.vocabulary}/${extractLabel(term)}`}>
-                                        <LinkText fontSize={14} fontWeight={500} lineHeight={20} letterSpacing={0.25} textDecorationLine='underline'>
-                                            {extractLabel(term)}
-                                        </LinkText>
+                                        <LinkText fontSize={14} fontWeight={500} lineHeight={20} letterSpacing={0.25} textDecorationLine='underline'>...</LinkText>
                                     </Link>
                                     <Text>&gt;</Text>
                                 </React.Fragment>
                             ))}
+
+                            <Link href={`/${data.vocabulary}/${extractLabel(data.broader[0])}`}>
+                                <LinkText fontSize={14} fontWeight={500} lineHeight={20} letterSpacing={0.25} textDecorationLine='underline'>
+                                    {extractLabel(data.broader[0])}
+                                </LinkText>
+                            </Link>
+                            <Text>&gt;</Text>
                         </>
                     )}
                     <Link href={`/${data.vocabulary}/${extractLabel(data.term)}`}>

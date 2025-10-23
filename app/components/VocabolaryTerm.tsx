@@ -199,10 +199,10 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
     };
 
     const statusColors = {
-      'Active': '$success500',
-      'Deprecated': '#B45309',
-      'Historic': '#B45309',
-      'Standard': '#46596B',
+        'Active': '$success500',
+        'Deprecated': '#B45309',
+        'Historic': '#B45309',
+        'Standard': '#46596B',
     };
 
     if (termData) {
@@ -283,7 +283,7 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
                             <Link href={termData.uri} mb={1} flexDirection='row' alignItems='center' gap={10}>
                                 <Text fontWeight={500} fontSize={'0.75em' as any} lineHeight={16} verticalAlign='middle' color='#828E9A'>URI:</Text>
                                 <Badge h={calculateFromMainWidth(27, mainWidth) as any} variant="solid" borderRadius="$full" bgColor='#46596B' mr={5}>
-                                    <BadgeText color='white' textAlign='center' fontSize={'0.625em' as any} fontWeight='$semibold'>{termData.uri}</BadgeText>
+                                    <BadgeText style={{ textTransform: 'none' } as any} color='white' textAlign='center' fontSize={'0.625em' as any} fontWeight='$semibold'>{termData.uri}</BadgeText>
                                 </Badge>
                             </Link>
                         </Box>
@@ -350,71 +350,71 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
                             <Accordion w={calculateFromMainWidth(976, mainWidth) as any} size="lg" defaultValue={['a']} type="multiple" isCollapsible={true} isDisabled={false} borderColor='#ACB4BD' overflow='hidden'>
                                 <AccordionItem value="a">
                                     <AccordionHeader bg='#F8F9FA' justifyContent="center" alignContent="center" sx={{ h: calculateFromMainWidth(96, mainWidth), pl: calculateFromMainWidth(30, mainWidth), pr: calculateFromMainWidth(36, mainWidth) } as any}>
-                                            <AccordionTrigger>
-                                                {({ isExpanded }) => (
-                                                    <>
-                                                        <Text fontSize={'1.25em' as any} fontWeight={700}>Narrowers</Text>
-                                                        {isExpanded ? (
-                                                            <AccordionIcon as={ChevronUpIcon} ml="$3" />
-                                                        ) : (
-                                                            <AccordionIcon as={ChevronDownIcon} ml="$3" />
-                                                        )}
-                                                    </>
-                                                )}
-                                            </AccordionTrigger>
-                                        </AccordionHeader>
-                                        <AccordionContent justifyContent="center" gap={calculateFromMainWidth(36, mainWidth) as any} alignContent="center" sx={{ ml: calculateFromMainWidth(30, mainWidth), mt: calculateFromMainWidth(36, mainWidth), minH: calculateFromMainWidth(96, mainWidth) } as any}>
-                                            {termData.relatedTerms.Narrower.length > 0 ? (
-                                                termData.relatedTerms.Narrower.length >= 50 ? (
-                                                    (() => {
-                                                        const normalizeLetter = (label: string) => {
-                                                            const trimmed = (label || "").trim();
-                                                            if (!trimmed) return "#";
-                                                            const first = trimmed[0]?.toUpperCase();
-                                                            return first && /[A-Z]/.test(first) ? first : "#";
-                                                        };
+                                        <AccordionTrigger>
+                                            {({ isExpanded }) => (
+                                                <>
+                                                    <Text fontSize={'1.25em' as any} fontWeight={700}>Narrowers</Text>
+                                                    {isExpanded ? (
+                                                        <AccordionIcon as={ChevronUpIcon} ml="$3" />
+                                                    ) : (
+                                                        <AccordionIcon as={ChevronDownIcon} ml="$3" />
+                                                    )}
+                                                </>
+                                            )}
+                                        </AccordionTrigger>
+                                    </AccordionHeader>
+                                    <AccordionContent justifyContent="center" gap={calculateFromMainWidth(36, mainWidth) as any} alignContent="center" sx={{ ml: calculateFromMainWidth(30, mainWidth), mt: calculateFromMainWidth(36, mainWidth), minH: calculateFromMainWidth(96, mainWidth) } as any}>
+                                        {termData.relatedTerms.Narrower.length > 0 ? (
+                                            termData.relatedTerms.Narrower.length >= 50 ? (
+                                                (() => {
+                                                    const normalizeLetter = (label: string) => {
+                                                        const trimmed = (label || "").trim();
+                                                        if (!trimmed) return "#";
+                                                        const first = trimmed[0]?.toUpperCase();
+                                                        return first && /[A-Z]/.test(first) ? first : "#";
+                                                    };
 
-                                                        const orderedEntries = termData.relatedTerms.Narrower
-                                                            .map((term) => {
-                                                                const label = getTermLabel(term, false) || term;
-                                                                return {
-                                                                    term,
-                                                                    label,
-                                                                    letter: normalizeLetter(label),
-                                                                };
-                                                            })
-                                                            .sort((a, b) => a.label.localeCompare(b.label));
+                                                    const orderedEntries = termData.relatedTerms.Narrower
+                                                        .map((term) => {
+                                                            const label = getTermLabel(term, false) || term;
+                                                            return {
+                                                                term,
+                                                                label,
+                                                                letter: normalizeLetter(label),
+                                                            };
+                                                        })
+                                                        .sort((a, b) => a.label.localeCompare(b.label));
 
-                                                        const sectionsMap = new Map<string, { term: string; label: string; }[]>();
-                                                        orderedEntries.forEach((entry) => {
-                                                            if (!sectionsMap.has(entry.letter)) {
-                                                                sectionsMap.set(entry.letter, []);
-                                                            }
-                                                            sectionsMap.get(entry.letter)?.push(entry);
-                                                        });
+                                                    const sectionsMap = new Map<string, { term: string; label: string; }[]>();
+                                                    orderedEntries.forEach((entry) => {
+                                                        if (!sectionsMap.has(entry.letter)) {
+                                                            sectionsMap.set(entry.letter, []);
+                                                        }
+                                                        sectionsMap.get(entry.letter)?.push(entry);
+                                                    });
 
-                                                        const sections = Array.from(sectionsMap.entries()).map(([letter, entries]: [string, { term: string; label: string; }[]]) => ({
-                                                            letter,
-                                                            entries,
-                                                        }));
+                                                    const sections = Array.from(sectionsMap.entries()).map(([letter, entries]: [string, { term: string; label: string; }[]]) => ({
+                                                        letter,
+                                                        entries,
+                                                    }));
 
-                                                        return sections.map((section: { letter: string; entries: { term: string; label: string }[] }, sectionIndex: number) => (
-                                                            <Box key={`narrower-section-${section.letter}`} gap={calculateFromMainWidth(16, mainWidth) as any}>
-                                                                <Text fontSize={'1.25em' as any} fontWeight={700} color="#1C2834" mt={calculateFromMainWidth(24, mainWidth) as any}>
-                                                                    {section.letter}
-                                                                </Text>
-                                                                <Box gap={calculateFromMainWidth(12, mainWidth) as any}>
-                                                                    {section.entries.map(({ term, label }) => {
-                                                                        const slug = extractLabel(term) ?? term;
-                                                                        return (
-                                                                            <Box flexDirection="row" key={term}>
-                                                                                <Link
-                                                                                    href={`/${termData.vocabulary}/${slug}`}
-                                                                                    mb={1}
-                                                                                    flexDirection="row"
-                                                                                    alignItems="center"
-                                                                                    sx={TERM_LINK_SX as any}
-                                                                                >
+                                                    return sections.map((section: { letter: string; entries: { term: string; label: string }[] }, sectionIndex: number) => (
+                                                        <Box key={`narrower-section-${section.letter}`} gap={calculateFromMainWidth(16, mainWidth) as any}>
+                                                            <Text fontSize={'1.25em' as any} fontWeight={700} color="#1C2834" mt={calculateFromMainWidth(24, mainWidth) as any}>
+                                                                {section.letter}
+                                                            </Text>
+                                                            <Box gap={calculateFromMainWidth(12, mainWidth) as any}>
+                                                                {section.entries.map(({ term, label }) => {
+                                                                    const slug = extractLabel(term) ?? term;
+                                                                    return (
+                                                                        <Box flexDirection="row" key={term}>
+                                                                            <Link
+                                                                                href={`/${termData.vocabulary}/${slug}`}
+                                                                                mb={1}
+                                                                                flexDirection="row"
+                                                                                alignItems="center"
+                                                                                sx={TERM_LINK_SX as any}
+                                                                            >
                                                                                 <LinkText
                                                                                     color="inherit"
                                                                                     fontSize={'1em' as any}
@@ -424,59 +424,59 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
                                                                                 >
                                                                                     {label}
                                                                                 </LinkText>
-                                                                                    <Box sx={TERM_LINK_ICON_BOX_SX as any}>
-                                                                                        <Icon
-                                                                                            as={ArrowRight}
-                                                                                            p={2}
-                                                                                            h={calculateFromMainWidth(24, mainWidth) as any}
-                                                                                            w={calculateFromMainWidth(24, mainWidth) as any}
-                                                                                            color="currentColor"
-                                                                                        />
-                                                                                    </Box>
-                                                                                </Link>
-                                                                            </Box>
-                                                                        );
-                                                                    })}
-                                                                </Box>
-                                                                {sectionIndex !== sections.length - 1 ? (
-                                                                    <Divider orientation='horizontal' mt={calculateFromMainWidth(64, mainWidth) as any} />
-                                                                ) : null}
+                                                                                <Box sx={TERM_LINK_ICON_BOX_SX as any}>
+                                                                                    <Icon
+                                                                                        as={ArrowRight}
+                                                                                        p={2}
+                                                                                        h={calculateFromMainWidth(24, mainWidth) as any}
+                                                                                        w={calculateFromMainWidth(24, mainWidth) as any}
+                                                                                        color="currentColor"
+                                                                                    />
+                                                                                </Box>
+                                                                            </Link>
+                                                                        </Box>
+                                                                    );
+                                                                })}
                                                             </Box>
-                                                        ));
-                                                    })()
-                                                ) : (
-                                                    termData.relatedTerms.Narrower.map(term => (
-                                                        <Box flexDirection='row'>
-                                                            <Link
-                                                                href={`/${termData.vocabulary}/${extractLabel(term)}`}
-                                                                mb={1}
-                                                                key={term}
-                                                                flexDirection='row'
-                                                                alignItems='center'
-                                                                sx={TERM_LINK_SX as any}
-                                                            >
-                                                                <LinkText
-                                                                    color='inherit'
-                                                                    fontSize={'1em' as any}
-                                                                    fontWeight={500}
-                                                                    textDecorationLine='underline'
-                                                                    sx={TERM_LINK_TEXT_SX as any}
-                                                                >
-                                                                    {getTermLabel(term, false)}
-                                                                </LinkText>
-                                                                <Box sx={TERM_LINK_ICON_BOX_SX as any}>
-                                                                    <Icon as={ArrowRight} p={2} h={calculateFromMainWidth(24, mainWidth) as any} w={calculateFromMainWidth(24, mainWidth) as any} color='currentColor' />
-                                                                </Box>
-                                                            </Link>
+                                                            {sectionIndex !== sections.length - 1 ? (
+                                                                <Divider orientation='horizontal' mt={calculateFromMainWidth(64, mainWidth) as any} />
+                                                            ) : null}
                                                         </Box>
-                                                    ))
-                                                )
+                                                    ));
+                                                })()
                                             ) : (
-                                                <Text color='$secondary300'>No Narrowers concepts...</Text>
-                                            )}
-                                        </AccordionContent>
-                                    </AccordionItem>
-                                </Accordion>
+                                                termData.relatedTerms.Narrower.map(term => (
+                                                    <Box flexDirection='row'>
+                                                        <Link
+                                                            href={`/${termData.vocabulary}/${extractLabel(term)}`}
+                                                            mb={1}
+                                                            key={term}
+                                                            flexDirection='row'
+                                                            alignItems='center'
+                                                            sx={TERM_LINK_SX as any}
+                                                        >
+                                                            <LinkText
+                                                                color='inherit'
+                                                                fontSize={'1em' as any}
+                                                                fontWeight={500}
+                                                                textDecorationLine='underline'
+                                                                sx={TERM_LINK_TEXT_SX as any}
+                                                            >
+                                                                {getTermLabel(term, false)}
+                                                            </LinkText>
+                                                            <Box sx={TERM_LINK_ICON_BOX_SX as any}>
+                                                                <Icon as={ArrowRight} p={2} h={calculateFromMainWidth(24, mainWidth) as any} w={calculateFromMainWidth(24, mainWidth) as any} color='currentColor' />
+                                                            </Box>
+                                                        </Link>
+                                                    </Box>
+                                                ))
+                                            )
+                                        ) : (
+                                            <Text color='$secondary300'>No Narrowers concepts...</Text>
+                                        )}
+                                    </AccordionContent>
+                                </AccordionItem>
+                            </Accordion>
 
                             <Accordion w={calculateFromMainWidth(976, mainWidth) as any} size="lg" defaultValue={['or']} type="multiple" isCollapsible={true} isDisabled={false} borderColor='#ACB4BD' overflow='hidden'>
                                 <AccordionItem value="or">

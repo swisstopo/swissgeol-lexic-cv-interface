@@ -65,6 +65,30 @@ const Footer: React.FC = () => {
                             </Text>
                         </Box>
                     </Link>
+                    <Divider
+                        orientation="vertical"
+                        h={18}
+                        bg="#FFFFFF33"
+                    />
+                    <Link href="https://www.swissgeol.ch/en/wiki#ControlledVocabularies">
+                        <Box
+                            h={46}
+                            pl={24}
+                            pr={24}
+                            justifyContent="center"
+                        >
+                            <Text
+                                color="#FFFFFF"
+                                fontSize={'0.875em' as any}
+                                lineHeight={20}
+                                letterSpacing={0.25}
+                                fontWeight="$medium"
+                                textAlign="center"
+                            >
+                                Wiki
+                            </Text>
+                        </Box>
+                    </Link>
                 </Box>
                 {/* Right (CH logo) */}
                 <Box alignItems="center" justifyContent="center" p={0} m={0} pr={16} w={256} h={60}>

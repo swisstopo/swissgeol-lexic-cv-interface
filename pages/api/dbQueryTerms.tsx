@@ -122,7 +122,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(500).json({ error: 'GRAPHDB_BASE_URL environment variable is required' });
     }
     
-    // Get repository ID from specific environment variables
+    // Get repository ID from environment variables for the requested vocabulary
     let repositoryId;
     switch (vocabulary) {
         case 'Chronostratigraphy':
@@ -157,21 +157,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
          */
         const graphDBClient = new GraphDBClient(url, username, password);
 
-        const otherVocabulary = Object.keys(configJsonDB.vocabularies).find(vocab => vocab !== vocabulary);
-        if (!otherVocabulary) {
-            return res.status(404).json({ message: 'No other vocabulary found' });
-        }
-
-        // Use same environment variables for other vocabulary
-        const otherUrl = url; // Same GraphDB instance
-        const otherUsername = username;
-        const otherPassword = password;
-        const graphDBClientOtherVocabulary = new GraphDBClient(otherUrl, otherUsername, otherPassword);
-
         try {
             await graphDBClient.getRepositoryIds();
-
-            await graphDBClientOtherVocabulary.getRepositoryIds();
         } catch (error) {
             console.error('GraphDB connection failed:', error);
             return res.status(500).json({ error: 'Failed to connect to GraphDB' });
@@ -186,30 +173,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Use the repositoryId already determined above with env override
         const repositoryUrl = `${url}/repositories/${repositoryId}`;
         
-        // Get repository ID for other vocabulary from environment variables
-        let repositoryIdOtherVocabulary;
-        switch (otherVocabulary) {
-            case 'Chronostratigraphy':
-                repositoryIdOtherVocabulary = process.env.CHRONOSTRATIGRAPHY_REPO_ID;
-                break;
-            case 'TectonicUnits':
-                repositoryIdOtherVocabulary = process.env.TECTONICUNITS_REPO_ID;
-                break;
-            case 'Lithostratigraphy':
-                repositoryIdOtherVocabulary = process.env.LITHOSTRATIGRAPHY_REPO_ID;
-                break;
-            case 'Lithology':
-                repositoryIdOtherVocabulary = process.env.LITHOLOGY_REPO_ID;
-                break;
-        }
-        
-        if (!repositoryIdOtherVocabulary) {
-            return res.status(500).json({ error: `${otherVocabulary.toUpperCase()}_REPO_ID environment variable is required` });
-        }
-        
-        const repositoryUrlOtherVocabulary = `${otherUrl}/repositories/${repositoryIdOtherVocabulary}`;
         const queryExecutor = new QueryExecutor(graphDBClient, repositoryId, url, username, password, repositoryUrl);
-        const queryExecutorOtherVocabulary = new QueryExecutor(graphDBClientOtherVocabulary, repositoryIdOtherVocabulary, otherUrl, otherUsername, otherPassword, repositoryUrlOtherVocabulary);
         /**
          * Retrieves the query configuration for the specified vocabulary using `getQueryConfig`.
          * Prepares the SPARQL queries for term data and breadcrumb path data by replacing placeholders in the query templates with the sanitized term.
@@ -219,12 +183,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const breadcrumbsConfig = getQueryConfig(vocabulary);
         const queryBreadcrumbs = breadcrumbsConfig.queryBreadcrumbs.replace('${term}', sanitizedTerm);
 
-        const queryConfigCronos = getQueryConfig('Chronostratigraphy');
-        const queryConfigTecto = getQueryConfig('TectonicUnits');
-
-        const queryLabelOfAllConceptCronos = queryConfigCronos.queryLabelOfAllConcept;
-        const queryLabelOfAllConceptTecto = queryConfigTecto.queryLabelOfAllConcept;
-        // Version is resolved client-side from GitHub; no server default.
+        // Build labels map by iterating across ALL configured vocabularies
+        const allVocabularies: string[] = Object.keys(configJsonDB.vocabularies || {});
 
         try {
             /**
@@ -234,8 +194,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             const termResult: SparqlResult[] = await queryExecutor.executeSparqlQuery(queryVocabolo);
             const breadcrumbResult: SparqlResult[] = await queryExecutor.executeSparqlQuery(queryBreadcrumbs);
             const broaderTerms: string[] = [];
-            const prefLabelOfAllConcept: LabelQueryResult[] = await queryExecutor.executeSparqlQuery(queryLabelOfAllConceptCronos); // for iterating across all vocabularies; note to include in practices
-            const prefLabelOfAllConceptOtherVocabulary: LabelQueryResult[] = await queryExecutorOtherVocabulary.executeSparqlQuery(queryLabelOfAllConceptTecto);
 
             const allConceptMap = new Map<string, string>();
 
@@ -266,9 +224,44 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 
             };
 
+            // Iterate through all configured vocabularies and collect their prefLabels (in parallel)
+            const jobs: Promise<void>[] = [];
+            for (const v of allVocabularies) {
+                let repoId: string | undefined;
+                switch (v) {
+                    case 'Chronostratigraphy':
+                        repoId = process.env.CHRONOSTRATIGRAPHY_REPO_ID;
+                        break;
+                    case 'TectonicUnits':
+                        repoId = process.env.TECTONICUNITS_REPO_ID;
+                        break;
+                    case 'Lithostratigraphy':
+                        repoId = process.env.LITHOSTRATIGRAPHY_REPO_ID;
+                        break;
+                    case 'Lithology':
+                        repoId = process.env.LITHOLOGY_REPO_ID;
+                        break;
+                    default:
+                        repoId = undefined;
+                }
+                if (!repoId) continue; // skip if not configured
 
-            processResults(prefLabelOfAllConcept);
-            processResults(prefLabelOfAllConceptOtherVocabulary);
+                const repoUrl = `${url}/repositories/${repoId}`;
+                const qx = new QueryExecutor(graphDBClient, repoId, url, username, password, repoUrl);
+                const qc = getQueryConfig(v);
+                const q = qc.queryLabelOfAllConcept;
+                if (!q) continue;
+                const p: Promise<void> = qx
+                    .executeSparqlQuery(q)
+                    .then((prefLabels: LabelQueryResult[]) => {
+                        processResults(prefLabels);
+                    })
+                    .catch(() => {
+                        // Swallow errors for individual vocabularies to avoid failing the whole endpoint
+                    });
+                jobs.push(p);
+            }
+            await Promise.all(jobs);
 
             /**
              * Initializes a `TermData` object to store the term details.

@@ -1,9 +1,7 @@
 "use client";
 
 import React from "react";
-import { Badge, BadgeText, Box, Icon, Link, Text } from "@gluestack-ui/themed";
-import { ArrowUpRight } from "lucide-react";
-import { CLIENT_BUTTON_STATE_COLORS } from "./ClientButton_UIv2";
+import { Badge, BadgeText, Box, Text } from "@gluestack-ui/themed";
 import { useMainWidth, calculateFromMainWidth } from "../utils/heightUtils";
 
 export type CardHomeProps = {
@@ -23,20 +21,7 @@ const CardTerm: React.FC<CardHomeProps> = ({
   const borderColor = "#ACB4BD";
   const headerBg = "#F8F9FA";
   const strong = "#1C2834";
-  const linkPalette = {
-    base: CLIENT_BUTTON_STATE_COLORS.base.textColor,
-    hover: CLIENT_BUTTON_STATE_COLORS.hover.textColor,
-  } as const;
-  const linkHoverSx = {
-    _web: {
-      color: linkPalette.base,
-      textDecoration: "none",
-      transition: "color 120ms ease",
-      ":hover": {
-        color: linkPalette.hover,
-      },
-    },
-  } as const;
+  
 
   return (
     <Box
@@ -78,42 +63,28 @@ const CardTerm: React.FC<CardHomeProps> = ({
             {description || "Coming soon"}
           </Text>
           {isDefinedBy && (
-            <Box w={'100%'} flexDirection="row" alignItems="center" overflow="hidden">
-              <Link
-                href={isDefinedBy}
-                mb={1}
-                flexDirection='row'
-                alignItems='center'
-                sx={linkHoverSx as any}
+            <Box w={'100%'} flexDirection="row" alignItems="flex-start" flexWrap="wrap">
+              <Badge h={calculateFromMainWidth(27, mainWidth) as any} variant="solid" borderRadius="$full" bgColor='#46596B'>
+                <BadgeText color='white' textAlign='center' fontSize={'0.625em' as any} fontWeight='$semibold'>Source</BadgeText>
+              </Badge>
+              <Text
+                ml={calculateFromMainWidth(8, mainWidth) as any}
+                fontSize={'1em' as any}
+                fontWeight={500}
+                lineHeight={24}
+                color={strong}
+                flex={1}
+                minWidth={0}
+                sx={{
+                  _web: {
+                    whiteSpace: 'normal',
+                    wordBreak: 'break-word',
+                    overflowWrap: 'anywhere',
+                  }
+                } as any}
               >
-                <Badge h={calculateFromMainWidth(27, mainWidth) as any} variant="solid" borderRadius="$full" bgColor='#46596B'>
-                  <BadgeText color='white' textAlign='center' fontSize={'0.625em' as any} fontWeight='$semibold'>Source</BadgeText>
-                </Badge>
-                <Text
-                  ml={calculateFromMainWidth(8, mainWidth) as any}
-                  fontSize={'1em' as any}
-                  fontWeight={500}
-                  lineHeight={24}
-                  textDecorationLine="underline"
-                  color="inherit"
-                  numberOfLines={1}
-                  sx={{ 
-                    _web: { 
-                      transition: "color 120ms ease", 
-                      textDecorationColor: "currentColor",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      maxWidth: '75%'
-                    } 
-                  } as any}
-                >
-                  {isDefinedBy}
-                </Text>
-                <Box sx={{ _web: { color: "inherit", transition: "color 120ms ease" } } as any}>
-                  <Icon as={ArrowUpRight} h={calculateFromMainWidth(24, mainWidth) as any} w={calculateFromMainWidth(24, mainWidth) as any} color="currentColor" />
-                </Box>
-              </Link>
+                {isDefinedBy}
+              </Text>
             </Box>
           )}
         </Box>

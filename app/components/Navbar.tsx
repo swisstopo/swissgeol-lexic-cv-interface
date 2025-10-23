@@ -92,10 +92,6 @@ const Navbar: React.FC = () => {
     const navHeight = NAV_INITIAL_HEIGHT - (NAV_INITIAL_HEIGHT - NAV_MIN_HEIGHT) * scrollProgress;
     const verticalPadding = 24 + (40 - 24) * (1 - scrollProgress);
     const heightRatio = clamp(navHeight / NAV_INITIAL_HEIGHT, NAV_MIN_HEIGHT / NAV_INITIAL_HEIGHT, 1);
-    const betaWidth = 70 * heightRatio;
-    const betaHeight = 18 * heightRatio;
-    const betaTopOffset = 17 * heightRatio;
-    const betaRightOffset = 35 * heightRatio;
 
 
 
@@ -141,6 +137,30 @@ const Navbar: React.FC = () => {
     return (
         <>
             <Box style={{ height: `${navHeight}px` } as any} />
+            {/* Banner Beta */}
+            <Box
+                position={'fixed' as any}
+                bg="#D4301F"
+                style={{
+                    top: 10,
+                    right: -20,
+                    width: 70,
+                    height: 18,
+                    transform: [{ rotate: '45deg' }],
+                    zIndex: 1001,
+                }}
+                alignItems='center'
+                justifyContent='center'
+            >
+                <Text
+                    color="white"
+                    fontSize="$xs"
+                    fontWeight="$bold"
+                    textAlign='center'
+                >
+                    Beta
+                </Text>
+            </Box>
             <Box
                 position={'fixed' as any}
                 top={0}
@@ -295,29 +315,6 @@ const Navbar: React.FC = () => {
             <Box w='25%' flexDirection='row' alignItems='center'
                 justifyContent='flex-end' gap={8} position='relative'
             >
-                {/* Banner Beta */}
-                <Box
-                    position="absolute"
-                    bg="#D4301F"
-                    style={{
-                        top: -betaTopOffset,
-                        right: -betaRightOffset,
-                        width: betaWidth,
-                        height: betaHeight,
-                        transform: [{ rotate: '45deg' }],
-                    }}
-                    alignItems='center'
-                    justifyContent='center'
-                >
-                    <Text
-                        color="white"
-                        fontSize="$xs"
-                        fontWeight="$bold"
-                        textAlign='center'
-                    >
-                        Beta
-                    </Text>
-                </Box>
                 {/* Version box */}
                 <VersionBox />
 
