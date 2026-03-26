@@ -19,6 +19,13 @@ const clamp = (value: number, min: number, max: number) => {
     return Math.min(Math.max(value, min), max);
 };
 
+const getVocabularyLabel = (vocabulary: string) => {
+    if (vocabulary === 'ls_correlations') {
+        return 'Lithostratigraphic Correlations';
+    }
+    return vocabulary;
+};
+
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ data }) => {
     const [scrollProgress, setScrollProgress] = useState(0);
     const mainWidth = useMainWidth();
@@ -95,7 +102,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ data }) => {
                     </Link>
                     <Text>&gt;</Text>
                     <Link href='/'>
-                        <LinkText fontSize={14} fontWeight={500} lineHeight={20} letterSpacing={0.25} textDecorationLine='underline'>{data.vocabulary}</LinkText>
+                        <LinkText fontSize={14} fontWeight={500} lineHeight={20} letterSpacing={0.25} textDecorationLine='underline'>{getVocabularyLabel(data.vocabulary)}</LinkText>
                     </Link>
                     <Text>&gt;</Text>
                     {data.broader.length <= 2 ? (

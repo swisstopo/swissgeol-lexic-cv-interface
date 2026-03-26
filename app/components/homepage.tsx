@@ -114,6 +114,21 @@ const Homepage: React.FC = () => {
                 { label: "Piémont-Ozean (de), Piémont Ocean (en), Océan piémontais (fr), Oceano piemontese (it)", url: '/Lithostratigraphy/Piemontocean' },
                 { label: "Walliser Trog (de), Valaisan Basin (en), Bassin valaisan (fr), Bacino vallese (it)", url: '/Lithostratigraphy/Valaisanbasin' },
             ],
+        },
+        {
+            name: 'Lithostratigraphic Correlations',
+            translations: {
+                'EN': 'Lithology',
+                'DE': 'Lithostratigraphische Korrelationen',
+                'IT': 'Correlazioni litostratigrafiche',
+                'FR': 'Corrélations lithostratigraphiques'
+            },
+            description: 'The controlled vocabulary "Lithostratigraphic Correlations" includes generic terms used to group and parallelize formations and subordinate lithostratigraphic units across a large (paleo)geographical extent based on a common geodynamic evolution. This classification scheme is used in maps, boreholes, and other items maintained by the Swiss Geological Survey.',
+            topConcept: [
+                { label: 'Alpine Cycle', url: '/ls_correlations/AlpineCycle' },
+                { label: 'Ante-Alpine Basement', url: '/ls_correlations/BasementAnteAlpine' },
+                { label: 'Post Messinian', url: '/ls_correlations/PostMessinian' },
+            ],
         }
     ];
 

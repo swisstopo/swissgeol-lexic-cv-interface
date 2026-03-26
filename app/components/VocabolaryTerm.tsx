@@ -39,6 +39,13 @@ const TERM_LINK_ICON_BOX_SX = {
     },
 } as const;
 
+const getVocabularyLabel = (vocabulary: string) => {
+    if (vocabulary === 'ls_correlations') {
+        return 'Lithostratigraphic Correlations';
+    }
+    return vocabulary;
+};
+
 interface VocabolaryTermProps {
     termData: TermData | null;
     breadCrumbsData: BreadCrumbsData;
@@ -206,15 +213,16 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
     };
 
     if (termData) {
-        const title = termData.term + ' - ' + termData.vocabulary + ' - Controlled Vocabularies Interface';
+        const vocabularyLabel = getVocabularyLabel(termData.vocabulary);
+        const title = termData.term + ' - ' + vocabularyLabel + ' - Controlled Vocabularies Interface';
 
         return (
             <RootLayout title={title}>
                 <Box id={termData.term} w={calculateFromMainWidth(1236, mainWidth) as any} mb={100} m={'auto'} mt={calculateFromMainWidth(120, mainWidth) as any}>
                     <Breadcrumbs data={breadCrumbsData} />
-                    <Box gap={calculateFromMainWidth(36, mainWidth) as any}>
-                        <Box flexDirection='row' gap={1} /* mb={5} */ justifyContent='space-between'>
-                            <Text fontSize={16} color='#828E9A' fontWeight={700} lineHeight={16} letterSpacing={0.10}>{termData.vocabulary}</Text>
+                        <Box gap={calculateFromMainWidth(36, mainWidth) as any}>
+                            <Box flexDirection='row' gap={1} /* mb={5} */ justifyContent='space-between'>
+                            <Text fontSize={16} color='#828E9A' fontWeight={700} lineHeight={16} letterSpacing={0.10}>{vocabularyLabel}</Text>
                             <Text fontSize={12} color='$secondary300' fontWeight={500} lineHeight={16} letterSpacing={0.10}>[{termData.version}]</Text>
                         </Box>
                         <Box alignItems='center'>
