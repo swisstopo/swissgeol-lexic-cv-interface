@@ -137,6 +137,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         case 'Lithology':
             repositoryId = process.env.LITHOLOGY_REPO_ID;
             break;
+        case 'ls_correlations':
+            repositoryId = process.env.LS_CORRELATIONS_REPO_ID;
+            break;
     }
     
     if (!repositoryId) {
@@ -240,6 +243,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         break;
                     case 'Lithology':
                         repoId = process.env.LITHOLOGY_REPO_ID;
+                        break;
+                    case 'ls_correlations':
+                        repoId = process.env.LS_CORRELATIONS_REPO_ID;
                         break;
                     default:
                         repoId = undefined;
