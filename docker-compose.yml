@@ -17,6 +17,7 @@ services:
       TECTONICUNITS_REPO_ID: "TectonicUnits_test_2_core"
       LITHOSTRATIGRAPHY_REPO_ID: "Lithostratigraphy_test_2_core"
       LITHOLOGY_REPO_ID: "Lithology_test_2_core"
+      LS_CORRELATIONS_REPO_ID: "ls_correlations_swisstopo_public_core"
       
       # Vocabulary Prefix Base URL (for SPARQL queries)
       VOCABULARY_PREFIX_URL: "https://lexic.swisstopo.demo.epsilon-italia.it"
@@ -27,3 +28,4 @@ services:
       TECTONICUNITS_REPO_SLUG: swissgeol-lexic-vocabulary-tektonik
       LITHOSTRATIGRAPHY_REPO_SLUG: swissgeol-lexic-vocabulary-lithostratigrafie
       LITHOLOGY_REPO_SLUG: swissgeol-lexic-vocabulary-lithologie
+      LS_CORRELATIONS_REPO_SLUG: swissgeol-lexic-vocabulary-litstrat-correl
