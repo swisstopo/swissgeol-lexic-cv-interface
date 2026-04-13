@@ -7,6 +7,7 @@ import { useMainWidth, calculateFromMainWidth } from '../utils/heightUtils';
 
 import CardHome from './CardHome';
 import HeroSection from './HeroSection';
+import { AnchorNav, AnchorItem } from './AnchorNav';
 
 interface Translation {
     [key: string]: string;
@@ -39,6 +40,10 @@ const ANCHOR_OFFSET = 120;
 const Homepage: React.FC = () => {
     const mainWidth = useMainWidth();
     const vocabulariesRef = useRef<HTMLDivElement>(null);
+    const anchorOffset = useMemo(
+        () => Number.parseInt(calculateFromMainWidth(ANCHOR_OFFSET, mainWidth), 10),
+        [mainWidth]
+    );
 
     const handleScrollToVocabularies = () => {
         vocabulariesRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -148,6 +153,11 @@ const Homepage: React.FC = () => {
         [vocabularies]
     );
 
+    const navItems: AnchorItem[] = useMemo(
+        () => sections.map(({ sectionId, name }) => ({ id: sectionId, label: name })),
+        [sections]
+    );
+
     return (
         <RootLayout title={title}>
             <HeroSection onExploreClick={handleScrollToVocabularies} />
@@ -155,19 +165,22 @@ const Homepage: React.FC = () => {
                 <Box
                     w={'100%'}
                     ref={vocabulariesRef as any}
-                    pl={'8.7%'}
-                    pr={'8.7%'}
-                    justifyContent='space-between'
+                    pl={calculateFromMainWidth(130, mainWidth) as any}
                     flexDirection='row'
+                    alignItems='flex-start'
                 >
-                    <Box gap={calculateFromMainWidth(64, mainWidth) as any}>
+                    <Box
+                        mr={calculateFromMainWidth(64, mainWidth) as any}
+                        gap={calculateFromMainWidth(64, mainWidth) as any}
+                        sx={{ width: calculateFromMainWidth(976, mainWidth), flexShrink: 0 } as any}
+                    >
                         <Text fontSize={'2em' as any} fontWeight={600} lineHeight={40} color='#1C2834' letterSpacing={-0.5} verticalAlign='middle'>Vocabularies</Text>
                         <VStack gap={calculateFromMainWidth(40, mainWidth) as any}>
                             {sections.map((vocab, index) => (
                                 <Box
                                     key={`vocab-${index}`}
                                     id={vocab.sectionId}
-                                    sx={{ scrollMarginTop: `${ANCHOR_OFFSET}px` } as any}
+                                    sx={{ scrollMarginTop: `${anchorOffset}px` } as any}
                                 >
                                     <CardHome
                                         title={vocab.name}
@@ -183,6 +196,21 @@ const Homepage: React.FC = () => {
                                 </Box>
                             ))}
                         </VStack>
+                    </Box>
+                    <Box
+                        alignSelf='flex-start'
+                        mt={calculateFromMainWidth(104, mainWidth) as any}
+                        sx={{
+                            width: calculateFromMainWidth(326, mainWidth),
+                            minWidth: calculateFromMainWidth(326, mainWidth),
+                            flexShrink: 0,
+                        } as any}
+                    >
+                        <AnchorNav
+                            items={navItems}
+                            offset={anchorOffset}
+                            stickyTop={anchorOffset}
+                        />
                     </Box>
                 </Box>
             </Box>
