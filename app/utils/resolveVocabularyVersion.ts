@@ -1,6 +1,6 @@
 import { fetchLatestReleaseLine } from '@/app/utils/githubRelease';
 
-export async function resolveVocabularyVersion(vocabulary: 'Chronostratigraphy' | 'TectonicUnits' | 'Lithostratigraphy' | 'Lithology' | 'ls_correlations'): Promise<string> {
+export async function resolveVocabularyVersion(vocabulary: 'Chronostratigraphy' | 'TectonicUnits' | 'TectonicStructures' | 'Lithostratigraphy' | 'Lithology' | 'ls_correlations'): Promise<string> {
   try {
     const cfgRes = await fetch(`/api/githubRepo?vocabulary=${encodeURIComponent(vocabulary)}`);
     if (!cfgRes.ok) {
