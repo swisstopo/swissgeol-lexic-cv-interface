@@ -295,6 +295,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 isDefinedBy: '',
                 termStatus: '',
             };
+            const definitions: Array<{ language?: string; value: string }> = [];
+
             termResult.forEach(result => {
                 const { predicate, object } = result;
 
@@ -310,7 +312,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         }
                         break;
                     case 'http://www.w3.org/2004/02/skos/core#definition':
-                        termData.definition = object.value;
+                        definitions.push({ language: object.language, value: object.value });
                         break;
                     case 'http://www.w3.org/2004/02/skos/core#broader':
                         termData.relatedTerms.Broader.push(object.value);
@@ -338,6 +340,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         break;
                 }
             });
+
+            const englishDefinition = definitions.find(
+                ({ language }) => language?.toLowerCase().split('-')[0] === 'en'
+            );
+            termData.definition = englishDefinition?.value ?? definitions[0]?.value ?? '';
+
             /**
              * Takes from configuration the order to follow when saving prefLabels by giving them a precise order of display 
              */
