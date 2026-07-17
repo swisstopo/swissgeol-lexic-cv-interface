@@ -14,6 +14,13 @@
             "username": "",
             "password": ""
         },
+        "TectonicStructures": {
+            "id": "TectonicStructures",
+            "url": "",
+            "repositoryId": "",
+            "username": "",
+            "password": ""
+        },
         "Lithostratigraphy": {
             "id": "Lithostratigraphy",
             "url": "",
@@ -45,6 +52,11 @@
         "TectonicUnitsQuery": {
             "queryBreadcrumbs": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <{{PREFIX_BASE_URL}}/TectonicUnits/>\n\nSELECT ?narrowerConcept\nWHERE {\n  ex:${term} skos:broader+ ?narrowerConcept.\n}",
             "queryVocabolo": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <{{PREFIX_BASE_URL}}/TectonicUnits/>\n\nSELECT ?predicate ?object\nWHERE {\n  ex:${term} ?predicate ?object .\n}",
+            "prefLabelOfAllConcept": "SELECT DISTINCT ?subject ?label\nWHERE {\n  GRAPH ?graph {\n ?subject ?predicate ?label .\n FILTER(CONTAINS(LCASE(STR(?predicate)), \"label\"))\n FILTER(LANGMATCHES(LANG(?label), \"en\"))\n }\n}"
+        },
+        "TectonicStructuresQuery": {
+            "queryBreadcrumbs": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <{{PREFIX_BASE_URL}}/TectonicStructures/>\n\nSELECT ?narrowerConcept\nWHERE {\n  ex:${term} skos:broader+ ?narrowerConcept.\n}",
+            "queryVocabolo": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <{{PREFIX_BASE_URL}}/TectonicStructures/>\n\nSELECT ?predicate ?object\nWHERE {\n  ex:${term} ?predicate ?object .\n}",
             "prefLabelOfAllConcept": "SELECT DISTINCT ?subject ?label\nWHERE {\n  GRAPH ?graph {\n ?subject ?predicate ?label .\n FILTER(CONTAINS(LCASE(STR(?predicate)), \"label\"))\n FILTER(LANGMATCHES(LANG(?label), \"en\"))\n }\n}"
         },
         "LithostratigraphyQuery": {

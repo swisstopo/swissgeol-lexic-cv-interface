@@ -73,7 +73,7 @@ const Homepage: React.FC = () => {
                 'IT': 'Unità tettoniche',
                 'FR': 'Unités tectoniques'
             },
-            description: 'The controlled vocabulary on "Tectonic Units" includes terms used to describe the tectonic units of Switzerland in maps, boreholes, and other assets managed by the Swiss Geological Survey. This vocabulary is based on the Tectonic Map of Switzerland 1:500,000 (Gouffon et al. 2024), adapted and complemented for more detailed attributions, considering additional internal and external links.',
+            description: 'The controlled vocabulary on "Tectonic Units" includes terms used to describe the tectonic units of Switzerland in 3D models, maps, boreholes, and other assets managed by the Swiss Geological Survey. These tectonic elements are 3D bodies bounded by “Tectonic Structures” and classified according to their present-day structural position (resulting predominantly from their Alpine deformation history). This vocabulary is based on the Tectonic Map of Switzerland 1:500’000 (Gouffon et al. 2024), adapted and complemented for more detailed attributions, considering additional internal and external links.',
             topConcept: [
                 { label: "Abgescherte Nordalpines Vorland (de), Detached North Alpine Foreland (en), Avant-pays nord-alpin décolle (fr), Avampaese nordalpino distaccato (it)", url: '/TectonicUnits/DetachedNorthAlpineForeland' },
                 { label: "Autochthones Nordalpines Vorland (de), Autochthonous North Alpine Foreland (en), Avant-pays nord-alpin autochtone (fr), Avampaese nordalpino autoctono (it)", url: '/TectonicUnits/AutochthonousNorthAlpineForeland' },
@@ -84,6 +84,21 @@ const Homepage: React.FC = () => {
                 { label: "Salassikum (de), Salassic (en), Salassique (fr), Salassico (it)", url: '/TectonicUnits/Salassic' },
                 { label: "Südalpin (de), South Alpine (en), Sudalpin (fr), Sudalpino (it)", url: '/TectonicUnits/SouthAlpine' },
                 { label: "Känozoische magmatische Gesteine (de), Cenozoic magmatic rocks (en), Roches magmatiques cénozoïques (fr), Rocce magmatiche cenozoiche (it)", url: '/TectonicUnits/CenozoicMagmaticRocks' },
+            ],
+        },
+        {
+            name: 'Tectonic Structures',
+            translations: {
+                'EN': 'Tectonic Structures',
+                'DE': 'Tektonische Strukturen',
+                'IT': 'Strutture tettoniche',
+                'FR': 'Structures tectoniques'
+            },
+            description: 'The controlled vocabulary on "Tectonic Structures" includes terms used to describe faults, folds and further deformation zones of Switzerland in 3D models, maps, boreholes, and other assets managed by the Swiss Geological Survey. These tectonic elements occur as rather narrow bands (often generalised as 3D surfaces or 2D lines) that either serve as boundaries to define “Tectonic Units” or are situated within them, respectively cut through them.',
+            topConcept: [
+                { label: 'tektonische Störung (de), tectonic accident (en), accident tectonique (fr), faglia (it)', url: '/TectonicStructures/Fault' },
+                { label: 'Falte (de), fold (en), pli (fr), piega (it)', url: '/TectonicStructures/Fold' },
+                { label: 'Deformationszone (de), deformation zone (en), zone de déformation (fr), zona di deformazione (it)', url: '/TectonicStructures/ZoneDeformation' },
             ],
         },
         {

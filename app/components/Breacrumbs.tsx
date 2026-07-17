@@ -23,6 +23,9 @@ const getVocabularyLabel = (vocabulary: string) => {
     if (vocabulary === 'ls_correlations') {
         return 'Lithostratigraphic Correlations';
     }
+    if (vocabulary === 'TectonicStructures') {
+        return 'Tectonic Structures';
+    }
     return vocabulary;
 };
 

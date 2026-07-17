@@ -92,7 +92,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const sanitizedTerm = validation.sanitizedTerm!;
-    
+
     /**
      * Reads the `connectionDbConfig.json` configuration file to retrieve the connection details for the specified vocabulary.
      * Parses the JSON content of the file to extract the configuration for the specified vocabulary.
@@ -117,11 +117,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const url = process.env.GRAPHDB_BASE_URL;
     const username = process.env.GRAPHDB_USERNAME || '';
     const password = process.env.GRAPHDB_PASSWORD || '';
-    
+
     if (!url) {
         return res.status(500).json({ error: 'GRAPHDB_BASE_URL environment variable is required' });
     }
-    
+
     // Get repository ID from environment variables for the requested vocabulary
     let repositoryId;
     switch (vocabulary) {
@@ -130,6 +130,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             break;
         case 'TectonicUnits':
             repositoryId = process.env.TECTONICUNITS_REPO_ID;
+            break;
+        case 'TectonicStructures':
+            repositoryId = process.env.TECTONICSTRUCTURES_REPO_ID;
             break;
         case 'Lithostratigraphy':
             repositoryId = process.env.LITHOSTRATIGRAPHY_REPO_ID;
@@ -141,12 +144,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             repositoryId = process.env.LS_CORRELATIONS_REPO_ID;
             break;
     }
-    
+
     if (!repositoryId) {
         return res.status(500).json({ error: `${vocabulary.toUpperCase()}_REPO_ID environment variable is required` });
     }
 
-    
+
     try {
         /** 
          * Establishes a connection to the GraphDB instance using the extracted configuration details.
@@ -175,7 +178,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
          */
         // Use the repositoryId already determined above with env override
         const repositoryUrl = `${url}/repositories/${repositoryId}`;
-        
+
         const queryExecutor = new QueryExecutor(graphDBClient, repositoryId, url, username, password, repositoryUrl);
         /**
          * Retrieves the query configuration for the specified vocabulary using `getQueryConfig`.
@@ -201,7 +204,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             const allConceptMap = new Map<string, string>();
 
             const processResults = (results: LabelQueryResult[]) => {
-                
+
                 let addedCount = 0;
                 let skippedCount = 0;
                 let duplicateCount = 0;
@@ -224,7 +227,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     }
                 });
 
-                
+
             };
 
             // Iterate through all configured vocabularies and collect their prefLabels (in parallel)
@@ -237,6 +240,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         break;
                     case 'TectonicUnits':
                         repoId = process.env.TECTONICUNITS_REPO_ID;
+                        break;
+                    case 'TectonicStructures':
+                        repoId = process.env.TECTONICSTRUCTURES_REPO_ID;
                         break;
                     case 'Lithostratigraphy':
                         repoId = process.env.LITHOSTRATIGRAPHY_REPO_ID;
@@ -289,10 +295,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 isDefinedBy: '',
                 termStatus: '',
             };
+            const definitions: Array<{ language?: string; value: string }> = [];
+
             termResult.forEach(result => {
                 const { predicate, object } = result;
 
-                
+
 
                 switch (predicate.value) {
                     case 'http://www.w3.org/2004/02/skos/core#inScheme':
@@ -304,7 +312,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         }
                         break;
                     case 'http://www.w3.org/2004/02/skos/core#definition':
-                        termData.definition = object.value;
+                        definitions.push({ language: object.language, value: object.value });
                         break;
                     case 'http://www.w3.org/2004/02/skos/core#broader':
                         termData.relatedTerms.Broader.push(object.value);
@@ -325,13 +333,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     case 'http://resource.geosciml.org/ontology/timescale/gts#rank':
                         break;
                     default:
-                        
+
                         const relatedArray = termData.relatedTerms.OtherRelation.get(predicate.value) ?? [];
                         relatedArray.push(object.value);
                         termData.relatedTerms.OtherRelation.set(predicate.value, relatedArray);
                         break;
                 }
             });
+
+            const englishDefinition = definitions.find(
+                ({ language }) => language?.toLowerCase().split('-')[0] === 'en'
+            );
+            termData.definition = englishDefinition?.value ?? definitions[0]?.value ?? '';
+
             /**
              * Takes from configuration the order to follow when saving prefLabels by giving them a precise order of display 
              */
@@ -387,7 +401,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 allConceptMap: allConceptObject,
             };
 
-            
+
             res.status(200).json(responseData);
         } catch (error) {
             console.error('Error executing query:', error);

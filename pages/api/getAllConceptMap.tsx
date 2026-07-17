@@ -35,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const url = process.env.GRAPHDB_BASE_URL;
         const username = process.env.GRAPHDB_USERNAME || '';
         const password = process.env.GRAPHDB_PASSWORD || '';
-        
+
         if (!url) {
             return res.status(500).json({ error: 'GRAPHDB_BASE_URL environment variable is required' });
         }
@@ -50,6 +50,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 case 'TectonicUnits':
                     repositoryId = process.env.TECTONICUNITS_REPO_ID;
                     break;
+                case 'TectonicStructures':
+                    repositoryId = process.env.TECTONICSTRUCTURES_REPO_ID;
+                    break;
                 case 'Lithostratigraphy':
                     repositoryId = process.env.LITHOSTRATIGRAPHY_REPO_ID;
                     break;
@@ -60,11 +63,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     repositoryId = process.env.LS_CORRELATIONS_REPO_ID;
                     break;
             }
-            
+
             if (!repositoryId) {
                 return res.status(500).json({ error: `${vocabulary.toUpperCase()}_REPO_ID environment variable is required` });
             }
-            
+
             const graphDBClient = new GraphDBClient(url, username, password);
             const repositoryUrl = `${url}/repositories/${repositoryId}`;
             const queryExecutor = new QueryExecutor(graphDBClient, repositoryId, url, username, password, repositoryUrl);
