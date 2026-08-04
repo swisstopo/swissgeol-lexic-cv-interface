@@ -1,0 +1,97 @@
+publiccodeYmlVersion: 0.5.0
+name: lexic.swissgeol.ch
+url: https://github.com/swisstopo/swissgeol-lexic-cv-interface
+landingURL: https://lexic.swissgeol.ch/
+platforms:
+  - web
+developmentStatus: beta
+softwareType: standalone/web
+intendedAudience:
+  countries:
+    - CH
+  scope:
+    - environment
+    - government
+    - research
+    - science-and-technology
+    - energy
+    - education
+organisation:
+  uri: https://ld.admin.ch/office/IV.1.5a
+  name: Bundesamt für Landestopografie (swisstopo)
+description:
+  en:
+    localisedName: lexic.swissgeol.ch
+    shortDescription: lexic.swissgeol.ch is a semantic web based platform for
+      controlled geological vocabularies and classifications.
+    longDescription: >-
+      lexic.swissgeol.ch is a semantic web based platform for controlled
+      geological vocabularies and classifications.
+
+      It holds the most relevant geological classifications for Switzerland
+      derived and harmonised with the geological data products of swisstopo. 
+    features:
+      - Manage controlled vocabularies
+      - Find geological terms
+      - Find geological vocabularies
+      - Navigate in semantic graphs
+  it:
+    localisedName: lexic.swissgeol.ch
+    shortDescription: lexic.swissgeol.ch is a semantic web based platform for
+      controlled geological vocabularies and classifications.
+    longDescription: >-
+      lexic.swissgeol.ch is a semantic web based platform for controlled
+      geological vocabularies and classifications.
+
+      It holds the most relevant geological classifications for Switzerland
+      derived and harmonised with the geological data products of swisstopo. 
+    features:
+      - Manage controlled vocabularies
+      - Find geological terms
+      - Find geological vocabularies
+      - Navigate in semantic graphs
+  fr:
+    localisedName: lexic.swissgeol.ch
+    shortDescription: lexic.swissgeol.ch is a semantic web based platform for
+      controlled geological vocabularies and classifications.
+    longDescription: >-
+      lexic.swissgeol.ch is a semantic web based platform for controlled
+      geological vocabularies and classifications.
+
+      It holds the most relevant geological classifications for Switzerland
+      derived and harmonised with the geological data products of swisstopo. 
+    features:
+      - Manage controlled vocabularies
+      - Find geological terms
+      - Find geological vocabularies
+      - Navigate in semantic graphs
+  de:
+    localisedName: lexic.swissgeol.ch
+    shortDescription: lexic.swissgeol.ch is a semantic web based platform for
+      controlled geological vocabularies and classifications.
+    longDescription: >-
+      lexic.swissgeol.ch is a semantic web based platform for controlled
+      geological vocabularies and classifications.
+
+      It holds the most relevant geological classifications for Switzerland
+      derived and harmonised with the geological data products of swisstopo. 
+    features:
+      - Find geological terms
+      - Find geological vocabularies
+      - Navigate in semantic graphs
+      - Manage controlled vocabularies
+legal:
+  license: BSD-3-Clause
+maintenance:
+  type: contract
+  contractors:
+    - name: Epsilon Italia srl
+      until: 2029-12-31
+      website: https://www.epsilon-italia.it
+localisation:
+  localisationReady: true
+  availableLanguages:
+    - de
+    - en
+    - fr
+    - it
