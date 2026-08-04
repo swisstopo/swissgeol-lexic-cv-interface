@@ -1,40 +1,97 @@
-This is a [Next.js](https://nextjs.org/) + [Gluestack-ui](https://ui.gluestack.io/) project template bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Controlled Vocabularies Interface
 
-## Getting Started
+Interfaccia web Next.js per consultare i vocabolari controllati Swissgeol tramite GraphDB.
 
-First, run the development server:
+## Stack principale
+
+- Next.js 14
+- React 18
+- TypeScript
+- Tailwind CSS
+- Gluestack UI v2 con componenti locali in `components/ui`
+- GraphDB client
+- Docker per build e runtime di produzione
+
+## Avvio con Docker
+
+Il percorso Docker e quello da considerare prioritario per test e produzione.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+docker compose up --build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+L'applicazione viene esposta su:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3050
+```
 
-This project uses [`@gluestack-ui`](https://ui.gluestack.io/docs/overview/introduction) library that provides optionally styled and accessible components. These components are designed for easy integration into applications developed with React and React Native.
+Per l'ambiente di test CVI:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```bash
+docker compose -f docker-compose.testCVI.yml up --build
+```
 
-## Learn More
+## Avvio locale
 
-To learn more about Next.js + Gluestack UI template, take a look at the following resources:
+```bash
+npm install
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Gluestack UI Documenatation](https://ui.gluestack.io/docs/overview/introduction) - learn about core concepts and architecture of gluestack-ui.
-- [Gluestack Style Documentaion](https://style.gluestack.io/docs/overview/introduction) - learn about the universal styling library that is used in Gluestack-ui
+L'applicazione locale viene esposta da Next.js su:
 
-You can check out:
-- [the gluestack-ui GitHub repository](https://github.com/gluestack/gluestack-ui)
-- [the gluestack-style GitHub repository](https://github.com/gluestack/gluestack-style)
-Your feedback and contributions are welcome!
+```text
+http://localhost:3000
+```
 
-## Deploy on Vercel
+Per verificare la build:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run build
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Variabili ambiente
+
+Le variabili principali sono documentate in `.env.example`.
+
+I file `docker-compose.yml` e `docker-compose.testCVI.yml` definiscono gia i valori usati dagli ambienti Docker. In locale, usare `.env.local` o variabili ambiente equivalenti.
+
+Variabili principali:
+
+- `GRAPHDB_BASE_URL`
+- `GRAPHDB_USERNAME`
+- `GRAPHDB_PASSWORD`
+- `CHRONOSTRATIGRAPHY_REPO_ID`
+- `TECTONICUNITS_REPO_ID`
+- `LITHOSTRATIGRAPHY_REPO_ID`
+- `LITHOLOGY_REPO_ID`
+- `LS_CORRELATIONS_REPO_ID`
+- `VOCABULARY_PREFIX_URL`
+- `GOOGLE_ANALYTICS_ID`
+- `GITHUB_OWNER`
+- `CHRONOSTRATIGRAPHY_REPO_SLUG`
+- `TECTONICUNITS_REPO_SLUG`
+- `LITHOSTRATIGRAPHY_REPO_SLUG`
+- `LITHOLOGY_REPO_SLUG`
+- `LS_CORRELATIONS_REPO_SLUG`
+
+## Struttura UI
+
+La UI e stata migrata da Gluestack v1 a Gluestack v2.
+
+I componenti Gluestack attivi sono componenti locali sotto `components/ui`. Il provider attivo e `components/ui/gluestack-ui-provider`, usato da `app/providers.tsx`.
+
+Non usare nuovi import da:
+
+- `@gluestack-ui/themed`
+- `@gluestack-ui/config`
+- `@gluestack-style/react`
+
+Per preservare il risultato grafico, alcuni stili restano intenzionalmente in Tailwind o React style object. Questo aiuta anche a ridurre gradualmente la dipendenza da Gluestack.
+
+## Note di manutenzione
+
+- `.npmrc` contiene `legacy-peer-deps=true` per compatibilita con lo stack Gluestack.
+- `.gluestack/` e un artefatto della migrazione v1 -> v2. Non rimuoverlo senza una verifica dedicata di build, Docker e UI.
+- I documenti e gli script interni di migrazione non fanno parte del repository applicativo.

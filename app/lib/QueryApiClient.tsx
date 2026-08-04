@@ -4,7 +4,7 @@ import RDFMimeType from 'graphdb/lib/http/rdf-mime-type';
 import SparqlXmlResultParser from 'graphdb/lib/parser/sparql-xml-result-parser';
 import GetQueryPayload from 'graphdb/lib/query/get-query-payload';
 import QueryType from 'graphdb/lib/query/query-type';
-import config from 'next/config';
+import { SparqlXmlParser } from 'sparqlxml-parse';
 /**
  * Class for executing SPARQL queries using a GraphDB client
  * 
@@ -31,6 +31,7 @@ class QueryExecutor {
         this.repositoryConfig = new RepositoryClientConfig(Url)
             .setEndpoints([RepositoryUrl])
             .setReadTimeout(50000)
+            .setWriteTimeout(50000)
             .setHeaders({
                 'Accept': RDFMimeType.SPARQL_RESULTS_XML,
             })
@@ -41,13 +42,15 @@ class QueryExecutor {
     public async executeSparqlQuery(sparqlQuery: string): Promise<any> {
         try {
             const repository = await this.graphDBClient.getClient().getRepository(this.repositoryId, this.repositoryConfig);
-            repository.registerParser(new SparqlXmlResultParser(config));
+            const resultParser = new SparqlXmlResultParser({});
+            resultParser.parser = new SparqlXmlParser();
+            repository.registerParser(resultParser);
 
             const payload = new GetQueryPayload()
-                .setQuery(sparqlQuery)
                 .setQueryType(QueryType.SELECT)
                 .setResponseType(RDFMimeType.SPARQL_RESULTS_XML)
                 .setLimit(10000);
+            payload.setQuery(sparqlQuery);
 
             const queryStream = await repository.query(payload);
             const results: any[] = [];

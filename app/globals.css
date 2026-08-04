@@ -132,3 +132,6 @@ body.no-scroll {
     width: 798px !important;
   }
 }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

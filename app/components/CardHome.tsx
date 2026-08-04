@@ -1,7 +1,12 @@
 "use client";
 
 import React from "react";
-import { Box, HStack, VStack, Text } from "@gluestack-ui/themed";
+import { Box } from '@/components/ui/box';
+import { HStack } from '@/components/ui/hstack';
+import { VStack } from '@/components/ui/vstack';
+import { Text } from '@/components/ui/text';
+import { Image } from '@/components/ui/image';
+
 import { useMainWidth, calculateFromMainWidth } from "../utils/heightUtils";
 import { ClientButton } from "./ClientButton_UIv2";
 
@@ -22,10 +27,10 @@ export type CardHomeProps = {
 };
 
 const flagImg = {
-  EN: "Bandiera-inglese.jpg",
-  DE: "GERMANIA.jpg",
-  FR: "Flag_of_France_(1794–1815,_1830–1974).svg.png",
-  IT: "italia.png",
+  EN: "flag-en.jpg",
+  DE: "flag-de.jpg",
+  FR: "flag-fr.png",
+  IT: "flag-it.png",
 };
 
 const getEnglishLabel = (rawLabel: string) => {
@@ -36,9 +41,11 @@ const getEnglishLabel = (rawLabel: string) => {
   return english.replace(/\(en\)/i, "").trim();
 };
 
+const getFlagSource = (src: string) => (src.startsWith("/") ? src : `/${src}`);
+
 const FlagCircle = ({ src, alt }: { src: string; alt: string }) => (
-  <Box rounded="$full" width={22} height={22} overflow="hidden">
-    <img src={src} alt={alt} height="100%" style={{ display: "block" }} />
+  <Box className="overflow-hidden rounded-full w-[22px] h-[22px]"    >
+    <Image source={{ uri: getFlagSource(src) }} alt={alt} size="full" resizeMode="cover" />
   </Box>
 );
 
@@ -55,71 +62,71 @@ const CardHome: React.FC<CardHomeProps> = ({
   const strong = "#1C2834";
 
   return (
-    <Box
-      bg="#fff"
-      borderWidth={1}
-      borderColor={borderColor}
-      borderRadius={8}
-      flexDirection="row"
-      overflow="hidden"
+    <Box style={{ borderColor: borderColor } as any} className="flex-row overflow-hidden border-[1px] rounded-[8px] bg-[#fff]"
+
+
+
+
+
+
     >
       {/* LEFT CARD */}
-      <Box flexDirection="column" sx={{ gap: calculateFromMainWidth(36, mainWidth) } as any}>
+      <Box style={{ gap: calculateFromMainWidth(36, mainWidth) } as any} className="flex-col"  >
         {/* LEFT HEADER */}
-        <Box bg={headerBg} justifyContent="center" alignContent="center" sx={{ h: calculateFromMainWidth(96, mainWidth), pl: calculateFromMainWidth(36, mainWidth), pt: calculateFromMainWidth(36, mainWidth), pr: calculateFromMainWidth(36, mainWidth), pb: calculateFromMainWidth(36, mainWidth) } as any}>
-          <Box gap={12} flexDirection="row" alignItems="center">
+        <Box style={{ backgroundColor: headerBg, height: calculateFromMainWidth(96, mainWidth), paddingLeft: calculateFromMainWidth(36, mainWidth), paddingTop: calculateFromMainWidth(36, mainWidth), paddingRight: calculateFromMainWidth(36, mainWidth), paddingBottom: calculateFromMainWidth(36, mainWidth) } as any} className="justify-center content-center"    >
+          <Box className="flex-row items-center gap-[12px]"   >
             {/* IMAGE FLAG */}
-            <Box rounded="$full" overflow="hidden" mr={8} h={24} w={24}>
-              <img
-                src={englishFlagSrc ?? flagImg.EN}
+            <Box className="overflow-hidden rounded-full h-[24px] w-[24px] mr-[8px]"     >
+              <Image
+                source={{ uri: getFlagSource(englishFlagSrc ?? flagImg.EN) }}
                 alt="English"
-                height="100%"
-                style={{ display: "block" }}
+                size="full"
+                resizeMode="cover"
               />
             </Box>
             {/* TITLE */}
-            <Text
-              fontWeight="$bold"
-              fontSize={'1.25em' as any}
-              lineHeight={24}
-              letterSpacing={0.1}
-              color={strong}
+            <Text style={{ color: strong } as any} className="font-[700] text-[1.25em] leading-[24px] tracking-[0.1px]"
+
+
+
+
+
             >
               {title}
             </Text>
           </Box>
         </Box>
         {/* LEFT CONTENT */}
-        <Box sx={{w: calculateFromMainWidth(649, mainWidth), gap: calculateFromMainWidth(36, mainWidth), pl: calculateFromMainWidth(36, mainWidth), pr: calculateFromMainWidth(36, mainWidth), pb: calculateFromMainWidth(36, mainWidth) } as any}>
+        <Box style={{ width: calculateFromMainWidth(649, mainWidth), gap: calculateFromMainWidth(36, mainWidth), paddingLeft: calculateFromMainWidth(36, mainWidth), paddingRight: calculateFromMainWidth(36, mainWidth), paddingBottom: calculateFromMainWidth(36, mainWidth) } as any} >
           {/* DESCRIPTION */}
-          <Text
-            fontWeight={400}
-            fontSize={'1em' as any}
-            lineHeight={24}
-            letterSpacing={0.1}
-            color={strong}
+          <Text style={{ color: strong } as any} className="font-[400] text-[1em] leading-[24px] tracking-[0.1px]"
+
+
+
+
+
           >
             {description}
           </Text>
           {/* TOP CONCEPTS */}
-          <Box sx={{ gap: calculateFromMainWidth(16, mainWidth) } as any}>
+          <Box style={{ gap: calculateFromMainWidth(16, mainWidth) } as any} >
             {/* TITLE TOP CONCEPTS */}
-            <Text
-              fontWeight={700}
-              fontSize={'1em' as any}
-              lineHeight={24}
-              letterSpacing={0.1}
-              verticalAlign="middle"
-              color={strong}
+            <Text style={{ color: strong } as any} className="font-[700] text-[1em] leading-[24px] tracking-[0.1px] align-middle"
+
+
+
+
+
+
             >
               Top Concepts
             </Text>
             {/* Buttons of the Concepts */}
-            <Box
-              flexDirection="row"
-              flexWrap="wrap"
-              justifyContent="space-between"
-              sx={{ gap: calculateFromMainWidth(16, mainWidth) } as any}
+            <Box style={{ gap: calculateFromMainWidth(16, mainWidth) } as any} className="flex-row flex-wrap justify-between"
+
+
+
+
             >
               {topConcepts.map((concept, index) => (
                 <ClientButton
@@ -134,37 +141,37 @@ const CardHome: React.FC<CardHomeProps> = ({
       </Box>
 
       {/* Right card (Translations) */}
-      <Box borderLeftWidth={1} borderColor={borderColor} sx={{ width: calculateFromMainWidth(326, mainWidth) } as any}>
+      <Box style={{ borderColor: borderColor, width: calculateFromMainWidth(326, mainWidth) } as any} className="border-l-[1px]"   >
         {/* Right header */}
-        <Box
-            bg={headerBg} justifyContent="center" alignContent="center"
-            sx={{ h: calculateFromMainWidth(96, mainWidth), pl: calculateFromMainWidth(36, mainWidth), pt: calculateFromMainWidth(36, mainWidth), pr: calculateFromMainWidth(36, mainWidth), pb: calculateFromMainWidth(36, mainWidth) } as any}
+        <Box style={{ backgroundColor: headerBg, height: calculateFromMainWidth(96, mainWidth), paddingLeft: calculateFromMainWidth(36, mainWidth), paddingTop: calculateFromMainWidth(36, mainWidth), paddingRight: calculateFromMainWidth(36, mainWidth), paddingBottom: calculateFromMainWidth(36, mainWidth) } as any} className="justify-center content-center"
+
+
         >
-          <Text
-            fontWeight={700}
-            fontSize={'1em' as any}
-            lineHeight={24}
-            letterSpacing={0.1}
-            verticalAlign="middle"
-            color={strong}
+          <Text style={{ color: strong } as any} className="font-[700] text-[1em] leading-[24px] tracking-[0.1px] align-middle"
+
+
+
+
+
+
           >
             Translations
           </Text>
         </Box>
 
         {/* Right content: translation list */}
-        <Box gap={calculateFromMainWidth(36, mainWidth) as any} mt={calculateFromMainWidth(36, mainWidth) as any} pr={calculateFromMainWidth(36, mainWidth) as any} pl={calculateFromMainWidth(36, mainWidth) as any}>
-          <Box alignItems="center" flexDirection="row" gap={calculateFromMainWidth(12, mainWidth) as any}>
+        <Box style={{ gap: calculateFromMainWidth(36, mainWidth) as any, marginTop: calculateFromMainWidth(36, mainWidth) as any, paddingRight: calculateFromMainWidth(36, mainWidth) as any, paddingLeft: calculateFromMainWidth(36, mainWidth) as any } as any}    >
+          <Box style={{ gap: calculateFromMainWidth(12, mainWidth) as any } as any} className="items-center flex-row"   >
             <FlagCircle src={flagImg.DE} alt="German" />
-            <Text fontSize={'1em' as any}>{translations.DE}</Text>
+            <Text className="text-[1em]" >{translations.DE}</Text>
           </Box>
-          <Box alignItems="center" flexDirection="row" gap={calculateFromMainWidth(12, mainWidth) as any}>
+          <Box style={{ gap: calculateFromMainWidth(12, mainWidth) as any } as any} className="items-center flex-row"   >
             <FlagCircle src={flagImg.FR} alt="French" />
-            <Text fontSize={'1em' as any}>{translations.FR}</Text>
+            <Text className="text-[1em]" >{translations.FR}</Text>
           </Box>
-          <Box alignItems="center" flexDirection="row" gap={calculateFromMainWidth(12, mainWidth) as any}>
+          <Box style={{ gap: calculateFromMainWidth(12, mainWidth) as any } as any} className="items-center flex-row"   >
             <FlagCircle src={flagImg.IT} alt="Italian" />
-            <Text fontSize={'1em' as any}>{translations.IT}</Text>
+            <Text className="text-[1em]" >{translations.IT}</Text>
           </Box>
         </Box>
       </Box>

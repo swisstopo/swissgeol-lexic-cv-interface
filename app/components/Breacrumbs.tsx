@@ -1,6 +1,7 @@
-'use client';
-
-import { Box, Link, LinkText, Text } from '@gluestack-ui/themed';
+'use client';;
+import { Text } from "@/components/ui/text";
+import { Link, LinkText } from "@/components/ui/link";
+import { Box } from "@/components/ui/box";
 import React, { useEffect, useState } from 'react';
 import { BreadCrumbsData } from '../models/breadCrumbsInterface';
 import { useMainWidth, calculateFromMainWidth } from '../utils/heightUtils';
@@ -9,7 +10,7 @@ export interface BreadcrumbsProps {
     data: BreadCrumbsData;
 }
 
-const NAV_INITIAL_HEIGHT = 88; 
+const NAV_INITIAL_HEIGHT = 88;
 const NAV_MIN_HEIGHT = 78;
 const BREADCRUMB_INITIAL_HEIGHT = 88;
 const BREADCRUMB_MIN_HEIGHT = 48;
@@ -25,6 +26,9 @@ const getVocabularyLabel = (vocabulary: string) => {
     }
     if (vocabulary === 'TectonicStructures') {
         return 'Tectonic Structures';
+    }
+    if (vocabulary === 'materialDescription') {
+        return 'Material Description';
     }
     return vocabulary;
 };
@@ -68,51 +72,40 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ data }) => {
     };
     return (
         <>
-            <Box h={`${breadcrumbHeight}px` as any} />
+            <Box style={{ height: `${breadcrumbHeight}px` } as any} />
             <Box
-                position={'fixed' as any}
-                top={`${navHeight}px` as any}
-                left={0}
-                right={0}
-                zIndex={900}
-                w={'100%'}
-                flexDirection='row'
-                alignItems='center'
-                justifyContent='center'
-                borderBottomWidth={1}
-                borderBottomColor='#DFE4E9'
-                h={`${breadcrumbHeight}px` as any}
-                bg='$white'
-                paddingLeft={calculateFromMainWidth(40, mainWidth) as any}
-                paddingRight={calculateFromMainWidth(40, mainWidth) as any}
-                paddingTop={paddingY}
-                paddingBottom={paddingY}
                 style={{
+                    top: `${navHeight}px`,
+                    height: `${breadcrumbHeight}px`,
+                    paddingLeft: calculateFromMainWidth(40, mainWidth),
+                    paddingRight: calculateFromMainWidth(40, mainWidth),
+                    paddingTop: paddingY,
+                    paddingBottom: paddingY,
                     transition: 'height 0.25s ease, padding 0.25s ease'
                 } as any}
-            >
+                className="fixed left-0 right-0 z-[900] w-[100%] flex-row items-center justify-center border-b-[1px] border-b-[#DFE4E9] bg-white">
                 <Box
-                    w={calculateFromMainWidth(1236, mainWidth) as any}
-                    h={28}
-                    margin='auto'
-                    flexDirection='row'
-                    alignItems='center'
-                    gap={calculateFromMainWidth(10, mainWidth) as any}
-                    flexWrap='wrap'
-                >
+                    style={{
+                        width: calculateFromMainWidth(1236, mainWidth),
+                        gap: calculateFromMainWidth(10, mainWidth),
+                    } as any}
+                    className="h-[28px] m-auto flex-row items-center flex-wrap">
                     <Link href='/'>
-                        <LinkText fontSize={14} fontWeight={500} lineHeight={20} letterSpacing={0.25} textDecorationLine='underline' >{data.startPage}</LinkText>
+                        <LinkText
+                            className="text-[14px] font-[500] leading-[20px] tracking-[0.25px] underline">{data.startPage}</LinkText>
                     </Link>
                     <Text>&gt;</Text>
                     <Link href='/'>
-                        <LinkText fontSize={14} fontWeight={500} lineHeight={20} letterSpacing={0.25} textDecorationLine='underline'>{getVocabularyLabel(data.vocabulary)}</LinkText>
+                        <LinkText
+                            className="text-[14px] font-[500] leading-[20px] tracking-[0.25px] underline">{getVocabularyLabel(data.vocabulary)}</LinkText>
                     </Link>
                     <Text>&gt;</Text>
                     {data.broader.length <= 2 ? (
                         data.broader.slice().reverse().map((term, index) => (
                             <React.Fragment key={`${term}-${index}`}>
-                                <Link href={`/${data.vocabulary}/${extractLabel(term)}`} ml={3}>
-                                    <LinkText fontSize={14} fontWeight={500} lineHeight={20} letterSpacing={0.25} textDecorationLine='underline'>
+                                <Link href={`/${data.vocabulary}/${extractLabel(term)}`} className="ml-[3px]">
+                                    <LinkText
+                                        className="text-[14px] font-[500] leading-[20px] tracking-[0.25px] underline">
                                         {extractLabel(term)}
                                     </LinkText>
                                 </Link>
@@ -121,8 +114,9 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ data }) => {
                         ))
                     ) : (
                         <>
-                            <Link href={`/${data.vocabulary}/${extractLabel(data.broader[data.broader.length - 1])}`} ml={3}>
-                                <LinkText fontSize={14} fontWeight={500} lineHeight={20} letterSpacing={0.25} textDecorationLine='underline'>
+                            <Link href={`/${data.vocabulary}/${extractLabel(data.broader[data.broader.length - 1])}`} className="ml-[3px]">
+                                <LinkText
+                                    className="text-[14px] font-[500] leading-[20px] tracking-[0.25px] underline">
                                     {extractLabel(data.broader[data.broader.length - 1])}
                                 </LinkText>
                             </Link>
@@ -131,14 +125,16 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ data }) => {
                             {data.broader.slice(1, -1).reverse().map((term, index) => (
                                 <React.Fragment key={`${term}-${index}`}>
                                     <Link href={`/${data.vocabulary}/${extractLabel(term)}`}>
-                                        <LinkText fontSize={14} fontWeight={500} lineHeight={20} letterSpacing={0.25} textDecorationLine='underline'>...</LinkText>
+                                        <LinkText
+                                            className="text-[14px] font-[500] leading-[20px] tracking-[0.25px] underline">...</LinkText>
                                     </Link>
                                     <Text>&gt;</Text>
                                 </React.Fragment>
                             ))}
 
                             <Link href={`/${data.vocabulary}/${extractLabel(data.broader[0])}`}>
-                                <LinkText fontSize={14} fontWeight={500} lineHeight={20} letterSpacing={0.25} textDecorationLine='underline'>
+                                <LinkText
+                                    className="text-[14px] font-[500] leading-[20px] tracking-[0.25px] underline">
                                     {extractLabel(data.broader[0])}
                                 </LinkText>
                             </Link>
@@ -146,7 +142,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ data }) => {
                         </>
                     )}
                     <Link href={`/${data.vocabulary}/${extractLabel(data.term)}`}>
-                        <LinkText fontSize={14} textDecorationLine='none' bold color='$secondary400'>{data?.term}</LinkText>
+                        <LinkText bold className="text-[14px] no-underline text-secondary-400">{data?.term}</LinkText>
                     </Link>
                 </Box>
             </Box>

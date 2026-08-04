@@ -19,6 +19,7 @@ services:
       LITHOLOGY_REPO_ID: "lithology_swisstopo_public_core"
       LS_CORRELATIONS_REPO_ID: "ls_correlations_swisstopo_public_core"
       TECTONICSTRUCTURES_REPO_ID: "tectonic_structures_swisstopo_public_core"
+      MATERIALDESCRIPTION_REPO_ID: "material_description_swisstopo_public_core"
 
       
       # Vocabulary Prefix Base URL (for SPARQL queries)
@@ -34,3 +35,4 @@ services:
       LITHOLOGY_REPO_SLUG: swissgeol-lexic-vocabulary-lithologie
       LS_CORRELATIONS_REPO_SLUG: swissgeol-lexic-vocabulary-litstrat-correl
       TECTONICSTRUCTURES_REPO_SLUG: swissgeol-lexic-vocabulary-tectonicStructures
+      MATERIALDESCRIPTION_REPO_SLUG: swissgeol-lexic-vocabulary-materialDescription

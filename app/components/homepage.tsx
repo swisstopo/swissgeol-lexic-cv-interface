@@ -1,8 +1,11 @@
 'use client';
 
 import React, { useMemo, useRef } from 'react';
-import { Box, VStack, Text } from '@gluestack-ui/themed';
-import RootLayout from '../layout';
+import { Box } from '@/components/ui/box';
+import { VStack } from '@/components/ui/vstack';
+import { Text } from '@/components/ui/text';
+
+import PageLayout from './PageLayout';
 import { useMainWidth, calculateFromMainWidth } from '../utils/heightUtils';
 
 import CardHome from './CardHome';
@@ -102,16 +105,18 @@ const Homepage: React.FC = () => {
             ],
         },
         {
-            name: 'Lithology',
+            name: 'Lithostratigraphic Correlations',
             translations: {
-                'EN': 'Lithology',
-                'DE': 'Lithologie',
-                'IT': 'Litologia',
-                'FR': 'Lithologie'
+                'EN': 'Lithostratigraphic Correlations',
+                'DE': 'Lithostratigraphische Korrelationen',
+                'IT': 'Correlazioni litostratigrafiche',
+                'FR': 'Corrélations lithostratigraphiques'
             },
-            description: 'The controlled vocabulary on "Lithology" includes terms used to describe the rock types and lithological characteristics of Switzerland in maps, boreholes, and other assets managed by the Swiss Geological Survey. This vocabulary is based on standardized geological classifications, adapted and complemented for detailed attributions of rock materials and their properties, considering additional internal and external links',
+            description: 'The controlled vocabulary "Lithostratigraphic Correlations" includes generic terms used to group and parallelize formations and subordinate lithostratigraphic units across a large (paleo)geographical extent based on a common geodynamic evolution. This classification scheme is used in maps, boreholes, and other items maintained by the Swiss Geological Survey.',
             topConcept: [
-                { label: "Gestein (de), Rock (en), Roche (fr), Roccia (it)", url: '/Lithology/Rock' },
+                { label: 'Alpine Cycle', url: '/ls_correlations/AlpineCycle' },
+                { label: 'Ante-Alpine Basement', url: '/ls_correlations/BasementAnteAlpine' },
+                { label: 'Post Messinian', url: '/ls_correlations/PostMessinian' },
             ],
         },
         {
@@ -137,27 +142,41 @@ const Homepage: React.FC = () => {
             ],
         },
         {
-            name: 'Lithostratigraphic Correlations',
+            name: 'Lithology',
             translations: {
                 'EN': 'Lithology',
-                'DE': 'Lithostratigraphische Korrelationen',
-                'IT': 'Correlazioni litostratigrafiche',
-                'FR': 'Corrélations lithostratigraphiques'
+                'DE': 'Lithologie',
+                'IT': 'Litologia',
+                'FR': 'Lithologie'
             },
-            description: 'The controlled vocabulary "Lithostratigraphic Correlations" includes generic terms used to group and parallelize formations and subordinate lithostratigraphic units across a large (paleo)geographical extent based on a common geodynamic evolution. This classification scheme is used in maps, boreholes, and other items maintained by the Swiss Geological Survey.',
+            description: 'The controlled vocabulary on "Lithology" includes terms used to describe the rock types and lithological characteristics of Switzerland in maps, boreholes, and other assets managed by the Swiss Geological Survey. This vocabulary is based on standardized geological classifications, adapted and complemented for detailed attributions of rock materials and their properties, considering additional internal and external links',
             topConcept: [
-                { label: 'Alpine Cycle', url: '/ls_correlations/AlpineCycle' },
-                { label: 'Ante-Alpine Basement', url: '/ls_correlations/BasementAnteAlpine' },
-                { label: 'Post Messinian', url: '/ls_correlations/PostMessinian' },
+                { label: "Gestein (de), Rock (en), Roche (fr), Roccia (it)", url: '/Lithology/Rock' },
             ],
-        }
+        },
+        {
+            name: 'Material Description',
+            translations: {
+                'EN': 'Material Description',
+                'DE': 'Materialbeschreibung',
+                'IT': 'Descrizione del materiale',
+                'FR': 'Description du matériau'
+            },
+            description: 'The controlled vocabulary “Material Description” includes descriptive terms to characterise geological materials — i.e. rocks and unconsolidated deposits — covering diverse aspects such as colour, material properties, components, and fabric. The nomenclature was extracted and consolidated from code lists in key swisstopo products, mainly boreholes.swissgeol.ch and swissGeoCover2D, preserving model-specific traits and adding new terms — bridging datasets that describe the same concepts in different ways. This vocabulary is developed by swisstopo as a shared semantic basis across different datasets of the Swiss Geological Survey. It will be progressively complemented (cf. placeholders for further code lists and branches).',
+            topConcept: [
+                { label: "Farbe (de), Colour (en), Couleur (fr), Colore (it)", url: '/materialDescription/Colour' },
+                { label: "Materialeigenschaft (de), Material property (en), Propriété du matériau (fr), Proprietà del materiale (it)", url: '/materialDescription/MaterialProperty' },
+                { label: "Materialkomponente (de), Material components (en), Composants matériels (fr), Componenti del materiale (it)", url: '/materialDescription/MaterialComponents' },
+                { label: "Mutuale Anordnung der Komponenten (de), Mutual arrangement of components (en), Arrangement mutuel des composants (fr), Disposizione mutuale dei componenti (it)", url: '/materialDescription/MaterialFabric' },
+            ],
+        },
     ];
 
     const flagImages = {
-        'EN': 'Bandiera-inglese.jpg',
-        'DE': 'GERMANIA.jpg',
-        'IT': 'italia.png',
-        'FR': 'Flag_of_France_(1794–1815,_1830–1974).svg.png'
+        'EN': 'flag-en.jpg',
+        'DE': 'flag-de.jpg',
+        'IT': 'flag-it.png',
+        'FR': 'flag-fr.png'
     } as Record<FlagCode, string>;
 
     const sections = useMemo(
@@ -175,28 +194,28 @@ const Homepage: React.FC = () => {
     );
 
     return (
-        <RootLayout title={title}>
+        <PageLayout title={title}>
             <HeroSection onExploreClick={handleScrollToVocabularies} />
-            <Box w={'100%'} m={'auto'} mb={calculateFromMainWidth(130, mainWidth) as any}>
-                <Box
-                    w={'100%'}
+            <Box style={{ marginBottom: calculateFromMainWidth(130, mainWidth) as any } as any} className="w-full m-auto"   >
+                <Box style={{ paddingLeft: calculateFromMainWidth(130, mainWidth) as any } as any} className="flex-row items-start w-full"
+
                     ref={vocabulariesRef as any}
-                    pl={calculateFromMainWidth(130, mainWidth) as any}
-                    flexDirection='row'
-                    alignItems='flex-start'
+
+
+
                 >
-                    <Box
-                        mr={calculateFromMainWidth(64, mainWidth) as any}
-                        gap={calculateFromMainWidth(64, mainWidth) as any}
-                        sx={{ width: calculateFromMainWidth(976, mainWidth), flexShrink: 0 } as any}
+                    <Box style={{ marginRight: calculateFromMainWidth(64, mainWidth) as any, gap: calculateFromMainWidth(64, mainWidth) as any, width: calculateFromMainWidth(976, mainWidth), flexShrink: 0 } as any}
+
+
+
                     >
-                        <Text fontSize={'2em' as any} fontWeight={600} lineHeight={40} color='#1C2834' letterSpacing={-0.5} verticalAlign='middle'>Vocabularies</Text>
-                        <VStack gap={calculateFromMainWidth(40, mainWidth) as any}>
+                        <Text className="text-[2em] font-[600] leading-[40px] tracking-[-0.5px] align-middle text-[#1C2834]"      >Vocabularies</Text>
+                        <VStack style={{ gap: calculateFromMainWidth(40, mainWidth) as any } as any} >
                             {sections.map((vocab, index) => (
-                                <Box
+                                <Box style={{ scrollMarginTop: `${anchorOffset}px` } as any}
                                     key={`vocab-${index}`}
                                     id={vocab.sectionId}
-                                    sx={{ scrollMarginTop: `${anchorOffset}px` } as any}
+
                                 >
                                     <CardHome
                                         title={vocab.name}
@@ -213,14 +232,10 @@ const Homepage: React.FC = () => {
                             ))}
                         </VStack>
                     </Box>
-                    <Box
-                        alignSelf='flex-start'
-                        mt={calculateFromMainWidth(104, mainWidth) as any}
-                        sx={{
-                            width: calculateFromMainWidth(326, mainWidth),
-                            minWidth: calculateFromMainWidth(326, mainWidth),
-                            flexShrink: 0,
-                        } as any}
+                    <Box style={{ marginTop: calculateFromMainWidth(104, mainWidth) as any, width: calculateFromMainWidth(326, mainWidth), minWidth: calculateFromMainWidth(326, mainWidth), flexShrink: 0 } as any} className="self-start"
+
+
+
                     >
                         <AnchorNav
                             items={navItems}
@@ -230,7 +245,7 @@ const Homepage: React.FC = () => {
                     </Box>
                 </Box>
             </Box>
-        </RootLayout>
+        </PageLayout>
     );
 };
 
