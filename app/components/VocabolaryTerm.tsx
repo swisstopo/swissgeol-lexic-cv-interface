@@ -1,43 +1,28 @@
 import React from 'react';
-import { Box, Text, Link, Badge, Menu, MenuItemLabel, MenuItem, Button, ButtonIcon, ButtonText, ChevronDownIcon, Accordion, AccordionItem, AccordionHeader, AccordionTrigger, AccordionContent, AccordionIcon, BadgeText, LinkText, Tooltip, TooltipContent, TooltipText, Divider, VStack, Icon } from '@gluestack-ui/themed';
+import { Box } from '@/components/ui/box';
+import { Text } from '@/components/ui/text';
+import { Link, LinkText } from '@/components/ui/link';
+import { Badge, BadgeText } from '@/components/ui/badge';
+import { Menu, MenuItemLabel, MenuItem } from '@/components/ui/menu';
+import { Button, ButtonIcon, ButtonText } from '@/components/ui/button';
+import { ChevronDownIcon, Icon } from '@/components/ui/icon';
+import { Accordion, AccordionItem, AccordionHeader, AccordionTrigger, AccordionContent, AccordionIcon } from '@/components/ui/accordion';
+import { Tooltip, TooltipContent, TooltipText } from '@/components/ui/tooltip';
+import { Divider } from '@/components/ui/divider';
+import { VStack } from '@/components/ui/vstack';
+import { Image } from '@/components/ui/image';
+
 import { DownloadIcon, Map as MapIcon, Search, ChevronUpIcon, ArrowRight, ArrowUpRight } from 'lucide-react';
 import Breadcrumbs from './Breacrumbs';
-import RootLayout from '../layout';
+import PageLayout from './PageLayout';
 import { TermData } from '../models/termDataInterface';
 import { BreadCrumbsData } from '../models/breadCrumbsInterface';
 import CardTerm from './CardTermPage';
-import { CLIENT_BUTTON_STATE_COLORS } from './ClientButton_UIv2';
 import { useMainWidth, calculateFromMainWidth } from '../utils/heightUtils';
 
-const TERM_LINK_COLORS = {
-    base: CLIENT_BUTTON_STATE_COLORS.base.textColor,
-    hover: CLIENT_BUTTON_STATE_COLORS.hover.textColor,
-} as const;
-
-const TERM_LINK_SX = {
-    _web: {
-        color: TERM_LINK_COLORS.base,
-        textDecoration: 'none',
-        transition: 'color 120ms ease',
-        ':hover': {
-            color: TERM_LINK_COLORS.hover,
-        },
-    },
-} as const;
-
-const TERM_LINK_TEXT_SX = {
-    _web: {
-        transition: 'color 120ms ease',
-        textDecorationColor: 'currentColor',
-    },
-} as const;
-
-const TERM_LINK_ICON_BOX_SX = {
-    _web: {
-        color: 'inherit',
-        transition: 'color 120ms ease',
-    },
-} as const;
+const TERM_LINK_CLASS = 'text-[#337083] no-underline transition-colors duration-[120ms] hover:text-[#2F4356]';
+const TERM_LINK_TEXT_CLASS = 'transition-colors duration-[120ms] decoration-current';
+const TERM_LINK_ICON_BOX_CLASS = 'text-inherit transition-colors duration-[120ms]';
 
 const getVocabularyLabel = (vocabulary: string) => {
     if (vocabulary === 'ls_correlations') {
@@ -45,6 +30,9 @@ const getVocabularyLabel = (vocabulary: string) => {
     }
     if (vocabulary === 'TectonicStructures') {
         return 'Tectonic Structures';
+    }
+    if (vocabulary === 'materialDescription') {
+        return 'Material Description';
     }
     return vocabulary;
 };
@@ -68,99 +56,91 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
             const LinkIcon = isPdf ? ArrowUpRight : ArrowRight;
 
             return (
-                <Box flexDirection="row" alignItems="center">
-                    <Link
+                <Box className="flex-row items-center"  >
+                    <Link className={`flex-row items-center mb-[1px] font-[500] ${TERM_LINK_CLASS}`}
                         href={term}
-                        mb={1}
-                        flexDirection="row"
-                        alignItems="center"
+
+
+
                         isExternal
-                        sx={{ ...TERM_LINK_SX, fontWeight: 500 } as any}
                     >
                         <Tooltip
                             placement="top"
                             trigger={(triggerProps) => (
-                                <Badge
+                                <Badge style={{ height: calculateFromMainWidth(27, mainWidth) } as any} className="rounded-full bg-[#46596B]"
                                     {...triggerProps}
-                                    h={calculateFromMainWidth(27, mainWidth)}
+
                                     variant="solid"
-                                    borderRadius="$full"
-                                    bgColor="#46596B"
+
+
                                 >
-                                    <BadgeText color="white" textAlign="center" fontSize={'0.625em' as any} fontWeight="$semibold">
+                                    <BadgeText className="text-center text-[0.625em] font-[600] text-white"    >
                                         {getTermLabel(predicate, true)}
                                     </BadgeText>
                                 </Badge>
                             )}
                         >
-                            <TooltipContent
-                                bg='#1C2834'
-                                pt={5}
-                                pr={8}
-                                pl={8}
-                                pb={5}
-                                borderRadius={4}
-                                gap={8}
+                            <TooltipContent className="rounded-[4px] bg-[#1C2834] pt-[5px] pr-[8px] pl-[8px] pb-[5px] gap-[8px]"
+
+
+
+
+
+
+
                             >
                                 <TooltipText>{predicate}</TooltipText>
                             </TooltipContent>
                         </Tooltip>
 
-                        <Text
-                            ml={calculateFromMainWidth(23, mainWidth) as any}
-                            fontSize={'1em' as any}
-                            fontWeight={500}
-                            lineHeight={24}
-                            textDecorationLine="underline"
-                            color="inherit"
-                            sx={TERM_LINK_TEXT_SX as any}
+                        <Text style={{ marginLeft: calculateFromMainWidth(23, mainWidth) as any } as any} className={`text-[1em] font-[500] leading-[24px] underline text-inherit ${TERM_LINK_TEXT_CLASS}`}
                         >
                             {getTermLabel(term, false)}
                         </Text>
 
-                        <Box sx={TERM_LINK_ICON_BOX_SX as any}>
-                            <Icon as={LinkIcon} p={2} h={calculateFromMainWidth(24, mainWidth) as any} w={calculateFromMainWidth(24, mainWidth) as any} color="currentColor" />
+                        <Box className={TERM_LINK_ICON_BOX_CLASS}>
+                            <Icon style={{ height: calculateFromMainWidth(24, mainWidth) as any, width: calculateFromMainWidth(24, mainWidth) as any } as any} className="text-current p-[2px]" as={LinkIcon}     />
                         </Box>
                     </Link>
                 </Box>
             );
         } else {
             return (
-                <Box flexDirection="row" alignItems="center">
+                <Box className="flex-row items-center"  >
                     <Tooltip
                         placement="top"
                         trigger={(triggerProps) => (
-                            <Badge
+                            <Badge style={{ height: calculateFromMainWidth(27, mainWidth) } as any} className="rounded-full bg-[#46596B]"
                                 {...triggerProps}
-                                h={calculateFromMainWidth(27, mainWidth)}
+
                                 variant="solid"
-                                borderRadius="$full"
-                                bgColor="#46596B"
+
+
                             >
-                                <BadgeText color="white" textAlign="center" fontSize={'0.625em' as any} fontWeight="$semibold">
+                                <BadgeText className="text-center text-[0.625em] font-[600] text-white"    >
                                     {getTermLabel(predicate, true)}
                                 </BadgeText>
                             </Badge>
                         )}
                     >
-                        <TooltipContent
-                            bg='#1C2834'
-                            pt={5}
-                            pr={8}
-                            pl={8}
-                            pb={5}
-                            borderRadius={4}
-                            gap={8}
+                        <TooltipContent className="rounded-[4px] bg-[#1C2834] pt-[5px] pr-[8px] pl-[8px] pb-[5px] gap-[8px]"
+
+
+
+
+
+
+
                         >
                             <TooltipText>{predicate}</TooltipText>
                         </TooltipContent>
                     </Tooltip>
-                    <Text
-                        ml={calculateFromMainWidth(23, mainWidth) as any}
-                        fontSize={'1em' as any}
-                        fontWeight={500}
-                        lineHeight={24}
-                        color="inherit"
+                    <Text style={{ marginLeft: calculateFromMainWidth(23, mainWidth) as any } as any} className="text-[1em] font-[500] leading-[24px] text-inherit"
+
+
+
+
+
                     >
                         {term}
                     </Text>
@@ -196,20 +176,20 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
     const getFlagImageUrl = (lang: string) => {
         switch (lang) {
             case 'en':
-                return '/Bandiera-inglese.jpg';
+                return '/flag-en.jpg';
             case 'de':
-                return '/GERMANIA.jpg';
+                return '/flag-de.jpg';
             case 'it':
-                return '/italia.png';
+                return '/flag-it.png';
             case 'fr':
-                return '/Flag_of_France_(1794–1815,_1830–1974).svg.png';
+                return '/flag-fr.png';
             default:
                 return '';
         }
     };
 
     const statusColors = {
-        'Active': '$success500',
+        'Active': '#348352',
         'Deprecated': '#B45309',
         'Historic': '#B45309',
         'Standard': '#46596B',
@@ -220,19 +200,19 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
         const title = termData.term + ' - ' + vocabularyLabel + ' - Controlled Vocabularies Interface';
 
         return (
-            <RootLayout title={title}>
-                <Box id={termData.term} w={calculateFromMainWidth(1236, mainWidth) as any} mb={100} m={'auto'} mt={calculateFromMainWidth(120, mainWidth) as any}>
+            <PageLayout title={title}>
+                <Box style={{ width: calculateFromMainWidth(1236, mainWidth) as any, marginTop: calculateFromMainWidth(120, mainWidth) as any } as any} className="mx-auto mb-[100px]" id={termData.term}    >
                     <Breadcrumbs data={breadCrumbsData} />
-                        <Box gap={calculateFromMainWidth(36, mainWidth) as any}>
-                            <Box flexDirection='row' gap={1} /* mb={5} */ justifyContent='space-between'>
-                            <Text fontSize={16} color='#828E9A' fontWeight={700} lineHeight={16} letterSpacing={0.10}>{vocabularyLabel}</Text>
-                            <Text fontSize={12} color='$secondary300' fontWeight={500} lineHeight={16} letterSpacing={0.10}>[{termData.version}]</Text>
+                        <Box style={{ gap: calculateFromMainWidth(36, mainWidth) as any } as any} >
+                            <Box className="flex-row justify-between gap-[1px]"   /* mb={5} */ >
+                            <Text className="text-[16px] font-[700] leading-[16px] tracking-[0.1px] text-[#828E9A]"     >{vocabularyLabel}</Text>
+                            <Text className="text-[12px] font-[500] leading-[16px] tracking-[0.1px] text-[#B0B0B0]"     >[{termData.version}]</Text>
                         </Box>
-                        <Box alignItems='center'>
+                        <Box className="items-center" >
                             {Object.entries(termData.languages).map(([lang, translation]) => (
                                 lang === 'en' && (
-                                    <Box flexDirection='row' justifyContent='space-between' w={'100%'} alignItems='center'>
-                                        <Text mb={0} fontWeight={600} lineHeight={'100%' as any} letterSpacing={-0.5} verticalAlign='middle' color='#1C2834' fontSize={'3em' as any} m={0}>
+                                    <Box className="flex-row justify-between items-center w-full"    >
+                                        <Text className="font-[600] leading-[100%] tracking-[-0.5px] align-middle text-[3em] text-[#1C2834] mb-0 m-0"        >
                                             {translation}
                                         </Text>
                                         {/* Language dropdown with tooltip */}
@@ -240,21 +220,21 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
                                             placement="top"
                                             trigger={(props) => {
                                                 return (
-                                                    <Button {...props} variant="solid" size='md' isDisabled={false} isFocusVisible={false} bgColor='#C1D3D9' rounded={4}>
-                                                        <ButtonText fontWeight={500} fontSize={'0.875em' as any} lineHeight={20}>Go To Map View </ButtonText>
+                                                    <Button className="rounded-[4px] bg-[#C1D3D9]" {...props} variant="solid" size='md' isDisabled={false} isFocusVisible={false}  >
+                                                        <ButtonText className="font-[500] text-[0.875em] leading-[20px]"   >Go To Map View </ButtonText>
                                                         <ButtonIcon as={MapIcon} />
                                                     </Button>
                                                 );
                                             }}
                                         >
-                                            <TooltipContent
-                                                bg='#1C2834'
-                                                pt={5}
-                                                pr={8}
-                                                pl={8}
-                                                pb={5}
-                                                borderRadius={4}
-                                                gap={8}
+                                            <TooltipContent className="rounded-[4px] bg-[#1C2834] pt-[5px] pr-[8px] pl-[8px] pb-[5px] gap-[8px]"
+
+
+
+
+
+
+
                                             >
                                                 <TooltipText>Coming soon...</TooltipText>
                                             </TooltipContent>
@@ -265,116 +245,110 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
                             ))}
                         </Box>
 
-                        <Box borderWidth={1} rounded={10} minHeight={calculateFromMainWidth(98, mainWidth) as any} alignItems='center' pl={calculateFromMainWidth(36, mainWidth) as any} pr={calculateFromMainWidth(36, mainWidth) as any} flexDirection='row' flexWrap='wrap' borderColor='#DFE4E9' bg='white'>
+                        <Box style={{ minHeight: calculateFromMainWidth(98, mainWidth) as any, paddingLeft: calculateFromMainWidth(36, mainWidth) as any, paddingRight: calculateFromMainWidth(36, mainWidth) as any } as any} className="items-center flex-row flex-wrap border-[1px] rounded-[10px] border-[#DFE4E9] bg-white"          >
                             {Object.entries(termData.languages)
                                 .filter(([lang]) => lang?.toLowerCase() !== 'en')
                                 .map(([lang, translation]) => (
-                                    <Box mr={calculateFromMainWidth(40, mainWidth) as any} pb={calculateFromMainWidth(36, mainWidth) as any} pt={calculateFromMainWidth(36, mainWidth) as any} flexDirection='row' key={lang}>
-                                        <Box rounded="$full" width={20} height={20} bgColor="$orange100" overflow="hidden">
-                                            <img
+                                    <Box style={{ marginRight: calculateFromMainWidth(40, mainWidth) as any, paddingBottom: calculateFromMainWidth(36, mainWidth) as any, paddingTop: calculateFromMainWidth(36, mainWidth) as any } as any} className="flex-row"     key={lang}>
+                                        <Box className="overflow-hidden rounded-full w-[20px] h-[20px] bg-[#ffedd5]"     >
+                                            <Image
                                                 id="imgLogo"
-                                                height="100%"
-                                                src={getFlagImageUrl(lang)}
+                                                source={{ uri: getFlagImageUrl(lang) }}
                                                 alt={`${lang} flag`}
+                                                size="full"
+                                                resizeMode="cover"
                                             />
                                         </Box>
-                                        <Text ml={8}>{translation}</Text>
+                                        <Text className="ml-[8px]" >{translation}</Text>
                                     </Box>
                                 ))}
                         </Box>
 
-                        <Box flexDirection='row' alignItems='center' gap={10}>
-                            <Box flexDirection='row' alignItems='center' gap={10}>
-                                <Text fontWeight={500} fontSize={'0.75em' as any} lineHeight={16} verticalAlign='middle' color='#828E9A'>Status:</Text>
-                                <Badge variant="solid" h={calculateFromMainWidth(27, mainWidth) as any} borderRadius="$full" bgColor={statusColors[extractLabel(termData.termStatus) as keyof typeof statusColors] || '$success500'} mr={5}>
-                                    <BadgeText color='white' textAlign='center' fontSize={'0.625em' as any} fontWeight='$semibold'>{extractLabel(termData.termStatus)}</BadgeText>
+                        <Box className="flex-row items-center gap-[10px]"   >
+                            <Box className="flex-row items-center gap-[10px]"   >
+                                <Text className="font-[500] text-[0.75em] leading-[16px] align-middle text-[#828E9A]"     >Status:</Text>
+                                <Badge style={{ height: calculateFromMainWidth(27, mainWidth) as any, backgroundColor: statusColors[extractLabel(termData.termStatus) as keyof typeof statusColors] || "#348352" } as any} className="rounded-full mr-[5px]" variant="solid"    >
+                                    <BadgeText className="text-center text-[0.625em] font-[600] text-white"    >{extractLabel(termData.termStatus)}</BadgeText>
                                 </Badge>
                             </Box>
-                            <Divider orientation='vertical' h={calculateFromMainWidth(17, mainWidth) as any} />
-                            <Link href={termData.uri} mb={1} flexDirection='row' alignItems='center' gap={10}>
-                                <Text fontWeight={500} fontSize={'0.75em' as any} lineHeight={16} verticalAlign='middle' color='#828E9A'>URI:</Text>
-                                <Badge h={calculateFromMainWidth(27, mainWidth) as any} variant="solid" borderRadius="$full" bgColor='#46596B' mr={5}>
-                                    <BadgeText style={{ textTransform: 'none' } as any} color='white' textAlign='center' fontSize={'0.625em' as any} fontWeight='$semibold'>{termData.uri}</BadgeText>
+                            <Divider style={{ height: calculateFromMainWidth(17, mainWidth) as any } as any} orientation='vertical'  />
+                            <Link className="flex-row items-center mb-[1px] gap-[10px]" href={termData.uri}    >
+                                <Text className="font-[500] text-[0.75em] leading-[16px] align-middle text-[#828E9A]"     >URI:</Text>
+                                <Badge style={{ height: calculateFromMainWidth(27, mainWidth) as any } as any} className="rounded-full bg-[#46596B] mr-[5px]"  variant="solid"   >
+                                    <BadgeText className="text-center text-[0.625em] font-[600] text-white" style={{ textTransform: 'none' } as any}    >{termData.uri}</BadgeText>
                                 </Badge>
                             </Link>
                         </Box>
 
-                        <Divider orientation='horizontal' mt={calculateFromMainWidth(64, mainWidth) as any} mb={calculateFromMainWidth(64, mainWidth) as any} />
+                        <Divider style={{ marginTop: calculateFromMainWidth(64, mainWidth) as any, marginBottom: calculateFromMainWidth(64, mainWidth) as any } as any} orientation='horizontal'   />
                         {/* TERM DESCRIPTION CARD */}
                         <CardTerm title="Details" description={termData.definition || 'Coming soon...'} isDefinedBy={termData.isDefinedBy} />
 
-                        <Divider orientation='horizontal' mt={calculateFromMainWidth(64, mainWidth) as any} mb={calculateFromMainWidth(64, mainWidth) as any} />
+                        <Divider style={{ marginTop: calculateFromMainWidth(64, mainWidth) as any, marginBottom: calculateFromMainWidth(64, mainWidth) as any } as any} orientation='horizontal'   />
 
-                        <Text fontSize={'2em' as any} color='#1C2834' fontWeight={600} mb={10}>Related Terms</Text>
+                        <Text className="text-[2em] font-[600] text-[#1C2834] mb-[10px]"    >Related Terms</Text>
 
-                        <Box flexDirection='column' id="relatedTermsAccordion" gap={calculateFromMainWidth(64, mainWidth) as any}>
-                            <Accordion w={calculateFromMainWidth(976, mainWidth) as any} size="lg" defaultValue={['b']} type="multiple" isCollapsible={true} isDisabled={false} borderColor='#ACB4BD' overflow='hidden'>
+                        <Box style={{ gap: calculateFromMainWidth(64, mainWidth) as any } as any} className="flex-col"  id="relatedTermsAccordion" >
+                            <Accordion style={{ width: calculateFromMainWidth(976, mainWidth) as any } as any} className="overflow-hidden border-[1px] border-[#ACB4BD] rounded-[6px] bg-white shadow-none"  size="lg" defaultValue={['b']} type="multiple" isCollapsible={true} isDisabled={false}  >
                                 <AccordionItem value="b">
-                                    <AccordionHeader bg='#F8F9FA' justifyContent="center" alignContent="center" sx={{ h: calculateFromMainWidth(96, mainWidth), pl: calculateFromMainWidth(30, mainWidth), pr: calculateFromMainWidth(36, mainWidth) } as any}>
+                                    <AccordionHeader style={{ height: calculateFromMainWidth(96, mainWidth), paddingLeft: calculateFromMainWidth(30, mainWidth), paddingRight: calculateFromMainWidth(36, mainWidth) } as any} className="justify-center content-center bg-[#F8F9FA]"    >
                                         <AccordionTrigger>
-                                            {({ isExpanded }) => (
+                                            {({ isExpanded }: { isExpanded?: boolean }) => (
                                                 <>
-                                                    <Text fontSize={'1.25em' as any} fontWeight={700}>Broader</Text>
+                                                    <Text className="text-[1.25em] font-[700]"  >Broader</Text>
                                                     {isExpanded ? (
-                                                        <AccordionIcon as={ChevronUpIcon} ml="$3" />
+                                                        <AccordionIcon className="ml-[12px]" as={ChevronUpIcon}  />
                                                     ) : (
-                                                        <AccordionIcon as={ChevronDownIcon} ml="$3" />
+                                                        <AccordionIcon className="ml-[12px]" as={ChevronDownIcon}  />
                                                     )}
                                                 </>
                                             )}
                                         </AccordionTrigger>
                                     </AccordionHeader>
-                                    <AccordionContent justifyContent="center" alignContent="center" gap={calculateFromMainWidth(12, mainWidth) as any} sx={{ ml: calculateFromMainWidth(30, mainWidth), mt: calculateFromMainWidth(36, mainWidth), minH: calculateFromMainWidth(96, mainWidth) } as any}>
+                                    <AccordionContent style={{ gap: calculateFromMainWidth(12, mainWidth) as any, marginLeft: calculateFromMainWidth(30, mainWidth), marginTop: calculateFromMainWidth(36, mainWidth), minHeight: calculateFromMainWidth(96, mainWidth) } as any} className="justify-center content-center"    >
                                         {termData.relatedTerms.Broader.length > 0 ? (
                                             termData.relatedTerms.Broader.map(term => (
-                                                <Box flexDirection='row'>
-                                                    <Link
+                                                <Box className="flex-row" >
+                                                    <Link className={`flex-row items-center mb-[1px] ${TERM_LINK_CLASS}`}
                                                         href={`/${termData.vocabulary}/${extractLabel(term)}`}
-                                                        mb={1}
+
                                                         key={term}
-                                                        flexDirection='row'
-                                                        alignItems='center'
-                                                        sx={TERM_LINK_SX as any}
+
                                                     >
-                                                        <LinkText
-                                                            color='inherit'
-                                                            fontSize={'1em' as any}
-                                                            fontWeight={500}
-                                                            textDecorationLine='underline'
-                                                            sx={TERM_LINK_TEXT_SX as any}
+                                                        <LinkText className={`text-[1em] font-[500] underline text-inherit ${TERM_LINK_TEXT_CLASS}`}
                                                         >
                                                             {getTermLabel(term, false)}
                                                         </LinkText>
-                                                        <Box sx={TERM_LINK_ICON_BOX_SX as any}>
-                                                            <Icon as={ArrowRight} p={2} h={calculateFromMainWidth(24, mainWidth) as any} w={calculateFromMainWidth(24, mainWidth) as any} color='currentColor' />
+                                                        <Box className={TERM_LINK_ICON_BOX_CLASS}>
+                                                            <Icon style={{ height: calculateFromMainWidth(24, mainWidth) as any, width: calculateFromMainWidth(24, mainWidth) as any } as any} className="text-current p-[2px]" as={ArrowRight}     />
                                                         </Box>
                                                     </Link>
                                                 </Box>
                                             ))
                                         ) : (
-                                            <Text color='$secondary300'>No Broader concepts...</Text>
+                                            <Text className="text-[#B0B0B0]" >No Broader concepts...</Text>
                                         )}
                                     </AccordionContent>
                                 </AccordionItem>
                             </Accordion>
 
-                            <Accordion w={calculateFromMainWidth(976, mainWidth) as any} size="lg" defaultValue={['a']} type="multiple" isCollapsible={true} isDisabled={false} borderColor='#ACB4BD' overflow='hidden'>
+                            <Accordion style={{ width: calculateFromMainWidth(976, mainWidth) as any } as any} className="overflow-hidden border-[1px] border-[#ACB4BD] rounded-[6px] bg-white shadow-none"  size="lg" defaultValue={['a']} type="multiple" isCollapsible={true} isDisabled={false}  >
                                 <AccordionItem value="a">
-                                    <AccordionHeader bg='#F8F9FA' justifyContent="center" alignContent="center" sx={{ h: calculateFromMainWidth(96, mainWidth), pl: calculateFromMainWidth(30, mainWidth), pr: calculateFromMainWidth(36, mainWidth) } as any}>
+                                    <AccordionHeader style={{ height: calculateFromMainWidth(96, mainWidth), paddingLeft: calculateFromMainWidth(30, mainWidth), paddingRight: calculateFromMainWidth(36, mainWidth) } as any} className="justify-center content-center bg-[#F8F9FA]"    >
                                         <AccordionTrigger>
-                                            {({ isExpanded }) => (
+                                            {({ isExpanded }: { isExpanded?: boolean }) => (
                                                 <>
-                                                    <Text fontSize={'1.25em' as any} fontWeight={700}>Narrowers</Text>
+                                                    <Text className="text-[1.25em] font-[700]"  >Narrowers</Text>
                                                     {isExpanded ? (
-                                                        <AccordionIcon as={ChevronUpIcon} ml="$3" />
+                                                        <AccordionIcon className="ml-[12px]" as={ChevronUpIcon}  />
                                                     ) : (
-                                                        <AccordionIcon as={ChevronDownIcon} ml="$3" />
+                                                        <AccordionIcon className="ml-[12px]" as={ChevronDownIcon}  />
                                                     )}
                                                 </>
                                             )}
                                         </AccordionTrigger>
                                     </AccordionHeader>
-                                    <AccordionContent justifyContent="center" gap={calculateFromMainWidth(36, mainWidth) as any} alignContent="center" sx={{ ml: calculateFromMainWidth(30, mainWidth), mt: calculateFromMainWidth(36, mainWidth), minH: calculateFromMainWidth(96, mainWidth) } as any}>
+                                    <AccordionContent style={{ gap: calculateFromMainWidth(36, mainWidth) as any, marginLeft: calculateFromMainWidth(30, mainWidth), marginTop: calculateFromMainWidth(36, mainWidth), minHeight: calculateFromMainWidth(96, mainWidth) } as any} className="justify-center content-center"    >
                                         {termData.relatedTerms.Narrower.length > 0 ? (
                                             termData.relatedTerms.Narrower.length >= 50 ? (
                                                 (() => {
@@ -410,38 +384,29 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
                                                     }));
 
                                                     return sections.map((section: { letter: string; entries: { term: string; label: string }[] }, sectionIndex: number) => (
-                                                        <Box key={`narrower-section-${section.letter}`} gap={calculateFromMainWidth(16, mainWidth) as any}>
-                                                            <Text fontSize={'1.25em' as any} fontWeight={700} color="#1C2834" mt={calculateFromMainWidth(24, mainWidth) as any}>
+                                                        <Box style={{ gap: calculateFromMainWidth(16, mainWidth) as any } as any} key={`narrower-section-${section.letter}`} >
+                                                            <Text style={{ marginTop: calculateFromMainWidth(24, mainWidth) as any } as any} className="text-[1.25em] font-[700] text-[#1C2834]"    >
                                                                 {section.letter}
                                                             </Text>
-                                                            <Box gap={calculateFromMainWidth(12, mainWidth) as any}>
+                                                            <Box style={{ gap: calculateFromMainWidth(12, mainWidth) as any } as any} >
                                                                 {section.entries.map(({ term, label }) => {
                                                                     const slug = extractLabel(term) ?? term;
                                                                     return (
-                                                                        <Box flexDirection="row" key={term}>
-                                                                            <Link
+                                                                        <Box className="flex-row"  key={term}>
+                                                                            <Link className={`flex-row items-center mb-[1px] ${TERM_LINK_CLASS}`}
                                                                                 href={`/${termData.vocabulary}/${slug}`}
-                                                                                mb={1}
-                                                                                flexDirection="row"
-                                                                                alignItems="center"
-                                                                                sx={TERM_LINK_SX as any}
                                                                             >
-                                                                                <LinkText
-                                                                                    color="inherit"
-                                                                                    fontSize={'1em' as any}
-                                                                                    fontWeight={500}
-                                                                                    textDecorationLine="underline"
-                                                                                    sx={TERM_LINK_TEXT_SX as any}
+                                                                                <LinkText className={`text-[1em] font-[500] underline text-inherit ${TERM_LINK_TEXT_CLASS}`}
                                                                                 >
                                                                                     {label}
                                                                                 </LinkText>
-                                                                                <Box sx={TERM_LINK_ICON_BOX_SX as any}>
-                                                                                    <Icon
+                                                                                <Box className={TERM_LINK_ICON_BOX_CLASS}>
+                                                                                    <Icon style={{ height: calculateFromMainWidth(24, mainWidth) as any, width: calculateFromMainWidth(24, mainWidth) as any } as any} className="text-current p-[2px]"
                                                                                         as={ArrowRight}
-                                                                                        p={2}
-                                                                                        h={calculateFromMainWidth(24, mainWidth) as any}
-                                                                                        w={calculateFromMainWidth(24, mainWidth) as any}
-                                                                                        color="currentColor"
+
+
+
+
                                                                                     />
                                                                                 </Box>
                                                                             </Link>
@@ -450,72 +415,63 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
                                                                 })}
                                                             </Box>
                                                             {sectionIndex !== sections.length - 1 ? (
-                                                                <Divider orientation='horizontal' mt={calculateFromMainWidth(64, mainWidth) as any} />
+                                                                <Divider style={{ marginTop: calculateFromMainWidth(64, mainWidth) as any } as any} orientation='horizontal'  />
                                                             ) : null}
                                                         </Box>
                                                     ));
                                                 })()
                                             ) : (
                                                 termData.relatedTerms.Narrower.map(term => (
-                                                    <Box flexDirection='row'>
-                                                        <Link
+                                                    <Box className="flex-row" >
+                                                        <Link className={`flex-row items-center mb-[1px] ${TERM_LINK_CLASS}`}
                                                             href={`/${termData.vocabulary}/${extractLabel(term)}`}
-                                                            mb={1}
                                                             key={term}
-                                                            flexDirection='row'
-                                                            alignItems='center'
-                                                            sx={TERM_LINK_SX as any}
                                                         >
-                                                            <LinkText
-                                                                color='inherit'
-                                                                fontSize={'1em' as any}
-                                                                fontWeight={500}
-                                                                textDecorationLine='underline'
-                                                                sx={TERM_LINK_TEXT_SX as any}
+                                                            <LinkText className={`text-[1em] font-[500] underline text-inherit ${TERM_LINK_TEXT_CLASS}`}
                                                             >
                                                                 {getTermLabel(term, false)}
                                                             </LinkText>
-                                                            <Box sx={TERM_LINK_ICON_BOX_SX as any}>
-                                                                <Icon as={ArrowRight} p={2} h={calculateFromMainWidth(24, mainWidth) as any} w={calculateFromMainWidth(24, mainWidth) as any} color='currentColor' />
+                                                            <Box className={TERM_LINK_ICON_BOX_CLASS}>
+                                                                <Icon style={{ height: calculateFromMainWidth(24, mainWidth) as any, width: calculateFromMainWidth(24, mainWidth) as any } as any} className="text-current p-[2px]" as={ArrowRight}     />
                                                             </Box>
                                                         </Link>
                                                     </Box>
                                                 ))
                                             )
                                         ) : (
-                                            <Text color='$secondary300'>No Narrowers concepts...</Text>
+                                            <Text className="text-[#B0B0B0]" >No Narrowers concepts...</Text>
                                         )}
                                     </AccordionContent>
                                 </AccordionItem>
                             </Accordion>
 
-                            <Accordion w={calculateFromMainWidth(976, mainWidth) as any} size="lg" defaultValue={['or']} type="multiple" isCollapsible={true} isDisabled={false} borderColor='#ACB4BD' overflow='hidden'>
+                            <Accordion style={{ width: calculateFromMainWidth(976, mainWidth) as any } as any} className="overflow-hidden border-[1px] border-[#ACB4BD] rounded-[6px] bg-white shadow-none"  size="lg" defaultValue={['or']} type="multiple" isCollapsible={true} isDisabled={false}  >
                                 <AccordionItem value="or">
-                                    <AccordionHeader bg='#F8F9FA' justifyContent="center" alignContent="center" sx={{ h: calculateFromMainWidth(96, mainWidth), pl: calculateFromMainWidth(30, mainWidth), pr: calculateFromMainWidth(36, mainWidth) } as any}>
+                                    <AccordionHeader style={{ height: calculateFromMainWidth(96, mainWidth), paddingLeft: calculateFromMainWidth(30, mainWidth), paddingRight: calculateFromMainWidth(36, mainWidth) } as any} className="justify-center content-center bg-[#F8F9FA]"    >
                                         <AccordionTrigger>
-                                            {({ isExpanded }) => (
+                                            {({ isExpanded }: { isExpanded?: boolean }) => (
                                                 <>
-                                                    <Text fontSize={'1.25em' as any} fontWeight={700}>Other Relations</Text>
+                                                    <Text className="text-[1.25em] font-[700]"  >Other Relations</Text>
                                                     {isExpanded ? (
-                                                        <AccordionIcon as={ChevronUpIcon} ml="$3" />
+                                                        <AccordionIcon className="ml-[12px]" as={ChevronUpIcon}  />
                                                     ) : (
-                                                        <AccordionIcon as={ChevronDownIcon} ml="$3" />
+                                                        <AccordionIcon className="ml-[12px]" as={ChevronDownIcon}  />
                                                     )}
                                                 </>
                                             )}
                                         </AccordionTrigger>
                                     </AccordionHeader>
-                                    <AccordionContent justifyContent="center" gap={calculateFromMainWidth(12, mainWidth) as any} alignContent="center" sx={{ ml: calculateFromMainWidth(30, mainWidth), mt: calculateFromMainWidth(36, mainWidth), minH: calculateFromMainWidth(96, mainWidth) } as any}>
+                                    <AccordionContent style={{ gap: calculateFromMainWidth(12, mainWidth) as any, marginLeft: calculateFromMainWidth(30, mainWidth), marginTop: calculateFromMainWidth(36, mainWidth), minHeight: calculateFromMainWidth(96, mainWidth) } as any} className="justify-center content-center"    >
                                         {Object.keys(termData.relatedTerms.OtherRelation).length > 0 ? (
                                             Object.entries(termData.relatedTerms.OtherRelation).map(([predicate, terms]) => (
                                                 terms.map((term: string, index: number) => (
-                                                    <Box key={`${predicate}-${index}`} mb={10} flexDirection='row' alignItems="center">
+                                                    <Box className="flex-row items-center mb-[10px]" key={`${predicate}-${index}`}   >
                                                         {renderRelatedTerm(term, predicate, index)}
                                                     </Box>
                                                 ))
                                             ))
                                         ) : (
-                                            <Text color='$secondary300'>No related concepts...</Text>
+                                            <Text className="text-[#B0B0B0]" >No related concepts...</Text>
                                         )}
                                     </AccordionContent>
                                 </AccordionItem>
@@ -523,7 +479,7 @@ const VocabolaryTerm: React.FC<VocabolaryTermProps> = ({ termData, breadCrumbsDa
                         </Box>
                     </Box>
                 </Box>
-            </RootLayout >
+            </PageLayout >
         );
     }
 };

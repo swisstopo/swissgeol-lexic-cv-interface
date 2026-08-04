@@ -1,106 +1,53 @@
 'use client';
-
-import { Box, Text, Divider, Link, Image } from '@gluestack-ui/themed';
+import { Image } from "@/components/ui/image";
+import { Link } from "@/components/ui/link";
+import { Divider } from "@/components/ui/divider";
+import { Text } from "@/components/ui/text";
+import { Box } from "@/components/ui/box";
 import React from 'react';
 
 const Footer: React.FC = () => {
     return (
-        <Box
-            bg="#201C34"
-            h={156}
-            w="100%"
-            p={48}
-        >
-            <Box
-                flexDirection="row"
-                alignItems="center"
-                justifyContent="space-between"
-                h="100%"
-            >
-                <Box
-                    flexDirection="row"
-                    alignItems="center"
-                    gap={6}
-                >
+        <Box className="bg-[#201C34] h-[156px] w-[100%] p-[48px] overflow-hidden">
+            <Box className="flex-row items-center justify-between h-[100%]">
+                <Box className="flex-row items-center gap-[6px]">
                     <Link href="/About">
-                        <Box
-                            h={46}
-                            pl={24}
-                            pr={24}
-                            justifyContent="center"
-                        >
+                        <Box className="h-[46px] pl-[24px] pr-[24px] justify-center">
                             <Text
-                                color="#FFFFFF"
-                                fontSize={'0.875em' as any}
-                                lineHeight={20}
-                                letterSpacing={0.25}
-                                fontWeight="$medium"
-                                textAlign="center"
-                            >
+                                style={{ color: '#FFFFFF', fontSize: '0.875em', lineHeight: '20px', letterSpacing: 0.25, fontWeight: 500, textAlign: 'center' } as any}>
                                 About
                             </Text>
                         </Box>
                     </Link>
-                    <Divider
-                        orientation="vertical"
-                        h={18}
-                        bg="#FFFFFF33"
-                    />
+                    <Divider orientation="vertical" className="h-[18px] bg-[#FFFFFF33]" />
                     <Link href="mailto:swissgeol@swisstopo.ch">
-                        <Box
-                            h={46}
-                            pl={24}
-                            pr={24}
-                            justifyContent="center"
-                        >
+                        <Box className="h-[46px] pl-[24px] pr-[24px] justify-center">
                             <Text
-                                color="#FFFFFF"
-                                fontSize={'0.875em' as any}
-                                lineHeight={20}
-                                letterSpacing={0.25}
-                                fontWeight="$medium"
-                                textAlign="center"
-                            >
+                                style={{ color: '#FFFFFF', fontSize: '0.875em', lineHeight: '20px', letterSpacing: 0.25, fontWeight: 500, textAlign: 'center' } as any}>
                                 Contact
                             </Text>
                         </Box>
                     </Link>
-                    <Divider
-                        orientation="vertical"
-                        h={18}
-                        bg="#FFFFFF33"
-                    />
+                    <Divider orientation="vertical" className="h-[18px] bg-[#FFFFFF33]" />
                     <Link href="https://www.swissgeol.ch/en/wiki#ControlledVocabularies">
-                        <Box
-                            h={46}
-                            pl={24}
-                            pr={24}
-                            justifyContent="center"
-                        >
+                        <Box className="h-[46px] pl-[24px] pr-[24px] justify-center">
                             <Text
-                                color="#FFFFFF"
-                                fontSize={'0.875em' as any}
-                                lineHeight={20}
-                                letterSpacing={0.25}
-                                fontWeight="$medium"
-                                textAlign="center"
-                            >
+                                style={{ color: '#FFFFFF', fontSize: '0.875em', lineHeight: '20px', letterSpacing: 0.25, fontWeight: 500, textAlign: 'center' } as any}>
                                 Wiki
                             </Text>
                         </Box>
                     </Link>
                 </Box>
                 {/* Right (CH logo) */}
-                <Box alignItems="center" justifyContent="center" p={0} m={0} pr={16} w={256} h={60}>
+                <Box
+                    className="items-center justify-center p-[0px] m-[0px] pr-[16px] w-[256px] h-[60px]">
                     <Image
                         alt="Logo Confederazione Svizzera"
                         source={{
                             uri: '/logo_svizzera.svg',
                         }}
-                        w={256}
                         resizeMode="center"
-                        opacity={1}
-                    />
+                        style={{ width: 256, height: 60, opacity: 1 } as any} />
                 </Box>
             </Box>
         </Box>

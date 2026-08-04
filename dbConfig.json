@@ -41,6 +41,13 @@
             "repositoryId": "",
             "username": "",
             "password": ""
+        },
+        "materialDescription": {
+            "id": "Material Description",
+            "url": "",
+            "repositoryId": "",
+            "username": "",
+            "password": ""
         }
     },
     "queries": {
@@ -72,6 +79,11 @@
         "ls_correlationsQuery": {
             "queryBreadcrumbs": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <{{PREFIX_BASE_URL}}/ls_correlations/>\n\nSELECT ?narrowerConcept\nWHERE {\n  ex:${term} skos:broader+ ?narrowerConcept.\n}",
             "queryVocabolo": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <{{PREFIX_BASE_URL}}/ls_correlations/>\n\nSELECT ?predicate ?object\nWHERE {\n  ex:${term} ?predicate ?object .\n}",
+            "prefLabelOfAllConcept": "SELECT DISTINCT ?subject ?label\nWHERE {\n  GRAPH ?graph {\n ?subject ?predicate ?label .\n FILTER(CONTAINS(LCASE(STR(?predicate)), \"label\"))\n FILTER(LANGMATCHES(LANG(?label), \"en\"))\n }\n}"
+        },
+        "materialDescriptionQuery": {
+            "queryBreadcrumbs": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <{{PREFIX_BASE_URL}}/materialDescription/>\n\nSELECT ?narrowerConcept\nWHERE {\n  ex:${term} skos:broader+ ?narrowerConcept.\n}",
+            "queryVocabolo": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <{{PREFIX_BASE_URL}}/materialDescription/>\n\nSELECT ?predicate ?object\nWHERE {\n  ex:${term} ?predicate ?object .\n}",
             "prefLabelOfAllConcept": "SELECT DISTINCT ?subject ?label\nWHERE {\n  GRAPH ?graph {\n ?subject ?predicate ?label .\n FILTER(CONTAINS(LCASE(STR(?predicate)), \"label\"))\n FILTER(LANGMATCHES(LANG(?label), \"en\"))\n }\n}"
         },
         "labelLanguageOrder": [

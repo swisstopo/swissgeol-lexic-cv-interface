@@ -1,7 +1,16 @@
 'use client';
 
 import React from 'react';
-import { Box, Text, Link, Button, ButtonText, Image, VStack, HStack, Heading, Icon, ArrowDownIcon, ChevronLeftIcon, ChevronRightIcon } from '@gluestack-ui/themed';
+import { Box } from '@/components/ui/box';
+import { Text } from '@/components/ui/text';
+import { Link, LinkText } from '@/components/ui/link';
+import { Button, ButtonText } from '@/components/ui/button';
+import { Image } from '@/components/ui/image';
+import { VStack } from '@/components/ui/vstack';
+import { HStack } from '@/components/ui/hstack';
+import { Heading } from '@/components/ui/heading';
+import { Icon, ArrowDownIcon, ChevronLeftIcon, ChevronRightIcon } from '@/components/ui/icon';
+
 import { useMainWidth, calculateFromMainWidth, DEFAULT_BASE_MAIN_WIDTH } from '../utils/heightUtils';
 
 type HeroSectionProps = {
@@ -12,45 +21,69 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick }) => {
     const mainWidth = useMainWidth();
 
     return (
-        <Box sx={{ w: '100%', mb: calculateFromMainWidth(260, mainWidth) } as any}>
-            <Box bg="#201C34" borderRadius={8} position='relative' sx={{ w: '100%', h: calculateFromMainWidth(773, mainWidth), mt: '88px', m: 'auto' } as any}>
+        <Box style={{ marginBottom: calculateFromMainWidth(260, mainWidth) } as any} className="w-full">
+            <Box
+                style={{
+                    height: calculateFromMainWidth(773, mainWidth),
+                } as any}
+                className="relative mx-auto mt-[88px] w-full rounded-[8px] bg-[#201C34]"    >
                 {/* Description/button card */}
-                <Box position='absolute' gap={calculateFromMainWidth(40, mainWidth) as any} sx={{ ml: calculateFromMainWidth(130, mainWidth), w: calculateFromMainWidth(716, mainWidth), h: calculateFromMainWidth(130, mainWidth), top: calculateFromMainWidth(260, mainWidth), pb: calculateFromMainWidth(260, mainWidth) } as any}>
+                <Box style={{ gap: calculateFromMainWidth(40, mainWidth) as any, marginLeft: calculateFromMainWidth(130, mainWidth), width: calculateFromMainWidth(716, mainWidth), top: calculateFromMainWidth(260, mainWidth) } as any} className="absolute flex-col overflow-visible"   >
                     {/* Text */}
-                    <Box gap={calculateFromMainWidth(36, mainWidth) as any} >
-                        <Box gap={calculateFromMainWidth(16, mainWidth) as any}>
-                            <Text color="#FFFFFF" fontWeight={600} verticalAlign='middle' letterSpacing={-0.05} fontSize={'3em' as any} lineHeight={'100%' as any}>
+                    <Box style={{ gap: calculateFromMainWidth(36, mainWidth) as any } as any} className="flex-col"  >
+                        <Box style={{ gap: calculateFromMainWidth(16, mainWidth) as any } as any} className="flex-col">
+                            <Text
+                                className="align-middle text-[3em] font-[600] leading-[100%] tracking-[-0.05px] text-white"
+                            >
                                 Welcome to {'\n'}
                                 lexic.swissgeol.ch
                             </Text>
-                            <Text color="#FFFFFF" fontWeight={400} fontSize={'1.25em' as any} lineHeight={calculateFromMainWidth(29, mainWidth) as any} letterSpacing={-0.05} verticalAlign='middle'>
+                            <Text
+                                className="align-middle text-[1.25em] font-[400] tracking-[-0.05px] text-white"
+                                style={{
+                                    lineHeight: calculateFromMainWidth(29, mainWidth) as any,
+                                } as any}
+                            >
                                 The controlled vocabulary platform for geology developed by swisstopo.
                             </Text>
                         </Box>
-                        <Text color="#FFFFFF" fontWeight={400} fontSize={'1em' as any} lineHeight={calculateFromMainWidth(24, mainWidth) as any} letterSpacing={0.1} verticalAlign='middle'>
+                        <Text
+                            className="align-middle text-[1em] font-[400] tracking-[0.1px] text-white"
+                            style={{
+                                lineHeight: calculateFromMainWidth(24, mainWidth) as any,
+                            } as any}
+                        >
                             Currently, lexic.swissgeol.ch is in its pilot phase. We are actively developing and refining features, and more vocabularies are planned for publication.
                             Your feedback, suggestions, and {mainWidth > 1200 ? <br /> : ''}ideas are most welcome.<br />
-                            Please do not hesitate to contact us at <Link href="mailto:swissgeol@swisstopo.ch">
-                                <Text color="#FFFFFF" textDecorationLine="underline">swissgeol@swisstopo.ch</Text>
-                            </Link>.
+                            Please do not hesitate to contact us at <br />
+                            <Link className="inline" href="mailto:swissgeol@swisstopo.ch">
+                                <LinkText className="text-white underline data-[hover=true]:text-white data-[hover=true]:underline">swissgeol@swisstopo.ch.</LinkText>
+                            </Link>
                         </Text>
                     </Box>
                     {/* Explore button */}
-                    <Button variant="solid" bgColor='#337083' onPress={onExploreClick} w={193} h={36} >
-                        <ButtonText m={0} p={0} fontSize={'0.875em' as any} lineHeight={20} letterSpacing={0.5} fontWeight={'$medium'} textAlign='center' verticalAlign='middle' color='#FFFFFF'>Explore vocabularies </ButtonText>
-                        <Icon color='#FFFFFF' as={ArrowDownIcon} size='md' />
+                    <Button
+                        className="h-[36px] w-[193px] bg-[#337083] px-[16px] data-[hover=true]:bg-[#005DB4] data-[active=true]:bg-[#004282]"
+                        variant="solid"
+                        onPress={onExploreClick}
+                    >
+                        <ButtonText
+                            className="m-0 p-0 text-center align-middle text-[0.875em] font-[500] leading-[20px] tracking-[0.5px] text-white whitespace-nowrap data-[hover=true]:text-white data-[active=true]:text-white"
+                        >
+                            Explore vocabularies
+                        </ButtonText>
+                        <Icon className="text-white" as={ArrowDownIcon} size='md' />
                     </Button>
                 </Box>
 
                 {/* IMAGE */}
-                <Box bgColor='white' borderRadius={8} position='absolute' justifyContent='center' alignItems='center' overflow='hidden' sx={{ w: calculateFromMainWidth(456, mainWidth), h: calculateFromMainWidth(773, mainWidth), top: calculateFromMainWidth(130, mainWidth), right: calculateFromMainWidth(130, mainWidth) } as any}>
+                <Box style={{ width: calculateFromMainWidth(456, mainWidth), height: calculateFromMainWidth(773, mainWidth), top: calculateFromMainWidth(130, mainWidth), right: calculateFromMainWidth(130, mainWidth) } as any} className="absolute justify-center items-center overflow-hidden rounded-[8px] bg-white"       >
                     <Image
                         source={{
                             uri: '/hero-image.png',
                         }}
                         alt="Sfondo"
-                        w="100%"
-                        h="100%"
+                        size="full"
                     />
                 </Box>
             </Box>

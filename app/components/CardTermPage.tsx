@@ -1,7 +1,10 @@
 "use client";
 
 import React from "react";
-import { Badge, BadgeText, Box, Text } from "@gluestack-ui/themed";
+import { Badge, BadgeText } from '@/components/ui/badge';
+import { Box } from '@/components/ui/box';
+import { Text } from '@/components/ui/text';
+
 import { useMainWidth, calculateFromMainWidth } from "../utils/heightUtils";
 
 export type CardHomeProps = {
@@ -21,67 +24,61 @@ const CardTerm: React.FC<CardHomeProps> = ({
   const borderColor = "#ACB4BD";
   const headerBg = "#F8F9FA";
   const strong = "#1C2834";
-  
+
 
   return (
-    <Box
-      w={calculateFromMainWidth(976, mainWidth) as any}
-      bg="#fff"
-      borderWidth={1}
-      borderColor={borderColor}
-      borderRadius={8}
-      flexDirection="row"
-      overflow="hidden"
+    <Box style={{ width: calculateFromMainWidth(976, mainWidth) as any, borderColor: borderColor } as any} className="flex-row overflow-hidden border-[1px] rounded-[8px] bg-[#fff]"
+
+
+
+
+
+
+
     >
       {/* LEFT CARD */}
-      <Box flexDirection="column" w={'100%'}>
+      <Box className="flex-col w-full"  >
         {/* LEFT HEADER */}
-        <Box bg={headerBg} justifyContent="center" alignContent="center" sx={{ h: calculateFromMainWidth(96, mainWidth), pl: calculateFromMainWidth(23, mainWidth), pt: calculateFromMainWidth(41, mainWidth), pr: calculateFromMainWidth(23, mainWidth), pb: calculateFromMainWidth(41, mainWidth) } as any}>
-          <Box gap={12} flexDirection="row" alignItems="center">
+        <Box style={{ backgroundColor: headerBg, height: calculateFromMainWidth(96, mainWidth), paddingLeft: calculateFromMainWidth(23, mainWidth), paddingTop: calculateFromMainWidth(41, mainWidth), paddingRight: calculateFromMainWidth(23, mainWidth), paddingBottom: calculateFromMainWidth(41, mainWidth) } as any} className="justify-center content-center"    >
+          <Box className="flex-row items-center gap-[12px]"   >
             {/* TITLE */}
-            <Text
-              fontWeight="$bold"
-              fontSize={'1.25em' as any}
-              lineHeight={24}
-              letterSpacing={0.1}
-              color={strong}
+            <Text style={{ color: strong } as any} className="font-[700] text-[1.25em] leading-[24px] tracking-[0.1px]"
+
+
+
+
+
             >
               {title}
             </Text>
           </Box>
         </Box>
         {/* LEFT CONTENT */}
-        <Box sx={{ gap: calculateFromMainWidth(40, mainWidth), pt: calculateFromMainWidth(40, mainWidth), pl: calculateFromMainWidth(23, mainWidth), pr: calculateFromMainWidth(23, mainWidth), pb: calculateFromMainWidth(40, mainWidth) } as any}>
+        <Box style={{ gap: calculateFromMainWidth(40, mainWidth), paddingTop: calculateFromMainWidth(40, mainWidth), paddingLeft: calculateFromMainWidth(23, mainWidth), paddingRight: calculateFromMainWidth(23, mainWidth), paddingBottom: calculateFromMainWidth(40, mainWidth) } as any} >
           {/* DESCRIPTION */}
-          <Text
-            fontWeight={400}
-            fontSize={'1em' as any}
-            lineHeight={24}
-            letterSpacing={0.1}
-            color={strong}
+          <Text style={{ color: strong } as any} className="font-[400] text-[1em] leading-[24px] tracking-[0.1px]"
+
+
+
+
+
           >
             {description || "Coming soon"}
           </Text>
           {isDefinedBy && (
-            <Box w={'100%'} flexDirection="row" alignItems="flex-start" flexWrap="wrap">
-              <Badge h={calculateFromMainWidth(27, mainWidth) as any} variant="solid" borderRadius="$full" bgColor='#46596B'>
-                <BadgeText color='white' textAlign='center' fontSize={'0.625em' as any} fontWeight='$semibold'>Source</BadgeText>
+            <Box className="flex-row items-start flex-wrap w-full"    >
+              <Badge style={{ height: calculateFromMainWidth(27, mainWidth) as any } as any} className="rounded-full bg-[#46596B]"  variant="solid"  >
+                <BadgeText className="text-center text-[0.625em] font-[600] text-white"    >Source</BadgeText>
               </Badge>
-              <Text
-                ml={calculateFromMainWidth(8, mainWidth) as any}
-                fontSize={'1em' as any}
-                fontWeight={500}
-                lineHeight={24}
-                color={strong}
-                flex={1}
-                minWidth={0}
-                sx={{
-                  _web: {
-                    whiteSpace: 'normal',
-                    wordBreak: 'break-word',
-                    overflowWrap: 'anywhere',
-                  }
-                } as any}
+              <Text style={{ marginLeft: calculateFromMainWidth(8, mainWidth) as any, color: strong, whiteSpace: 'normal', wordBreak: 'break-word', overflowWrap: 'anywhere' } as any} className="flex-1 min-w-0 text-[1em] font-[500] leading-[24px]"
+
+
+
+
+
+
+
+
               >
                 {isDefinedBy}
               </Text>

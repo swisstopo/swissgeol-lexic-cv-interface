@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-type Vocabulary = 'Chronostratigraphy' | 'TectonicUnits' | 'TectonicStructures' | 'Lithostratigraphy' | 'Lithology' | 'ls_correlations';
+type Vocabulary = 'Chronostratigraphy' | 'TectonicUnits' | 'TectonicStructures' | 'Lithostratigraphy' | 'Lithology' | 'ls_correlations' | 'materialDescription';
 
 interface RepoResponse {
   owner: string;
@@ -15,6 +15,7 @@ const VOCAB_TO_ENV: Record<Vocabulary, string> = {
   Lithostratigraphy: 'LITHOSTRATIGRAPHY_REPO_SLUG',
   Lithology: 'LITHOLOGY_REPO_SLUG',
   ls_correlations: 'LS_CORRELATIONS_REPO_SLUG',
+  materialDescription: 'MATERIALDESCRIPTION_REPO_SLUG',
 };
 
 
@@ -28,7 +29,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<RepoRe
     return res.status(400).json({ error: 'Missing or invalid vocabulary parameter' });
   }
 
-  const allowed: Vocabulary[] = ['Chronostratigraphy', 'TectonicUnits', 'TectonicStructures', 'Lithostratigraphy', 'Lithology', 'ls_correlations'];
+  const allowed: Vocabulary[] = ['Chronostratigraphy', 'TectonicUnits', 'TectonicStructures', 'Lithostratigraphy', 'Lithology', 'ls_correlations', 'materialDescription'];
   if (!allowed.includes(vocabulary as Vocabulary)) {
     return res.status(400).json({ error: 'Unsupported vocabulary' });
   }
