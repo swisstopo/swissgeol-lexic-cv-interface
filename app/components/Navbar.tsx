@@ -1,11 +1,13 @@
-'use client';
-
-import { Box, Icon, Text, Link } from '@gluestack-ui/themed';
+'use client';;
+import { Tooltip, TooltipContent, TooltipText } from "@/components/ui/tooltip";
+import { Link } from "@/components/ui/link";
+import { Text } from "@/components/ui/text";
+import { Icon } from "@/components/ui/icon";
+import { Box } from "@/components/ui/box";
 import { ChevronDownIcon, Search, UserRound, X } from 'lucide-react';
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react';
 import Select, { components } from 'react-select';
-import { Tooltip, TooltipContent, TooltipText } from '@gluestack-ui/themed';
 import VersionBox from './Version';
 
 interface Concept {
@@ -13,8 +15,8 @@ interface Concept {
     label: string;
 }
 
-const NAV_INITIAL_HEIGHT = 88; 
-const NAV_MIN_HEIGHT = 78; 
+const NAV_INITIAL_HEIGHT = 88;
+const NAV_MIN_HEIGHT = 78;
 const NAV_SCROLL_DISTANCE = 80;
 
 const clamp = (value: number, min: number, max: number) => {
@@ -117,18 +119,18 @@ const Navbar: React.FC = () => {
 
         return (
             <components.Control {...props}>
-                <Box pl={12} flexDirection="row" alignItems="center">
+                <Box className="pl-[12px] flex-row items-center">
                     <Search size={20} color="black" />
                 </Box>
                 {children}
                 {inputValue && (
                     // @ts-ignore
-                    <Box mr={10} onMouseDown={(e: React.MouseEvent) => {
+                    (<Box onMouseDown={(e: React.MouseEvent) => {
                         clearValue();
                         e.stopPropagation();
-                    }} style={{ cursor: 'pointer' }}>
+                    }} className="mr-[10px] web:cursor-pointer">
                         <X size={20} color="#337083" />
-                    </Box>
+                    </Box>)
                 )}
             </components.Control>
         );
@@ -139,50 +141,30 @@ const Navbar: React.FC = () => {
             <Box style={{ height: `${navHeight}px` } as any} />
             {/* Banner Beta */}
             <Box
-                position={'fixed' as any}
-                bg="#D4301F"
                 style={{
                     top: 10,
                     right: -20,
                     width: 70,
                     height: 18,
-                    transform: [{ rotate: '45deg' }],
+                    transform: 'rotate(45deg)',
                     zIndex: 1001,
-                }}
-                alignItems='center'
-                justifyContent='center'
-            >
-                <Text
-                    color="white"
-                    fontSize="$xs"
-                    fontWeight="$bold"
-                    textAlign='center'
-                >
+                } as any}
+                className="fixed bg-[#D4301F] items-center justify-center">
+                <Text className="text-white text-xs font-bold text-center">
                     Beta
                 </Text>
             </Box>
             <Box
-                position={'fixed' as any}
-                top={0}
-                left={0}
-                right={0}
-                zIndex={1000}
-                flexDirection='row'
-                alignItems='center'
-                justifyContent='space-between'
-                borderBottomWidth={1}
-                borderBottomColor='#DFE4E9'
-                bg='$white'
-                paddingTop={verticalPadding}
-                paddingBottom={verticalPadding}
                 style={{
                     height: `${navHeight}px`,
                     paddingLeft: '0.83vw',
                     paddingRight: '0.83vw',
+                    paddingTop: verticalPadding,
+                    paddingBottom: verticalPadding,
                     transition: 'height 0.25s ease, padding 0.25s ease',
                 } as any}
-            >
-                <Box w='25%' flexDirection='row'>
+                className="fixed top-0 left-0 right-0 z-[1000] flex-row items-center justify-between border-b-[1px] border-b-[#DFE4E9] bg-white">
+                <Box className="w-[25%] flex-row">
                 <Link href='/'><img
                     id="imgLogo"
                     width={117}
@@ -192,11 +174,11 @@ const Navbar: React.FC = () => {
                 /></Link>
             </Box>
             {loading ? (
-                <Box w={480} h={56} alignItems='center' justifyContent='center'>
+                <Box className="w-[480px] h-[56px] items-center justify-center">
                     <Text>Loading concepts...</Text>
                 </Box>
             ) : error ? (
-                <Text color="red">{error}</Text>
+                <Text style={{ color: 'red' } as any}>{error}</Text>
             ) : (
                 <Box>
                     <Select
@@ -312,9 +294,7 @@ const Navbar: React.FC = () => {
                 </Box>
 
             )}
-            <Box w='25%' flexDirection='row' alignItems='center'
-                justifyContent='flex-end' gap={8} position='relative'
-            >
+            <Box className="w-[25%] flex-row items-center justify-end gap-[8px] relative">
                 {/* Version box */}
                 <VersionBox />
 
@@ -326,37 +306,18 @@ const Navbar: React.FC = () => {
                             <Box
                                 {...props}
                                 style={{ height: 36, cursor: 'pointer' } as any}
-                                flexDirection='row'
-                                alignItems='center'
-                                pt={8}
-                                pr={12}
-                                pl={12}
-                                pb={8}
-                                gap={6}
-                            >
+                                className="flex-row items-center pt-[8px] pr-[12px] pl-[12px] pb-[8px] gap-[6px]">
                                 <Text
-                                    fontSize={14}
-                                    fontWeight='$medium'
-                                    lineHeight={20}
-                                    letterSpacing={1.5}
-                                    color='#828E9A'
-                                >
+                                    className="text-[14px] font-medium leading-[20px] tracking-[1.5px] text-[#828E9A]">
                                     EN
                                 </Text>
-                                <Icon as={ChevronDownIcon} w={20} h={20} color='#828E9A' />
+                                <Icon as={ChevronDownIcon} className="w-[20px] h-[20px] text-[#828E9A]" />
                             </Box>
                         );
                     }}
                 >
                     <TooltipContent
-                        bg='#1C2834'
-                        pt={5}
-                        pr={8}
-                        pl={8}
-                        pb={5}
-                        borderRadius={4}
-                        gap={8}
-                    >
+                        className="bg-[#1C2834] pt-[5px] pr-[8px] pl-[8px] pb-[5px] rounded-[4px] gap-[8px]">
                         <TooltipText>Coming soon...</TooltipText>
                     </TooltipContent>
                 </Tooltip>

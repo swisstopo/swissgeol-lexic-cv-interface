@@ -62,6 +62,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 case 'ls_correlations':
                     repositoryId = process.env.LS_CORRELATIONS_REPO_ID;
                     break;
+                case 'materialDescription':
+                    repositoryId = process.env.MATERIALDESCRIPTION_REPO_ID;
+                    break;
             }
 
             if (!repositoryId) {

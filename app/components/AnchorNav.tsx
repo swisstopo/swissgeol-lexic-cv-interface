@@ -8,7 +8,11 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Box, HStack, Pressable, Text } from '@gluestack-ui/themed';
+import { Box } from '@/components/ui/box';
+import { HStack } from '@/components/ui/hstack';
+import { Pressable } from '@/components/ui/pressable';
+import { Text } from '@/components/ui/text';
+
 import { calculateFromMainWidth, useMainWidth } from '../utils/heightUtils';
 
 /**
@@ -259,71 +263,48 @@ export function AnchorNav({
       ? null
       : stickyState.mode === 'fixed'
         ? ({
-            _web: {
-              position: 'fixed',
-              top: `${stickyState.top}px`,
-              width: fixedWidth ? `${fixedWidth}px` : '100%',
-              zIndex: 2,
-            },
+            position: 'fixed',
+            top: `${stickyState.top}px`,
+            width: fixedWidth ? `${fixedWidth}px` : '100%',
+            zIndex: 2,
           } as any)
         : ({
-            _web: {
-              position: 'relative',
-              width: '100%',
-            },
+            position: 'relative',
+            width: '100%',
           } as any);
 
   return (
-    <Box
+    <Box className="relative"
       ref={shellRef as any}
-      position="relative"
-      style={shellHeight ? ({ minHeight: shellHeight } as any) : undefined}
-      sx={{
-        width: '100%',
-      }}
+
+      style={{ ...((shellHeight ? ({ minHeight: shellHeight } as any) : undefined) ?? {}), width: '100%' } as any}
+
     >
-      <Box
+      <Box style={{ paddingRight: rowPaddingRight, ...(stickyStyles ?? null) } as any}
       ref={containerRef as any}
-      sx={{
-        paddingRight: rowPaddingRight,
-        ...(stickyStyles ?? null),
-      }}
+
     >
-      <Box
-        position="relative"
-        sx={{
-          _web: {
-            height: totalHeight,
-          },
-        }}
+      <Box style={{ height: totalHeight } as any} className="relative"
+
+
       >
-        <Box
-          position="absolute"
-          left={0}
-          w={trackWidth}
-          bg={palette.track}
-          sx={{ top: 0, height: totalHeight } as any}
+        <Box style={{ width: trackWidth, backgroundColor: palette.track, top: 0, height: totalHeight } as any} className="absolute left-0"
+
+
+
+
+
         />
-        <Box
-          position="absolute"
-          left={0}
-          w={indicatorWidth}
-          bg={palette.indicator}
-          sx={{
-            _web: {
-              top: indicatorOffset,
-              height: rowHeight,
-              transition: 'top 240ms ease',
-            },
-          } as any}
+        <Box style={{ width: indicatorWidth, backgroundColor: palette.indicator, top: indicatorOffset, height: rowHeight, transition: 'top 240ms ease' } as any} className="absolute left-0"
+
+
+
+
+
         />
 
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            height: totalHeight,
-          } as any}
+        <Box style={{ display: 'flex', flexDirection: 'column', height: totalHeight } as any}
+
         >
           {flat.map(({ id, label, depth }) => {
             const isActive = id === activeId;
@@ -331,14 +312,11 @@ export function AnchorNav({
             const color = isActive ? palette.active : isHovered ? palette.hover : palette.base;
 
             return (
-              <Box
+              <Box style={{ paddingRight: rowPaddingRight, height: rowHeight } as any}
                 key={id}
-                sx={{
-                  paddingRight: rowPaddingRight,
-                  _web: { height: rowHeight },
-                } as any}
+
               >
-                <Pressable
+                <Pressable style={{ cursor: 'pointer', paddingRight: rowPaddingRight, height: rowHeight, display: 'flex', alignItems: 'center' } as any}
                   role="link"
                   accessibilityRole="link"
                   aria-current={isActive ? 'true' : 'false'}
@@ -347,33 +325,16 @@ export function AnchorNav({
                   onHoverOut={() => setHoveredId((prev) => (prev === id ? null : prev))}
                   onFocus={() => setHoveredId(id)}
                   onBlur={() => setHoveredId((prev) => (prev === id ? null : prev))}
-                  sx={{
-                    cursor: 'pointer',
-                    paddingRight: rowPaddingRight,
-                    _web: {
-                      height: rowHeight,
-                      display: 'flex',
-                      alignItems: 'center',
-                    },
-                  } as any}
+
                 >
-                  <HStack
-                    alignItems="center"
-                    sx={{
-                      width: '100%',
-                      _web: { height: rowHeight },
-                    } as any}
+                  <HStack style={{ width: '100%', height: rowHeight } as any} className="items-center"
+
+
                   >
-                    <Text
-                      fontWeight={isActive ? '$bold' : '$medium'}
-                      color={color as any}
-                      sx={{
-                        _web: {
-                          marginLeft: `calc(${textInset} + ${depth * 12}px)`,
-                          fontSize,
-                          lineHeight: lineHeight,
-                        },
-                      }}
+                    <Text style={{ fontWeight: isActive ? "700" : "500", color: color as any, marginLeft: `calc(${textInset} + ${depth * 12}px)`, fontSize: fontSize, lineHeight: lineHeight } as any}
+
+
+
                     >
                       {label}
                     </Text>

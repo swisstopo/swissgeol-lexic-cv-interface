@@ -1,7 +1,10 @@
 "use client";
 
 import React from "react";
-import { Box, Text, Pressable } from "@gluestack-ui/themed";
+import { Box } from '@/components/ui/box';
+import { Text } from '@/components/ui/text';
+import { Pressable } from '@/components/ui/pressable';
+
 import { Linking } from "react-native";
 import { ChevronRight } from "lucide-react";
 import { useMainWidth, calculateFromMainWidth } from "../utils/heightUtils";
@@ -97,7 +100,7 @@ export function ClientButton({
   };
 
   return (
-    <Pressable
+    <Pressable style={{ borderColor: palette.borderColor, backgroundColor: palette.backgroundColor, width: calculateFromMainWidth(280, mainWidth), height: "auto", minHeight: calculateFromMainWidth(78, mainWidth), paddingTop: calculateFromMainWidth(16, mainWidth), paddingBottom: calculateFromMainWidth(16, mainWidth), paddingLeft: calculateFromMainWidth(32, mainWidth), paddingRight: calculateFromMainWidth(16, mainWidth), cursor: isDisabled ? "not-allowed" : "pointer", transition: "background-color 120ms ease, border-color 120ms ease" } as any} className="flex-row items-center justify-between rounded-[8px] border-[1px]"
       {...rest}
       disabled={isDisabled}
       onPress={handlePress}
@@ -107,41 +110,29 @@ export function ClientButton({
       aria-disabled={isDisabled}
       aria-pressed={isSelected}
       // Styles applied directly for clarity and correctness
-      borderRadius={8}
-      borderWidth={1}
-      borderColor={palette.borderColor}
-      backgroundColor={palette.backgroundColor}
-      flexDirection="row"
-      alignItems="center"
-      justifyContent="space-between"
-      sx={{
-        width: calculateFromMainWidth(280, mainWidth),
-        height: "auto",
-        minHeight: calculateFromMainWidth(78, mainWidth),
-        paddingTop: calculateFromMainWidth(16, mainWidth),
-        paddingBottom: calculateFromMainWidth(16, mainWidth),
-        paddingLeft: calculateFromMainWidth(32, mainWidth),
-        paddingRight: calculateFromMainWidth(16, mainWidth),
-        cursor: isDisabled ? "not-allowed" : "pointer",
-        _web: {
-          transition: "background-color 120ms ease, border-color 120ms ease",
-        },
-      } as any}
+
+
+
+
+
+
+
+
     >
       {/* Text container that can shrink */}
-      <Box flexShrink={1} mr="$3">
-        <Text
-          color={palette.textColor}
-          fontWeight="$medium"
-          fontSize={'1em' as any}
-          lineHeight="$md"
-          letterSpacing={0.25}
-          textDecorationLine="underline"
+      <Box className="shrink mr-[12px]"  >
+        <Text style={{ color: palette.textColor } as any} className="font-[500] text-[1em] leading-[22px] tracking-[0.25px] underline"
+
+
+
+
+
+
         >
           {label}
         </Text>
       </Box>
-      
+
       {/* Right-side icon */}
       {RightIcon ? (
         <Box>
