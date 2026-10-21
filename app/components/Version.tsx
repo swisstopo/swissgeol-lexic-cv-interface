@@ -10,7 +10,7 @@ const VersionBox = () => {
             className="pt-[10px] pb-[10px] rounded-[22px] flex-row items-center justify-end gap-[8px]">
             <Text
                 className="text-[12px] font-[500] leading-[16px] tracking-[1.25px] text-[#828E9A] align-middle">
-                v0.8.1-beta
+                v0.8.2-beta
             </Text>
         </Box>
     );

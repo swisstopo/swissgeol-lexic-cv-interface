@@ -4,8 +4,8 @@ Interfaccia web Next.js per consultare i vocabolari controllati Swissgeol tramit
 
 ## Stack principale
 
-- Next.js 14
-- React 18
+- Next.js 16
+- React 19
 - TypeScript
 - Tailwind CSS
 - Gluestack UI v2 con componenti locali in `components/ui`
@@ -91,6 +91,25 @@ Non usare nuovi import da:
 Per preservare il risultato grafico, alcuni stili restano intenzionalmente in Tailwind o React style object. Questo aiuta anche a ridurre gradualmente la dipendenza da Gluestack.
 
 ## Note di manutenzione
+
+### Pagine vocabolario
+
+Il pulsante **Overview** nelle card della home apre `/<vocabulary>` (per esempio
+`/Chronostratigraphy`). Le pagine termine mantengono le rotte `/<vocabulary>/<term>`.
+
+Nome, traduzioni, descrizione e Top Concepts sono hardcoded in
+`app/data/vocabularies.ts`, condivisi con la home e selezionati tramite l'ID nella rotta.
+
+**Explore Concepts** riutilizza l'API `/api/getAllConceptMap`, già usata dalla ricerca,
+passando il parametro `vocabulary`: la stessa query esistente viene eseguita solo
+sul repository richiesto. Senza parametro, la ricerca continua a leggere tutti i
+vocabolari. La pagina mostra indice alfabetico e collegamenti alle pagine termine.
+Il filtro **Narrowers of a term** permette di cercare tra i concetti del vocabolario
+e riutilizza `/api/dbQueryTerms`: mostra i Narrowers diretti e il termine selezionato,
+con le etichette inglesi. **All concepts** ripristina l'elenco completo;
+**Concepts in a collection** resta disabilitato (Coming soon).
+
+### UI e dipendenze
 
 - `.npmrc` contiene `legacy-peer-deps=true` per compatibilita con lo stack Gluestack.
 - `.gluestack/` e un artefatto della migrazione v1 -> v2. Non rimuoverlo senza una verifica dedicata di build, Docker e UI.

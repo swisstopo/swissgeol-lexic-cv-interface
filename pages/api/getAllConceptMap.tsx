@@ -28,6 +28,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const vocabularies = Object.keys(configJsonDB.vocabularies);
+    const requestedVocabulary = req.query.vocabulary;
+    if (requestedVocabulary !== undefined &&
+        (typeof requestedVocabulary !== 'string' || !vocabularies.includes(requestedVocabulary))) {
+        return res.status(400).json({ error: 'Unsupported vocabulary' });
+    }
+    // Search uses every repository; a vocabulary overview requests only its own.
+    const selectedVocabularies = typeof requestedVocabulary === 'string' ? [requestedVocabulary] : vocabularies;
     const allConceptMap = new Map<string, string>();
 
     try {
@@ -40,7 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(500).json({ error: 'GRAPHDB_BASE_URL environment variable is required' });
         }
 
-        for (const vocabulary of vocabularies) {
+        for (const vocabulary of selectedVocabularies) {
             // Get repository ID from specific environment variables
             let repositoryId;
             switch (vocabulary) {
@@ -105,7 +112,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                             const vocabulary = parts[parts.length - 2];
                             const term = parts[parts.length - 1];
 
-                            if (vocabularies.includes(vocabulary) && term) {
+                            if (selectedVocabularies.includes(vocabulary) && term) {
                                 allConceptMap.set(subject, label);
                             } else {
                                 duplicates = true;

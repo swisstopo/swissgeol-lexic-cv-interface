@@ -5,6 +5,7 @@ import { Box } from "@/components/ui/box";
 import React, { useEffect, useState } from 'react';
 import { BreadCrumbsData } from '../models/breadCrumbsInterface';
 import { useMainWidth, calculateFromMainWidth } from '../utils/heightUtils';
+import { getVocabulary } from '../data/vocabularies';
 
 export interface BreadcrumbsProps {
     data: BreadCrumbsData;
@@ -95,9 +96,13 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ data }) => {
                             className="text-[14px] font-[500] leading-[20px] tracking-[0.25px] underline">{data.startPage}</LinkText>
                     </Link>
                     <Text>&gt;</Text>
-                    <Link href='/'>
+                    {!data.term ? (
+                        <Text aria-current="page" className="text-[14px] text-secondary-400">{getVocabulary(data.vocabulary)?.name ?? getVocabularyLabel(data.vocabulary)}</Text>
+                    ) : (
+                    <>
+                    <Link href={`/${data.vocabulary}`}>
                         <LinkText
-                            className="text-[14px] font-[500] leading-[20px] tracking-[0.25px] underline">{getVocabularyLabel(data.vocabulary)}</LinkText>
+                            className="text-[14px] font-[500] leading-[20px] tracking-[0.25px] underline">{getVocabulary(data.vocabulary)?.name ?? getVocabularyLabel(data.vocabulary)}</LinkText>
                     </Link>
                     <Text>&gt;</Text>
                     {data.broader.length <= 2 ? (
@@ -144,6 +149,8 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ data }) => {
                     <Link href={`/${data.vocabulary}/${extractLabel(data.term)}`}>
                         <LinkText bold className="text-[14px] no-underline text-secondary-400">{data?.term}</LinkText>
                     </Link>
+                    </>
+                    )}
                 </Box>
             </Box>
         </>

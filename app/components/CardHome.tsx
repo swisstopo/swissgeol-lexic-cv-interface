@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import NextLink from 'next/link';
+import { getEnglishLabel }  from "../utils/vocabularyConcepts";
 import { Box } from '@/components/ui/box';
 import { HStack } from '@/components/ui/hstack';
 import { VStack } from '@/components/ui/vstack';
@@ -20,6 +22,7 @@ type Translations = {
 
 export type CardHomeProps = {
   title: string; // English title
+  overviewHref: string;
   description: string;
   translations: Translations; // DE, FR, IT in the aside
   topConcepts: TopConcept[];
@@ -33,14 +36,6 @@ const flagImg = {
   IT: "flag-it.png",
 };
 
-const getEnglishLabel = (rawLabel: string) => {
-  if (!rawLabel) return rawLabel;
-  const segments = rawLabel.split(",").map((segment) => segment.trim());
-  const english = segments.find((segment) => /(\(en\))/i.test(segment));
-  if (!english) return rawLabel;
-  return english.replace(/\(en\)/i, "").trim();
-};
-
 const getFlagSource = (src: string) => (src.startsWith("/") ? src : `/${src}`);
 
 const FlagCircle = ({ src, alt }: { src: string; alt: string }) => (
@@ -51,6 +46,7 @@ const FlagCircle = ({ src, alt }: { src: string; alt: string }) => (
 
 const CardHome: React.FC<CardHomeProps> = ({
   title,
+  overviewHref,
   description,
   translations,
   topConcepts,
@@ -94,6 +90,13 @@ const CardHome: React.FC<CardHomeProps> = ({
             >
               {title}
             </Text>
+            <NextLink
+              href={overviewHref}
+              aria-label={`Overview of ${title}`}
+              className="ml-auto rounded-[4px] border border-[#DFE4E9] px-[20px] py-[5px] text-[0.875em] font-medium text-[#1C2834] hover:bg-[#E8EFF3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#337083]"
+            >
+              Overview
+            </NextLink>
           </Box>
         </Box>
         {/* LEFT CONTENT */}
