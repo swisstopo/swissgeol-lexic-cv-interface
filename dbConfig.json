@@ -51,6 +51,7 @@
         }
     },
     "queries": {
+        "prefLabelsForExport": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nSELECT DISTINCT ?subject ?label ?de ?fr ?it ?en\nWHERE {\n  GRAPH ?graph {\n    ?subject ?predicate ?label .\n    FILTER(CONTAINS(LCASE(STR(?predicate)), \"label\"))\n    FILTER(LANGMATCHES(LANG(?label), \"en\"))\n    OPTIONAL { ?subject skos:prefLabel ?de . FILTER(LANGMATCHES(LANG(?de), \"de\")) }\n    OPTIONAL { ?subject skos:prefLabel ?fr . FILTER(LANGMATCHES(LANG(?fr), \"fr\")) }\n    OPTIONAL { ?subject skos:prefLabel ?it . FILTER(LANGMATCHES(LANG(?it), \"it\")) }\n    OPTIONAL { ?subject skos:prefLabel ?en . FILTER(LANGMATCHES(LANG(?en), \"en\")) }\n  }\n}",
         "ChronostratigraphyQuery": {
             "queryBreadcrumbs": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <{{PREFIX_BASE_URL}}/Chronostratigraphy/>\n\nSELECT ?narrowerConcept\nWHERE {\n  ex:${term} skos:broader+ ?narrowerConcept.\n}",
             "queryVocabolo": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX ex: <{{PREFIX_BASE_URL}}/Chronostratigraphy/>\n\nSELECT ?predicate ?object\nWHERE {\n  ex:${term} ?predicate ?object .\n}",

@@ -7,3 +7,5 @@ export interface VocabularyConcept {
 export interface VocabularyConcepts {
   concepts: VocabularyConcept[];
 }
+
+export type VocabularyConceptLabels = Record<string, Partial<Record<'de' | 'fr' | 'it' | 'en', string>>>;

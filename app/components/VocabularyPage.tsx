@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Select from 'react-select';
-import { ArrowRight, Map as MapIcon } from 'lucide-react';
+import { ArrowRight, Download, Map as MapIcon } from 'lucide-react';
 import { Box } from '@/components/ui/box';
 import { Text } from '@/components/ui/text';
 import { Link, LinkText } from '@/components/ui/link';
@@ -17,9 +17,11 @@ import Breadcrumbs from './Breacrumbs';
 import CardTerm from './CardTermPage';
 import { ClientButton } from './ClientButton_UIv2';
 import type { Vocabulary } from '../data/vocabularies';
-import type { VocabularyConcept, VocabularyConcepts } from '../models/vocabularyConcepts';
+import type { VocabularyConcept, VocabularyConcepts, VocabularyConceptLabels } from '../models/vocabularyConcepts';
 import { getEnglishLabel, mapVocabularyConcepts, getNarrowerConcepts, groupConcepts } from '../utils/vocabularyConcepts';
 import { resolveVocabularyVersion } from '../utils/resolveVocabularyVersion';
+import { createVocabularyCsv, createVocabularyCsvFilename } from '../utils/vocabularyCsv';
+import { downloadCsv, waitForCsvPaint } from '../utils/downloadCsv';
 import { useMainWidth, calculateFromMainWidth } from '../utils/heightUtils';
 
 const TERM_LINK_CLASS = 'text-[#337083] no-underline transition-colors duration-[120ms] hover:text-[#2F4356]';
@@ -44,15 +46,38 @@ export default function VocabularyPage({ vocabulary, uri }: { vocabulary: Vocabu
   const size = (pixels: number) => calculateFromMainWidth(pixels, mainWidth);
   const [version, setVersion] = useState('');
   const [data, setData] = useState<VocabularyConcepts>(EMPTY);
+  const [conceptLabels, setConceptLabels] = useState<VocabularyConceptLabels>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [attempt, setAttempt] = useState(0);
   const [view, setView] = useState('all');
   const [selectedTerm, setSelectedTerm] = useState<VocabularyConcept | null>(null);
-  const [narrowerData, setNarrowerData] = useState<VocabularyConcepts>(EMPTY);
+  const [narrowerData, setNarrowerData] = useState<VocabularyConcepts | null>(null);
   const [narrowersLoading, setNarrowersLoading] = useState(false);
   const [narrowersError, setNarrowersError] = useState('');
   const [narrowersAttempt, setNarrowersAttempt] = useState(0);
+  const [downloading, setDownloading] = useState(false);
+  const [exportError, setExportError] = useState('');
+  const exportController = useRef<AbortController | null>(null);
+
+  const cancelExport = () => {
+    exportController.current?.abort();
+    exportController.current = null;
+    setDownloading(false);
+    setExportError('');
+  };
+
+  useEffect(() => {
+    cancelExport();
+    setSelectedTerm(null);
+    setNarrowerData(null);
+    setNarrowersLoading(false);
+    setNarrowersError('');
+    return () => {
+      exportController.current?.abort();
+      exportController.current = null;
+    };
+  }, [vocabulary.id]);
 
   useEffect(() => {
     let active = true;
@@ -64,13 +89,15 @@ export default function VocabularyPage({ vocabulary, uri }: { vocabulary: Vocabu
     const controller = new AbortController();
     setLoading(true);
     setError('');
-    fetch(`/api/getAllConceptMap?vocabulary=${encodeURIComponent(vocabulary.id)}`, { signal: controller.signal })
+    fetch(`/api/getAllConceptMap?vocabulary=${encodeURIComponent(vocabulary.id)}&includeTranslations=true`, { signal: controller.signal })
       .then(async response => {
         if (!response.ok) throw new Error('Could not load concepts. Please try again.');
-        const value: { allConceptMap: Record<string, string> } = await response.json();
-        return mapVocabularyConcepts(value.allConceptMap, vocabulary.id);
+        const value: { allConceptMap: Record<string, string>; conceptLabels: VocabularyConceptLabels } = await response.json();
+        if (!controller.signal.aborted) {
+          setData(mapVocabularyConcepts(value.allConceptMap, vocabulary.id));
+          setConceptLabels(value.conceptLabels);
+        }
       })
-      .then(value => { if (!controller.signal.aborted) setData(value); })
       .catch(() => { if (!controller.signal.aborted) setError('Could not load concepts. Please try again.'); })
       .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
@@ -91,10 +118,39 @@ export default function VocabularyPage({ vocabulary, uri }: { vocabulary: Vocabu
   const narrowed = view === 'narrowers' && selectedTerm !== null;
   const listLoading = loading || (narrowed && narrowersLoading);
   const listError = error || (narrowed ? narrowersError : '');
-  const displayed = (narrowed ? narrowerData : data).concepts;
+  const displayed = narrowed ? (narrowerData?.concepts ?? EMPTY.concepts) : data.concepts;
   const groups = useMemo(() => groupConcepts(displayed), [displayed]);
   const letters = new Set(groups.map(([letter]) => letter));
   const labels = vocabulary.translations;
+  const exportDisabled = listLoading || Boolean(listError) || view === 'collection'
+    || (view === 'narrowers' && (!selectedTerm || !narrowerData));
+
+  const handleExport = async () => {
+    if (exportDisabled || exportController.current) return;
+    const controller = new AbortController();
+    exportController.current = controller;
+    setDownloading(true);
+    setExportError('');
+    try {
+      if (!await waitForCsvPaint(controller.signal) || controller.signal.aborted) return;
+      const csv = createVocabularyCsv(displayed, conceptLabels);
+      const filename = createVocabularyCsvFilename(vocabulary.name,
+        view === 'narrowers' && selectedTerm
+          ? { view: 'narrowers', conceptName: selectedTerm.label }
+          : { view: 'all' });
+      downloadCsv(csv, filename);
+    } catch (cause) {
+      if (!controller.signal.aborted) {
+        console.error('Could not export vocabulary CSV.', cause);
+        setExportError('Could not export CSV. Please try again.');
+      }
+    } finally {
+      if (exportController.current === controller) {
+        exportController.current = null;
+        setDownloading(false);
+      }
+    }
+  };
 
   return (
     <PageLayout title={`${vocabulary.name} - Controlled Vocabularies Interface`}>
@@ -167,10 +223,20 @@ export default function VocabularyPage({ vocabulary, uri }: { vocabulary: Vocabu
         <Divider style={{ marginTop: size(64), marginBottom: size(64) } as any} />
         <section id="explore-concepts" aria-labelledby="concepts-title" className="border-[1px] border-[#ACB4BD] rounded-[4px] bg-white scroll-mt-[150px]" style={{ width: size(976) }}>
           <Box className="bg-[#F8F9FA] border-b-[1px] border-[#DFE4E9]" style={{ padding: size(24) } as any}>
-            <Box className="flex-row items-center flex-wrap gap-[12px]">
-              <h2 id="concepts-title" className="text-[1.25em] font-[700]">Explore Concepts</h2>
-              <span className="text-[0.75em] text-[#828E9A]" aria-live="polite">{!listLoading && !listError && `${displayed.length} concepts`}</span>
+            <Box className="flex-row items-center justify-between flex-wrap gap-[12px]">
+              <Box className="flex-row items-center flex-wrap gap-[12px]">
+                <h2 id="concepts-title" className="text-[1.25em] font-[700]">Explore Concepts</h2>
+                <span className="text-[0.75em] text-[#828E9A]" aria-live="polite">{!listLoading && !listError && `${displayed.length} concepts`}</span>
+              </Box>
+              <Button variant="outline" action="default" size="sm" onPress={handleExport}
+                isDisabled={exportDisabled || downloading} accessibilityState={{ busy: downloading }}
+                style={{ height: size(40), paddingLeft: size(16), paddingRight: size(16), gap: size(8) } as any}
+                className={`ml-auto rounded-[4px] border-[#ACB4BD] border-[1px] ${downloading ? 'bg-[#D6E2E6] data-[disabled=true]:opacity-100' : 'bg-white data-[hover=true]:bg-[#F8F9FA] data-[active=true]:bg-[#D6E2E6]'}`}>
+                <ButtonIcon as={Download} className="text-[#1C2834]" style={{ width: size(20), height: size(20) } as any} />
+                <ButtonText className="text-[#1C2834] text-[0.75em] font-[500]">{downloading ? 'downloading' : 'Export CSV'}</ButtonText>
+              </Button>
             </Box>
+            {exportError && <p role="alert" className="mt-[12px] text-[0.875em] text-[#B42318]">{exportError}</p>}
             <Box className="flex-row flex-wrap items-end gap-[24px] mt-[24px]">
               <Box className="w-[34%] min-w-[180px] max-w-full">
                 <Select
@@ -179,7 +245,14 @@ export default function VocabularyPage({ vocabulary, uri }: { vocabulary: Vocabu
                   aria-label="Concept filter"
                   options={CONCEPT_VIEWS}
                   value={CONCEPT_VIEWS.find(option => option.value === view)}
-                  onChange={option => { if (option) { setView(option.value); setSelectedTerm(null); } }}
+                  onChange={option => { if (option) {
+                    cancelExport();
+                    setView(option.value);
+                    setSelectedTerm(null);
+                    setNarrowerData(null);
+                    setNarrowersLoading(false);
+                    setNarrowersError('');
+                  } }}
                   isSearchable={false}
                   isOptionDisabled={option => Boolean(option.isDisabled)}
                   components={{ IndicatorSeparator: null }}
@@ -217,8 +290,9 @@ export default function VocabularyPage({ vocabulary, uri }: { vocabulary: Vocabu
                     options={data.concepts}
                     value={selectedTerm}
                     onChange={value => {
+                      cancelExport();
                       setSelectedTerm(value);
-                      setNarrowerData(EMPTY);
+                      setNarrowerData(null);
                       setNarrowersLoading(value !== null);
                       setNarrowersError('');
                     }}

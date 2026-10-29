@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { GraphDBClient, QueryExecutor, getConfigDB, getQueryConfig } from '@/app/lib';
 import fs from 'fs';
 import path from 'path';
+import type { VocabularyConceptLabels } from '@/app/models/vocabularyConcepts';
 
 interface LabelQueryResult {
     subject: {
@@ -10,6 +11,10 @@ interface LabelQueryResult {
     label: {
         value: string;
     };
+    de?: { value: string };
+    fr?: { value: string };
+    it?: { value: string };
+    en?: { value: string };
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -35,7 +40,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     // Search uses every repository; a vocabulary overview requests only its own.
     const selectedVocabularies = typeof requestedVocabulary === 'string' ? [requestedVocabulary] : vocabularies;
+    const includeTranslations = req.query.includeTranslations === 'true';
     const allConceptMap = new Map<string, string>();
+    const conceptLabels: VocabularyConceptLabels = {};
 
     try {
         // Get configuration from environment variables (required)
@@ -83,7 +90,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             const queryExecutor = new QueryExecutor(graphDBClient, repositoryId, url, username, password, repositoryUrl);
 
             const queryConfig = getQueryConfig(vocabulary);
-            const queryLabelOfAllConcept = queryConfig.queryLabelOfAllConcept;
+            const queryLabelOfAllConcept = includeTranslations
+                ? configJsonDB.queries.prefLabelsForExport
+                : queryConfig.queryLabelOfAllConcept;
 
             const prefLabels: LabelQueryResult[] = await queryExecutor.executeSparqlQuery(queryLabelOfAllConcept);
 
@@ -99,6 +108,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             prefLabels.forEach(result => {
                 const subject = result.subject.value;
                 const label = result.label.value;
+
+                // The overview loads all four labels once; the search keeps its existing response.
+                if (includeTranslations) {
+                    const parts = subject.split('/');
+                    const vocabulary = parts[parts.length - 2];
+                    const term = parts[parts.length - 1];
+                    if (parts.length < 5 || !selectedVocabularies.includes(vocabulary) || !term || !label) return;
+
+                    conceptLabels[subject] = {
+                        de: result.de?.value ?? '',
+                        fr: result.fr?.value ?? '',
+                        it: result.it?.value ?? '',
+                        en: result.en?.value ?? '',
+                    };
+                    if (!allConceptMap.has(subject)) allConceptMap.set(subject, label);
+                    return;
+                }
 
                 let duplicates: boolean = false;
                 if (subject && label) {
@@ -132,7 +158,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             Array.from(allConceptMap.entries()).map(([key, value]) => [key, value])
         );
 
-        res.status(200).json({ allConceptMap: allConceptObject });
+        res.status(200).json(includeTranslations
+            ? { allConceptMap: allConceptObject, conceptLabels }
+            : { allConceptMap: allConceptObject });
     } catch (error) {
         console.error('Error fetching all concepts:', error);
         res.status(500).json({ error: 'Internal Server Error' });

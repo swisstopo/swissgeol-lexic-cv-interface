@@ -101,13 +101,19 @@ Nome, traduzioni, descrizione e Top Concepts sono hardcoded in
 `app/data/vocabularies.ts`, condivisi con la home e selezionati tramite l'ID nella rotta.
 
 **Explore Concepts** riutilizza l'API `/api/getAllConceptMap`, già usata dalla ricerca,
-passando il parametro `vocabulary`: la stessa query esistente viene eseguita solo
-sul repository richiesto. Senza parametro, la ricerca continua a leggere tutti i
-vocabolari. La pagina mostra indice alfabetico e collegamenti alle pagine termine.
+passando `vocabulary` e `includeTranslations=true`: carica URI e nomi DE, FR, IT,
+EN dal repository richiesto, mostrando le etichette inglesi nella lista.
+La pagina mostra l'indice in ordine alfabetico con relativi collegamenti alle pagine termine.
 Il filtro **Narrowers of a term** permette di cercare tra i concetti del vocabolario
 e riutilizza `/api/dbQueryTerms`: mostra i Narrowers diretti e il termine selezionato,
 con le etichette inglesi. **All concepts** ripristina l'elenco completo;
 **Concepts in a collection** resta disabilitato (Coming soon).
+
+**Export CSV** genera il download nel browser dai dati già caricati.
+Entrambi i filtri usano le colonne `concept URI`, `concept DE`, `concept FR`,
+`concept IT`, `concept EN`; le traduzioni mancanti restano vuote.
+**All concepts** esporta l'elenco completo; **Narrowers of a term** esporta
+il termine selezionato e i suoi Narrowers diretti, in un'unica tabella.
 
 ### UI e dipendenze
 
